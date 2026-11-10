@@ -1,0 +1,13 @@
+Comparación de docs/letra-obligatorio.md contra el texto extraído directamente de "Obligatorio AIOps.docx".
+Método: se separó el texto del docx en frases de al menos 40 caracteres, se normalizaron (minúsculas, sin signos ni espacios) y se buscó cada una dentro de la transcripción normalizada.
+
+Primera pasada: 54 de 73 frases presentes. Faltaban textuales la sección RECORDATORIO, la línea de fecha de entrega, el párrafo sobre uso de IAG y el bloque "Importante": estaban resumidos.
+Corrección: se reemplazaron por el texto literal del docx.
+
+Resultado final:
+frases del docx: 73 | presentes en la transcripcion: 73 | ausentes: 0
+
+Notas del equipo dentro del archivo, marcadas como tales y sin alterar el texto original:
+- Puntaje máximo 0 y mínimo 40, tal como figura en el original.
+- La lista vacía después de "tales como:".
+- "hasta 2 estudiantes" en el recordatorio contra "hasta 3 personas" en las condiciones.

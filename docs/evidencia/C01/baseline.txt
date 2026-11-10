@@ -1,0 +1,15 @@
+Punto de partida de feature/k8s (commit dccba67), medido el 2026-11-09 en Windows 10 con .NET SDK 10.0.401.
+Directorio: "Implementacion K8S/Codigo/Backend"
+
+$ dotnet build PharmaGo.sln -c Release
+    648 Warning(s)
+    0 Error(s)
+Time Elapsed 00:00:20.39
+
+$ dotnet test PharnaGo.Test/PharmaGo.Test.csproj -c Release --no-build
+  Failed Test_GetOneByExpression [69 ms]
+   Assert.IsNotNull failed.
+Failed!  - Failed:     1, Passed:   290, Skipped:     0, Total:   291, Duration: 2 s - PharmaGo.Test.dll (net6.0)
+
+Resultado: coincide con lo esperado (0 errores, 290 de 291 tests).
+El test que falla asume Id == 1 sobre una base en memoria compartida entre tests. No se corrige acá: va en C21.

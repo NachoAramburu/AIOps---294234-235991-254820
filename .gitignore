@@ -57,3 +57,10 @@ k8s/.port-forward.pids
 # === Docker ===
 .docker/
 docker-compose.override.yml
+
+# === Obligatorio AIOps ===
+**/.port-forward.pids
+**/.ipynb_checkpoints/
+anomaly-detection/.venv/
+**/cypress/videos/
+**/cypress/screenshots/
