@@ -1,0 +1,24 @@
+$ kubectl logs de cada pod fluent-bit, buscando error|fail|refused|connection
+fluent-bit-fmk9m: 54 lineas, 0 con error/fail/refused/connection
+fluent-bit-kkgdg: 53 lineas, 0 con error/fail/refused/connection
+fluent-bit-p8bqc: 63 lineas, 0 con error/fail/refused/connection
+fluent-bit-ptl5s: 60 lineas, 0 con error/fail/refused/connection
+fluent-bit-qszmk: 53 lineas, 0 con error/fail/refused/connection
+
+$ kubectl logs -n pharmago fluent-bit-p8bqc --tail=12
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3266265 watch_fd=7 name=/var/log/containers/grafana-854bbd78d7-vqphv_pharmago_volume-permissions-01d69f24c07f0504b869bc518ce5804643311326a58968f4d1b66f4e609ba628.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3216622 watch_fd=8 name=/var/log/containers/grafana-854bbd78d7-vqphv_pharmago_wait-for-prometheus-728d8b1c551751fb25ca6d6151648f2a59394b4c0ffd9d333724c328f0268a04.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3327599 watch_fd=9 name=/var/log/containers/kibana-7d8cfc6546-fqkvr_pharmago_kibana-e653001e4f56f52fe10cceb5ef8a79677b5b46d2d50dc922e1bb01fd992b50d1.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3029641 watch_fd=10 name=/var/log/containers/kube-proxy-wtz5t_kube-system_kube-proxy-b5bda5ebd82ffb4a8d05a1b865b79316ce2083a295608afa02581b40bcfaa2f1.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3238429 watch_fd=11 name=/var/log/containers/node-exporter-zpj2x_pharmago_node-exporter-47e3fc48552d015580d3d8f35ddd765f9378b9f093d1e3abf3ceb53823b55ac8.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3215466 watch_fd=12 name=/var/log/containers/otlp-collector-759bcf6d77-82fg5_pharmago_otlp-collector-a3e947e925dd0129b4ec657adbd715bee9c6905f20be1e9e2f740d68d6ef3dfa.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3209507 watch_fd=13 name=/var/log/containers/pharmago-db-79bd8977ff-7hbxd_pharmago_pharmago-db-8f1ba6f2827087e9244e7ec2d581d4ec6bf286b416cc0c491f0ac870cc792a9d.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3198636 watch_fd=14 name=/var/log/containers/pharmago-db-79bd8977ff-7hbxd_pharmago_volume-permissions-87ab863f8b5a3ca6ddf212f82653b55a6645f1813ee9721fb17bd73137027d82.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3239171 watch_fd=15 name=/var/log/containers/prometheus-76c6c4f5d5-754rt_pharmago_prometheus-80567552062dcb2c9c18c5218e6f87715c97dea60f4165b16155cbc9c24bbe8d.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3215925 watch_fd=16 name=/var/log/containers/prometheus-76c6c4f5d5-754rt_pharmago_volume-permissions-cf8dae38ef38170c07dd3b9445f34c4ccd82e40b40442501e487716ebccc80ac.log
+[2026/11/10 04:09:48] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3331127 watch_fd=17 name=/var/log/containers/fluent-bit-p8bqc_pharmago_fluent-bit-b22edbd77592125991a29fee877d8c485524bbe8297204a686512a20d013bebe.log
+[2026/11/10 04:10:08] [ info] [input:tail:tail.0] inotify_fs_add(): inode=3342347 watch_fd=18 name=/var/log/containers/grafana-854bbd78d7-vqphv_pharmago_grafana-f4a4d1d6ba4bd55fcfe39755a1009a844a44c0c94225901fcafe38cded750758.log
+
+$ kubectl exec deploy/elasticsearch -- curl -s localhost:9200/_cat/indices/pharmago-logs-*?v
+health status index                    uuid                   pri rep docs.count docs.deleted store.size pri.store.size dataset.size
+yellow open   pharmago-logs-2026.11.10 K5NW-QMQTh2am8kvkWbAfw   1   1       2981            0      2.1mb          2.1mb        2.1mb

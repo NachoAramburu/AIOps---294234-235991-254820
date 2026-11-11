@@ -1,0 +1,30 @@
+=== Construyendo y cargando imágenes Docker en Minikube ===
+Construyendo imágenes de backend...
+  - pharmago-users-service...
+#24 10.77     0 Error(s)
+#27 naming to docker.io/library/pharmago-users-service:latest done
+#27 unpacking to docker.io/library/pharmago-users-service:latest
+#27 unpacking to docker.io/library/pharmago-users-service:latest 0.2s done
+  - pharmago-pharmacy-service...
+#24 11.96     0 Error(s)
+#29 naming to docker.io/library/pharmago-pharmacy-service:latest
+#29 naming to docker.io/library/pharmago-pharmacy-service:latest done
+#29 unpacking to docker.io/library/pharmago-pharmacy-service:latest 0.1s done
+  - pharmago-api-gateway...
+#15 5.465     0 Error(s)
+#20 naming to docker.io/library/pharmago-api-gateway:latest
+#20 naming to docker.io/library/pharmago-api-gateway:latest done
+#20 unpacking to docker.io/library/pharmago-api-gateway:latest 0.1s done
+Construyendo imagen de frontend...
+  - pharmago-ui...
+#12 55.72 1 rules skipped due to selector errors:
+#12 55.72 2 rules skipped due to selector errors:
+#15 naming to docker.io/library/pharmago-ui:latest
+#15 naming to docker.io/library/pharmago-ui:latest done
+#15 unpacking to docker.io/library/pharmago-ui:latest
+#15 unpacking to docker.io/library/pharmago-ui:latest 0.2s done
+=== Imágenes construidas y cargadas exitosamente ===
+docker.io/library/pharmago-users-service:latest
+docker.io/library/pharmago-ui:latest
+docker.io/library/pharmago-pharmacy-service:latest
+docker.io/library/pharmago-api-gateway:latest

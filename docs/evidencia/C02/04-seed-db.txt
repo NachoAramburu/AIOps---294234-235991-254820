@@ -1,0 +1,114 @@
+### Corrida 1
+=== Seed de datos de PharmaGo ===
+Esperando el pod de BD listo...
+pod/pharmago-db-79bd8977ff-7hbxd condition met
+Pod de BD: pharmago-db-79bd8977ff-7hbxd
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+sqlcmd: /opt/mssql-tools18/bin/sqlcmd -C
+Esperando a que las migraciones creen las tablas (Roles, Users, Pharmacys, Drugs, Invitations)...
+  Esperando... (5/300s, tablas: 0/7)
+Tablas listas.
+Copiando seed-data.sql al pod...
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+Ejecutando seed-data.sql...
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+Changed database context to 'PharmaDb'.
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+Datos iniciales insertados correctamente.
+Usuarios de prueba: admin, owner001, empleado01
+ 
+Roles: Administrator, Employee, Owner
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+
+Verificación:
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+Roles=3
+Users=3
+Drugs=4
+=== Seed completado ===
+
+### Corrida 2 (idempotencia)
+=== Seed de datos de PharmaGo ===
+Esperando el pod de BD listo...
+pod/pharmago-db-79bd8977ff-7hbxd condition met
+Pod de BD: pharmago-db-79bd8977ff-7hbxd
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+sqlcmd: /opt/mssql-tools18/bin/sqlcmd -C
+Esperando a que las migraciones creen las tablas (Roles, Users, Pharmacys, Drugs, Invitations)...
+Tablas listas.
+Copiando seed-data.sql al pod...
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+Ejecutando seed-data.sql...
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+Changed database context to 'PharmaDb'.
+Datos iniciales insertados correctamente.
+Usuarios de prueba: admin, owner001, empleado01
+ 
+Roles: Administrator, Employee, Owner
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+
+Verificación:
+Defaulted container "pharmago-db" out of: pharmago-db, volume-permissions (init)
+Roles=3
+Users=3
+Drugs=4
+=== Seed completado ===
+
+### Corrida 3 (tras agregar -c pharmago-db a kubectl exec)
+=== Seed de datos de PharmaGo ===
+Esperando el pod de BD listo...
+pod/pharmago-db-79bd8977ff-7hbxd condition met
+Pod de BD: pharmago-db-79bd8977ff-7hbxd
+sqlcmd: /opt/mssql-tools18/bin/sqlcmd -C
+Esperando a que las migraciones creen las tablas (Roles, Users, Pharmacys, Drugs, Invitations)...
+Tablas listas.
+Copiando seed-data.sql al pod...
+Ejecutando seed-data.sql...
+Changed database context to 'PharmaDb'.
+Datos iniciales insertados correctamente.
+Usuarios de prueba: admin, owner001, empleado01
+ 
+Roles: Administrator, Employee, Owner
+
+Verificación:
+Roles=3
+Users=3
+Drugs=4
+=== Seed completado ===

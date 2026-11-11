@@ -1,0 +1,80 @@
+=== Cluster Minikube de PharmaGo (5 nodos) ===
+Creando cluster: 5 nodos, 2 CPU y 4096 MB por nodo, Kubernetes v1.33.13...
+* minikube v1.39.0 en Microsoft Windows 11 Pro 25H2
+* Using the docker driver based on user configuration
+* Using Docker Desktop driver with root privileges
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Descargando Kubernetes v1.33.13 ...
+* Configurando CNI Calico ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Complementos habilitados: storage-provisioner, default-storageclass
+
+* Starting "minikube-m02" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2
+  - NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2
+* Verifying Kubernetes components...
+
+* Starting "minikube-m03" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3
+  - NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+* Verifying Kubernetes components...
+
+* Starting "minikube-m04" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+* Verifying Kubernetes components...
+
+* Starting "minikube-m05" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+* Verifying Kubernetes components...
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+Habilitando addon metrics-server...
+* metrics-server is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+  - Using image registry.k8s.io/metrics-server/metrics-server:v0.9.0
+* The 'metrics-server' addon is enabled
+
+Etiquetando nodos (node-type)...
+node/minikube labeled
+node/minikube-m02 labeled
+node/minikube-m03 labeled
+node/minikube-m04 labeled
+node/minikube-m05 labeled
+
+Esperando a que todos los nodos estén Ready...
+node/minikube condition met
+node/minikube-m02 condition met
+node/minikube-m03 condition met
+node/minikube-m04 condition met
+node/minikube-m05 condition met
+
+NAME           STATUS   ROLES           AGE     VERSION    NODE-TYPE
+minikube       Ready    control-plane   5m22s   v1.33.13   frontend
+minikube-m02   Ready    <none>          3m56s   v1.33.13   gateway
+minikube-m03   Ready    <none>          2m37s   v1.33.13   users
+minikube-m04   Ready    <none>          88s     v1.33.13   pharmacy
+minikube-m05   Ready    <none>          18s     v1.33.13   ops
+
+Siguiente paso: ./build-images.sh, ./apply-k8s.sh y ./seed-db.sh

@@ -3,6 +3,7 @@
 # Uso: ./build-ui.sh
 
 set -e
+export MINIKUBE_IN_STYLE=false   # salida de minikube en texto plano, sin emojis
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CODE_DIR="$(dirname "$SCRIPT_DIR")"

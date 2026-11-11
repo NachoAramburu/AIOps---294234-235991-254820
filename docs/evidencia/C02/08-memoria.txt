@@ -1,0 +1,56 @@
+$ kubectl top nodes
+NAME           CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)   
+minikube       262m         2%       1155Mi          7%          
+minikube-m02   100m         0%       640Mi           4%          
+minikube-m03   95m          0%       613Mi           3%          
+minikube-m04   96m          0%       593Mi           3%          
+minikube-m05   1068m        8%       3696Mi          23%         
+
+$ kubectl top pods -n pharmago --sort-by=memory
+NAME                                        CPU(cores)   MEMORY(bytes)   
+elasticsearch-757964844b-vhxwm              136m         915Mi           
+pharmago-db-79bd8977ff-7hbxd                14m          900Mi           
+kibana-7d8cfc6546-fqkvr                     439m         813Mi           
+pharmago-users-service-5875d9d9c5-6z6gk     3m           116Mi           
+pharmago-api-gateway-5b8c447866-hcwcn       4m           79Mi            
+pharmago-pharmacy-service-f858cd56f-6zcrj   3m           77Mi            
+prometheus-76c6c4f5d5-754rt                 9m           67Mi            
+otlp-collector-759bcf6d77-82fg5             3m           55Mi            
+grafana-854bbd78d7-vqphv                    50m          49Mi            
+fluent-bit-p8bqc                            9m           12Mi            
+pharmago-ui-69ccf8b66-xnvcc                 1m           10Mi            
+fluent-bit-ptl5s                            3m           10Mi            
+node-exporter-ndr5m                         4m           8Mi             
+fluent-bit-kkgdg                            1m           5Mi             
+fluent-bit-qszmk                            1m           5Mi             
+fluent-bit-fmk9m                            1m           5Mi             
+node-exporter-sl2rr                         1m           2Mi             
+node-exporter-zpj2x                         1m           2Mi             
+node-exporter-vv67n                         1m           2Mi             
+node-exporter-tk9zw                         1m           2Mi             
+
+$ docker stats --no-stream
+NAME           CPU %     MEM USAGE / LIMIT   MEM %
+minikube-m05   55.05%    3.535GiB / 4GiB     88.37%
+minikube-m04   4.42%     591.9MiB / 4GiB     14.45%
+minikube-m03   2.71%     616.5MiB / 4GiB     15.05%
+minikube-m02   9.58%     645.6MiB / 4GiB     15.76%
+minikube       25.02%    1.131GiB / 4GiB     28.27%
+
+$ docker info (memoria total de la VM de Docker/WSL2)
+MemTotal=16669306880 NCPU=12
+
+$ kubectl describe node minikube-m05 | Allocated resources
+
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                1800m (15%)   2750m (22%)
+  memory             3300Mi (20%)  6600Mi (41%)
+  ephemeral-storage  0 (0%)        0 (0%)
+  hugepages-1Gi      0 (0%)        0 (0%)
+  hugepages-2Mi      0 (0%)        0 (0%)
+
+
+$ RAM fisica del host (Windows)
+Total=15.9 GB  Libre=0.6 GB

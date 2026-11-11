@@ -1,0 +1,181 @@
+=== Desplegando PharmaGo en Kubernetes ===
+
+1. Nodos y etiquetas:
+NAME           STATUS   ROLES           AGE     VERSION    NODE-TYPE
+minikube       Ready    control-plane   12m     v1.33.13   frontend
+minikube-m02   Ready    <none>          10m     v1.33.13   gateway
+minikube-m03   Ready    <none>          9m40s   v1.33.13   users
+minikube-m04   Ready    <none>          8m31s   v1.33.13   pharmacy
+minikube-m05   Ready    <none>          7m21s   v1.33.13   ops
+
+2. Creando namespace...
+namespace/pharmago created
+
+3. Creando secrets...
+secret/db-secret created
+
+4. Creando configmaps...
+configmap/prometheus-config created
+configmap/otel-collector-config created
+configmap/grafana-provisioning created
+configmap/grafana-dashboards created
+configmap/grafana-dashboard-infra created
+configmap/fluent-bit-config created
+
+5. Creando StorageClass y PersistentVolumes...
+storageclass.storage.k8s.io/local-storage created
+   Limpiando PVs huérfanos (Released)...
+persistentvolume/sql-pv created
+persistentvolumeclaim/sql-pvc created
+persistentvolume/elasticsearch-pv created
+persistentvolumeclaim/elasticsearch-pvc created
+persistentvolume/prometheus-pv created
+persistentvolumeclaim/prometheus-pvc created
+persistentvolume/grafana-pv created
+persistentvolumeclaim/grafana-pvc created
+
+6. Desplegando base de datos...
+service/pharmago-db created
+deployment.apps/pharmago-db created
+
+   Esperando a que la base de datos esté lista...
+   Esperando... (5/300 segundos)
+   Esperando... (10/300 segundos)
+   Esperando... (15/300 segundos)
+   Esperando... (20/300 segundos)
+   Esperando... (25/300 segundos)
+   Esperando... (30/300 segundos)
+   Esperando... (35/300 segundos)
+   Esperando... (40/300 segundos)
+   Esperando... (45/300 segundos)
+   Esperando... (50/300 segundos)
+   Esperando... (55/300 segundos)
+   Esperando... (60/300 segundos)
+   Esperando... (65/300 segundos)
+   Esperando... (70/300 segundos)
+   Esperando... (75/300 segundos)
+   Esperando... (80/300 segundos)
+   Esperando... (85/300 segundos)
+   Esperando... (90/300 segundos)
+   Esperando... (95/300 segundos)
+   Esperando... (100/300 segundos)
+   Esperando... (105/300 segundos)
+   Esperando... (110/300 segundos)
+   Base de datos lista!
+
+7. Desplegando servicios de observabilidad...
+service/elasticsearch created
+deployment.apps/elasticsearch created
+   Esperando a que Elasticsearch esté listo...
+   Esperando... (5/300 segundos)
+   Esperando... (10/300 segundos)
+   Esperando... (15/300 segundos)
+   Esperando... (20/300 segundos)
+   Esperando... (25/300 segundos)
+   Esperando... (30/300 segundos)
+   Esperando... (35/300 segundos)
+   Esperando... (40/300 segundos)
+   Esperando... (45/300 segundos)
+   Esperando... (50/300 segundos)
+   Esperando... (55/300 segundos)
+   Esperando... (60/300 segundos)
+   Esperando... (65/300 segundos)
+   Esperando... (70/300 segundos)
+   Esperando... (75/300 segundos)
+   Esperando... (80/300 segundos)
+   Esperando... (85/300 segundos)
+   Esperando... (90/300 segundos)
+   Esperando... (95/300 segundos)
+   Esperando... (100/300 segundos)
+   Esperando... (105/300 segundos)
+   Esperando... (110/300 segundos)
+   Esperando... (115/300 segundos)
+   Esperando... (120/300 segundos)
+   Esperando... (125/300 segundos)
+   Esperando... (130/300 segundos)
+   Esperando... (135/300 segundos)
+   Esperando... (140/300 segundos)
+   Esperando... (145/300 segundos)
+   Esperando... (150/300 segundos)
+   Esperando... (155/300 segundos)
+   Esperando... (160/300 segundos)
+   Esperando... (165/300 segundos)
+   Esperando... (170/300 segundos)
+   Esperando... (175/300 segundos)
+   Esperando... (180/300 segundos)
+   Esperando... (185/300 segundos)
+   Esperando... (190/300 segundos)
+   Esperando... (195/300 segundos)
+   Esperando... (200/300 segundos)
+   Esperando... (205/300 segundos)
+   Esperando... (210/300 segundos)
+   Esperando... (215/300 segundos)
+   Esperando... (220/300 segundos)
+   Esperando... (225/300 segundos)
+   Esperando... (230/300 segundos)
+   Esperando... (235/300 segundos)
+   Esperando... (240/300 segundos)
+   Elasticsearch listo!
+service/otlp-collector created
+deployment.apps/otlp-collector created
+serviceaccount/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus-cadvisor created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus-cadvisor created
+service/prometheus created
+deployment.apps/prometheus created
+service/node-exporter created
+daemonset.apps/node-exporter created
+service/grafana created
+deployment.apps/grafana created
+service/kibana created
+deployment.apps/kibana created
+serviceaccount/fluent-bit created
+clusterrole.rbac.authorization.k8s.io/fluent-bit-read created
+clusterrolebinding.rbac.authorization.k8s.io/fluent-bit-read created
+daemonset.apps/fluent-bit created
+
+8. Desplegando servicios backend...
+service/pharmago-users-service created
+deployment.apps/pharmago-users-service created
+service/pharmago-pharmacy-service created
+deployment.apps/pharmago-pharmacy-service created
+service/pharmago-api-gateway created
+deployment.apps/pharmago-api-gateway created
+
+9. Desplegando frontend...
+service/pharmago-ui created
+deployment.apps/pharmago-ui created
+
+=== Despliegue completado ===
+
+Verificando estado de los pods...
+NAME                                        READY   STATUS              RESTARTS   AGE     IP             NODE           NOMINATED NODE   READINESS GATES
+elasticsearch-757964844b-vhxwm              1/1     Running             0          4m19s   10.244.149.2   minikube-m05   <none>           <none>
+fluent-bit-fmk9m                            0/1     ContainerCreating   0          4s      <none>         minikube-m02   <none>           <none>
+fluent-bit-kkgdg                            0/1     ContainerCreating   0          4s      <none>         minikube-m03   <none>           <none>
+fluent-bit-p8bqc                            0/1     ContainerCreating   0          4s      <none>         minikube-m05   <none>           <none>
+fluent-bit-ptl5s                            0/1     ContainerCreating   0          4s      <none>         minikube       <none>           <none>
+fluent-bit-qszmk                            0/1     ContainerCreating   0          4s      <none>         minikube-m04   <none>           <none>
+grafana-854bbd78d7-vqphv                    0/1     Init:0/2            0          6s      <none>         minikube-m05   <none>           <none>
+kibana-7d8cfc6546-fqkvr                     0/1     ContainerCreating   0          5s      <none>         minikube-m05   <none>           <none>
+node-exporter-ndr5m                         0/1     ContainerCreating   0          7s      192.168.49.2   minikube       <none>           <none>
+node-exporter-sl2rr                         0/1     ContainerCreating   0          7s      192.168.49.4   minikube-m03   <none>           <none>
+node-exporter-tk9zw                         0/1     ContainerCreating   0          7s      192.168.49.5   minikube-m04   <none>           <none>
+node-exporter-vv67n                         0/1     ContainerCreating   0          7s      192.168.49.3   minikube-m02   <none>           <none>
+node-exporter-zpj2x                         0/1     ContainerCreating   0          7s      192.168.49.6   minikube-m05   <none>           <none>
+otlp-collector-759bcf6d77-82fg5             0/1     ContainerCreating   0          9s      <none>         minikube-m05   <none>           <none>
+pharmago-api-gateway-5b8c447866-hcwcn       0/1     ContainerCreating   0          1s      <none>         minikube-m02   <none>           <none>
+pharmago-db-79bd8977ff-7hbxd                1/1     Running             0          6m17s   10.244.149.1   minikube-m05   <none>           <none>
+pharmago-pharmacy-service-f858cd56f-6zcrj   0/1     ContainerCreating   0          2s      <none>         minikube-m04   <none>           <none>
+pharmago-ui-69ccf8b66-xnvcc                 0/1     Pending             0          0s      <none>         minikube       <none>           <none>
+pharmago-users-service-5875d9d9c5-6z6gk     0/1     ContainerCreating   0          3s      <none>         minikube-m03   <none>           <none>
+prometheus-76c6c4f5d5-754rt                 0/1     PodInitializing     0          8s      10.244.149.4   minikube-m05   <none>           <none>
+
+Para acceder a los servicios (usa 127.0.0.1 en Windows):
+  ./port-forward.sh
+
+O con minikube service:
+  Frontend:     minikube service pharmago-ui -n pharmago --url
+  Grafana:      minikube service grafana -n pharmago --url
+  Kibana:       minikube service kibana -n pharmago --url
+  Prometheus:   minikube service prometheus -n pharmago --url

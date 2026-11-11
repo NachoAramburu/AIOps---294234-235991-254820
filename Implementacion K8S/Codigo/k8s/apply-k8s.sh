@@ -1,8 +1,14 @@
 #!/bin/bash
 # Script de despliegue para Kubernetes (Minikube)
-# Uso: ./apply-k8s.sh
+# Uso: ./apply-k8s.sh (se puede correr desde cualquier directorio)
+# Requiere el cluster multinodo creado y etiquetado por cluster-up.sh.
 
 set -e
+export MINIKUBE_IN_STYLE=false   # salida de minikube en texto plano, sin emojis
+
+# Trabajar siempre desde el directorio del script, para que las rutas relativas funcionen
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$SCRIPT_DIR"
 
 echo "=== Desplegando PharmaGo en Kubernetes ==="
 
@@ -15,19 +21,19 @@ fi
 # Verificar que minikube está corriendo
 if ! minikube status &> /dev/null; then
     echo "Error: Minikube no está corriendo."
-    echo "Ejecuta: minikube start --memory=6144 --cpus=4"
+    echo "Ejecuta: ./cluster-up.sh"
+    exit 1
+fi
+
+# Los nodos los etiqueta cluster-up.sh (node-type=frontend|gateway|users|pharmacy|ops).
+if ! kubectl get nodes -l node-type=ops -o name 2>/dev/null | grep -q .; then
+    echo "Error: ningún nodo tiene node-type=ops. Ejecuta primero: ./cluster-up.sh"
     exit 1
 fi
 
 echo ""
-echo "1. Etiquetando nodo (requerido para que los pods se programen)..."
-NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
-if [ -n "$NODE_NAME" ]; then
-    kubectl label nodes $NODE_NAME node-type=all --overwrite 2>/dev/null || true
-    echo "   Nodo $NODE_NAME etiquetado con node-type=all"
-else
-    echo "   No se pudo obtener el nombre del nodo. Continuando..."
-fi
+echo "1. Nodos y etiquetas:"
+kubectl get nodes -L node-type
 
 echo ""
 echo "2. Creando namespace..."

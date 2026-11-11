@@ -1,0 +1,7 @@
+$ kubectl get nodes -L node-type -o wide
+NAME           STATUS   ROLES           AGE   VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION                      CONTAINER-RUNTIME   NODE-TYPE
+minikube       Ready    control-plane   22m   v1.33.13   192.168.49.2   <none>        Debian GNU/Linux 12 (bookworm)   6.6.114.1-microsoft-standard-WSL2   docker://29.7.2     frontend
+minikube-m02   Ready    <none>          20m   v1.33.13   192.168.49.3   <none>        Debian GNU/Linux 12 (bookworm)   6.6.114.1-microsoft-standard-WSL2   docker://29.7.2     gateway
+minikube-m03   Ready    <none>          19m   v1.33.13   192.168.49.4   <none>        Debian GNU/Linux 12 (bookworm)   6.6.114.1-microsoft-standard-WSL2   docker://29.7.2     users
+minikube-m04   Ready    <none>          18m   v1.33.13   192.168.49.5   <none>        Debian GNU/Linux 12 (bookworm)   6.6.114.1-microsoft-standard-WSL2   docker://29.7.2     pharmacy
+minikube-m05   Ready    <none>          17m   v1.33.13   192.168.49.6   <none>        Debian GNU/Linux 12 (bookworm)   6.6.114.1-microsoft-standard-WSL2   docker://29.7.2     ops

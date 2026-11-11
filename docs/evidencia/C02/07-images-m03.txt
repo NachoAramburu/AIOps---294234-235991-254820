@@ -1,0 +1,11 @@
+$ minikube ssh -n minikube-m03 -- docker images | grep pharmago
+[34m[1mpharmago-api-gateway:latest[0m
+[34m[1mpharmago-pharmacy-service:latest[0m
+[34m[1mpharmago-ui:latest[0m  
+[34m[1mpharmago-users-service:latest[0m
+
+$ minikube ssh -n minikube-m05 -- docker images | grep pharmago
+[34m[1mpharmago-api-gateway:latest[0m
+[34m[1mpharmago-pharmacy-service:latest[0m
+[34m[1mpharmago-ui:latest[0m  
+[34m[1mpharmago-users-service:latest[0m

@@ -1,46 +1,74 @@
 # Despliegue de PharmaGo en Kubernetes (Minikube)
 
-Esta guía describe cómo desplegar la aplicación PharmaGo en un cluster de Kubernetes usando Minikube con un solo nodo.
+Esta guía describe cómo desplegar la aplicación PharmaGo en un cluster Minikube **multinodo (5 nodos)**.
+
+## Inicio rápido (desde cero)
+
+Desde **Git Bash**, con Docker Desktop corriendo. Los scripts se pueden correr desde cualquier directorio:
+
+```bash
+cd "Implementacion K8S/Codigo/k8s"
+./cluster-up.sh      # crea/arranca el cluster de 5 nodos, metrics-server y etiquetas node-type
+./build-images.sh    # construye las imágenes y las carga en todos los nodos
+./apply-k8s.sh       # aplica namespace, secrets, configmaps, volúmenes y deployments
+./seed-db.sh         # carga Backend/seed-data.sql (roles y usuarios de prueba)
+```
+
+`seed-db.sh` es imprescindible: sin él no hay roles ni usuarios y no se puede iniciar sesión. Se puede correr más de una vez.
 
 ## Arquitectura
 
-La aplicación se ejecuta en un único nodo (minikube) con todos los componentes:
+Cada nodo tiene una etiqueta `node-type` y cada Deployment usa `nodeAffinity` sobre esa etiqueta:
 
-- **Frontend**: pharmago-ui
-- **Backend**: pharmago-api-gateway, pharmago-users-service, pharmago-pharmacy-service
-- **Base de datos**: pharmago-db (SQL Server Express)
-- **Telemetría y observabilidad**: otlp-collector, prometheus, grafana, elasticsearch, kibana, fluent-bit
+| Nodo Minikube | `node-type` | Corre |
+|---|---|---|
+| `minikube` (control-plane) | `frontend` | `pharmago-ui` |
+| `minikube-m02` | `gateway` | `pharmago-api-gateway` |
+| `minikube-m03` | `users` | `pharmago-users-service` |
+| `minikube-m04` | `pharmacy` | `pharmago-pharmacy-service` |
+| `minikube-m05` | `ops` | `pharmago-db` (SQL Server Express), otlp-collector, prometheus, grafana, elasticsearch, kibana |
 
-**Requisito de memoria**: El nodo debe tener al menos 5-6GB de RAM para soportar Elasticsearch (1.5Gi), Kibana (2Gi), SQL Server Express (1.5Gi) y el resto de servicios.
+Los DaemonSets (fluent-bit, node-exporter) corren en todos los nodos.
+
+**Requisito de memoria**: cada nodo tiene 4 GB (`--memory 4096`), es decir hasta 20 GB en total; en la práctica el cluster usa bastante menos (ver `docs/evidencia/C02/`). En Windows, Docker Desktop (WSL2) tiene que tener la memoria necesaria en `%UserProfile%\.wslconfig`.
 
 ## Prerrequisitos
 
-1. **Minikube** instalado y configurado
-2. **kubectl** instalado y configurado
-3. **Docker** instalado (para construir las imágenes)
+1. **Minikube** (referencia v1.39.0) y **kubectl**
+2. **Docker Desktop** con backend WSL2 (para el driver y para construir las imágenes)
+3. **Git Bash** en Windows: los scripts son solo bash (los `.ps1` se eliminaron, decisión D06)
 
 ## Configuración Inicial
 
-### 1. Crear cluster Minikube (un nodo, 6GB RAM)
+### 1. Crear el cluster multinodo
 
 ```bash
-# Crear cluster con suficiente memoria para telemetría (Elasticsearch, Kibana, etc.)
-minikube start --memory=6144 --cpus=4
-
-# Verificar nodo
-kubectl get nodes
+./cluster-up.sh
 ```
 
-**Importante**: Usa al menos 6GB de RAM. Con menos, Elasticsearch y otros pods de observabilidad pueden fallar por OOM.
+Es idempotente. Si el cluster no existe lo crea con:
 
-### 2. Etiquetar nodo
-
-El script `apply-k8s.sh` etiqueta el nodo automáticamente con `node-type=all`. Si despliegas manualmente:
 ```bash
-kubectl label nodes minikube node-type=all --overwrite
+minikube start --driver=docker --container-runtime=docker --cni=calico \
+  --kubernetes-version=v1.33.13 --nodes 5 --cpus 2 --memory 4096
 ```
 
-### 3. Construir y cargar imágenes Docker
+- `--container-runtime=docker`: Fluent Bit usa el parser `docker` para los logs.
+- `--cni=calico`: hace cumplir las `NetworkPolicy` (caos de red).
+- Si hay pods `Pending` por memoria: `minikube delete` y `MINIKUBE_MEMORY=4608 ./cluster-up.sh`.
+
+Después habilita `metrics-server` (para `kubectl top`) y etiqueta los nodos:
+
+```bash
+kubectl label node minikube     node-type=frontend --overwrite
+kubectl label node minikube-m02 node-type=gateway  --overwrite
+kubectl label node minikube-m03 node-type=users    --overwrite
+kubectl label node minikube-m04 node-type=pharmacy --overwrite
+kubectl label node minikube-m05 node-type=ops      --overwrite
+kubectl get nodes -L node-type
+```
+
+### 2. Construir y cargar imágenes Docker
 
 **IMPORTANTE**: Usa `minikube image load` para cargar las imágenes en Minikube (no `minikube docker-env`).
 
@@ -74,11 +102,11 @@ docker build -f Dockerfile -t pharmago-ui:latest .
 minikube image load pharmago-ui:latest
 ```
 
-**Nota**: `minikube image load` carga las imágenes en el nodo de Minikube.
+**Nota**: en un cluster multinodo, `minikube image load` carga las imágenes en todos los nodos.
 
 ## Despliegue
 
-**IMPORTANTE**: Asegúrate de haber construido y cargado las imágenes Docker primero (paso 3).
+**IMPORTANTE**: Asegúrate de haber creado el cluster (paso 1) y construido y cargado las imágenes Docker (paso 2). Al terminar, corré `./seed-db.sh`.
 
 ### Opción 1: Script automatizado (Recomendado)
 
@@ -226,12 +254,11 @@ kubectl apply -f deployments/<component>/<deployment>.yaml
 
 Si los pods de telemetría (otel-collector, prometheus, grafana, elasticsearch, kibana, fluent-bit) quedan en `Pending`:
 
-1. **Falta etiqueta en el nodo**: Los pods requieren `node-type=all`.
-   - Usa el script `apply-k8s.sh` que etiqueta automáticamente, o
-   - Manual: `kubectl label nodes minikube node-type=all --overwrite`
-   
+1. **Falta etiqueta en el nodo**: cada pod requiere un nodo con su `node-type` (frontend, gateway, users, pharmacy u ops).
+   - Corré `./cluster-up.sh`, que etiqueta los 5 nodos, o etiquetá a mano (ver paso 1).
+
    ```bash
-   kubectl get nodes --show-labels
+   kubectl get nodes -L node-type
    ```
 
 2. Verificar eventos del pod:
@@ -299,14 +326,13 @@ Si Elasticsearch está en `CrashLoopBackOff` con `OOMKilled`:
 
 1. **Verificar memoria disponible en el nodo:**
    ```bash
-   kubectl describe node minikube | grep -A 5 "Allocated resources"
+   kubectl describe node minikube-m05 | grep -A 5 "Allocated resources"
    ```
 
-2. **Aumentar memoria de Minikube:**
+2. **Aumentar memoria de Minikube (por nodo):**
    ```bash
-   minikube stop
    minikube delete
-   minikube start --memory=6144 --cpus=4
+   MINIKUBE_MEMORY=4608 ./cluster-up.sh
    ```
 
 3. **Reducir memoria heap de Elasticsearch:**

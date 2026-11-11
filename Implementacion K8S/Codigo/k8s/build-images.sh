@@ -4,6 +4,7 @@
 # Uso: ./build-images.sh
 
 set -e
+export MINIKUBE_IN_STYLE=false   # salida de minikube en texto plano, sin emojis
 
 echo "=== Construyendo y cargando imágenes Docker en Minikube ==="
 
@@ -15,7 +16,7 @@ fi
 
 # Verificar que minikube está corriendo
 if ! minikube status &> /dev/null; then
-    echo "Error: Minikube no está corriendo. Ejecuta: minikube start --nodes 3"
+    echo "Error: Minikube no está corriendo. Ejecuta: ./cluster-up.sh"
     exit 1
 fi
 
