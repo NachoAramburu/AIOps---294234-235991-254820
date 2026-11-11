@@ -1,0 +1,16 @@
+Reproducibilidad: dos corridas completas adicionales de cada cuaderno (además de la corrida --inplace).
+
+$ for r in 1 2; do jupyter nbconvert --to notebook --execute --output-dir <tmp>/run$r ...; done   (4 ejecuciones, exit 0)
+$ sha256sum de las salidas de texto de cada corrida
+ee1630c3b30a82467d3d82e2af40e1699be2b89b93b5c491f052da27df515163   run1/laboratorio_comparacion_detectores.txt
+ee1630c3b30a82467d3d82e2af40e1699be2b89b93b5c491f052da27df515163   run2/laboratorio_comparacion_detectores.txt
+ee1630c3b30a82467d3d82e2af40e1699be2b89b93b5c491f052da27df515163   inplace_laboratorio_comparacion_detectores.txt
+587da17d33c2bd232e34caf9ede66b141d77ccd4c4d37bde97ce90d7459c5787   run1/deteccion_dataset_docentes.txt
+587da17d33c2bd232e34caf9ede66b141d77ccd4c4d37bde97ce90d7459c5787   run2/deteccion_dataset_docentes.txt
+587da17d33c2bd232e34caf9ede66b141d77ccd4c4d37bde97ce90d7459c5787   inplace_deteccion_dataset_docentes.txt
+
+Comprobación más estricta: scores y flags (IF, OCSVM, k-sigma error, MAD lat) como bytes float64, en dos procesos separados:
+sha256(scores y flags) = c05bb6bb80bd9176e9be2b1eb385dacf3153c5376eb8fe2b7ddee636d458d85b
+sha256(scores y flags) = c05bb6bb80bd9176e9be2b1eb385dacf3153c5376eb8fe2b7ddee636d458d85b
+
+Resultado: idénticos en todas las corridas. La semilla fija (random_state=42 en IsolationForest y rng con SEED=42 en el dataset) hace el resultado determinístico; OneClassSVM no tiene componente aleatoria.

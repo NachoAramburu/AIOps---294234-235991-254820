@@ -56,7 +56,7 @@
 
 | # | Decisión | Elegido | Por qué es lo más simple | Origen y fuente |
 |---|---|---|---|---|
-| D40 | Protocolo de anomalías | El del laboratorio: entrenar sin etiquetas sobre todas las ventanas. *Probado*: IF F1 = 0,578; OCSVM F1 = 0,439 | **Difiere de AGENTS**, que ajustaba solo con datos normales. La letra pide técnicas no supervisadas. | Letra · Lab · [IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html) · [OneClassSVM](https://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html) |
+| D40 | Protocolo de anomalías | El del laboratorio: entrenar sin etiquetas sobre todas las ventanas. *Probado*: IF F1 = 0,578; OCSVM F1 = 0,439. **Confirmado en C15** con `anomaly-detection/requirements.txt`, idéntico en dos corridas | **Difiere de AGENTS**, que ajustaba solo con datos normales. La letra pide técnicas no supervisadas. | Letra · Lab · [IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html) · [OneClassSVM](https://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html) |
 | D41 | Caos de red | `NetworkPolicy` deny-all con Calico | Declarativa, reversible con un `delete`. | AGENTS · [NetworkPolicy](https://kubernetes.io/docs/concepts/services-networking/network-policies/) · [Minikube + Calico](https://minikube.sigs.k8s.io/docs/handbook/network_policy/) |
 | D42 | Caos de desconexión | `kubectl scale --replicas=0` del componente, restaurado por `trap` | Corta de verdad. Cambiar el selector del Service deja vivas las conexiones ya abiertas. | Análisis propio |
 | D43 | Caos de memoria | Variable de shell que retiene N MB (`dd … | tr`) dentro del contenedor | No requiere imágenes ni manifiestos nuevos, y consume memoria real del cgroup. | Análisis propio |
@@ -68,6 +68,7 @@
 | D49 | BDD | `cypress@13.17.0`, `@badeball/cypress-cucumber-preprocessor@20.1.2`, `@bahmutov/cypress-esbuild-preprocessor@2.2.4`, `esbuild@0.21.5`, en carpeta `e2e/` separada | Compatibilidad declarada por el paquete. No toca las dependencias de Angular 14. | Letra · [Preprocessor](https://github.com/badeball/cypress-cucumber-preprocessor) |
 | D50 | Elasticsearch | Se mantiene ES + Kibana, no Loki | Es lo que nombra la letra y lo que trae el repo. **C02 confirmó que entra:** Elasticsearch usa 915 MiB y Kibana 813 MiB (`kubectl top pods`), Fluent Bit no tiene errores de conexión y el índice `pharmago-logs-2026.11.10` recibió ~3000 documentos en los primeros minutos. | Letra · Repo · evidencia `docs/evidencia/C02/08-memoria.txt` y `09-fluent-bit.txt` |
 | D51 | `docker-compose.yml` | No se mantiene | Solo Kubernetes. | AGENTS |
+| D52 | Cuaderno para el dataset de los docentes | `deteccion_dataset_docentes.ipynb` genérico: `DATA_PATH`, `FEATURES` y `LABEL_COL` (opcional, solo para evaluar) en una celda o por variable de entorno; mismos hiperparámetros que D40; si el CSV no existe, avisa y termina sin error | El formato del dataset todavía no se conoce. Variables de entorno permiten correrlo con `nbconvert` sin editar el cuaderno, y que termine sin error permite ejecutarlo de punta a punta (por ejemplo en CI) mientras no llegue. | Letra · Lab · [nbconvert: ejecutar cuadernos](https://nbconvert.readthedocs.io/en/latest/execute_api.html) |
 
 ## Puntos abiertos con los docentes
 

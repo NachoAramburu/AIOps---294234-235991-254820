@@ -1,0 +1,14 @@
+$ cd anomaly-detection && jupyter nbconvert --to notebook --execute --inplace deteccion_dataset_docentes.ipynb
+[NbConvertApp] Writing ... bytes to deteccion_dataset_docentes.ipynb   (exit 0)
+
+DATA_PATH por defecto (datos/dataset_docentes.csv) no existe: el cuaderno lo avisa y termina sin error.
+
+===== [1] c15d0002 exec=1
+===== [2] c15d0003 exec=2
+DATASET NO ENCONTRADO: datos/dataset_docentes.csv (ruta relativa a la carpeta del cuaderno)
+Estado: dataset de los docentes pendiente de recepción.
+Copiá el CSV a esa ruta o definí DATA_PATH, y volvé a ejecutar. No se entrenó ningún modelo.
+===== [3] c15d0004 exec=3
+===== [4] c15d0005 exec=4
+===== [5] c15d0006 exec=5
+===== [6] c15d0007 exec=6

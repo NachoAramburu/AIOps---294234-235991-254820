@@ -1,0 +1,165 @@
+Prueba del cuaderno de docentes con un CSV real: el dataset sintético del laboratorio exportado a CSV
+(timestamp, requests, error_rate, latency_ms, cpu_pct, kind, is_anomaly; 300 filas). El CSV es temporal y no se versiona.
+
+$ DATA_PATH=<tmp>/dataset_lab.csv FEATURES=requests,error_rate,latency_ms,cpu_pct LABEL_COL=is_anomaly \
+    jupyter nbconvert --to notebook --execute --output-dir <tmp> --output docentes_con_lab.ipynb deteccion_dataset_docentes.ipynb
+(exit 0)
+
+===== [1] c15d0002 exec=1
+===== [2] c15d0003 exec=2
+Archivo: <tmp>/dataset_lab.csv  |  filas: 300  |  columnas: ['timestamp', 'requests', 'error_rate', 'latency_ms', 'cpu_pct', 'kind', 'is_anomaly']
+FEATURES: ['requests', 'error_rate', 'latency_ms', 'cpu_pct'] |  LABEL_COL: is_anomaly
+       requests  error_rate  latency_ms   cpu_pct
+count  300.0000    300.0000    300.0000  300.0000
+mean   128.4967      0.0112    110.4651   41.7448
+std     32.5408      0.0072     38.5447   12.5813
+min     30.0000      0.0048     73.6615   19.4538
+25%    111.7500      0.0087     91.5309   35.1269
+50%    135.5000      0.0097     99.2228   39.5740
+75%    152.0000      0.0108    107.2947   44.1737
+max    183.0000      0.0632    278.8722   89.5725
+===== [3] c15d0004 exec=3
+Filas: 300  |  alertas en ambos: 18  |  solo IF: 12  |  solo OCSVM: 11
+                  alertas  % de filas
+Isolation Forest       30        10.0
+One-Class SVM          29         9.7
+===== [4] c15d0005 exec=4
+Tabla de alertas (41 filas):
+               timestamp                 kind  is_anomaly  requests  \
+282  2026-06-03 12:42:00          micro_burst        True     134.0   
+281  2026-06-03 12:41:00          micro_burst        True     113.0   
+115  2026-06-03 09:55:00        incidente_5xx        True      30.0   
+110  2026-06-03 09:50:00        incidente_5xx        True      31.0   
+112  2026-06-03 09:52:00        incidente_5xx        True      42.0   
+117  2026-06-03 09:57:00        incidente_5xx        True      30.0   
+114  2026-06-03 09:54:00        incidente_5xx        True      43.0   
+113  2026-06-03 09:53:00        incidente_5xx        True      38.0   
+116  2026-06-03 09:56:00        incidente_5xx        True      38.0   
+111  2026-06-03 09:51:00        incidente_5xx        True      42.0   
+262  2026-06-03 12:22:00         cpu_latencia        True     140.0   
+264  2026-06-03 12:24:00         cpu_latencia        True     141.0   
+266  2026-06-03 12:26:00         cpu_latencia        True     137.0   
+265  2026-06-03 12:25:00         cpu_latencia        True     144.0   
+263  2026-06-03 12:23:00         cpu_latencia        True     133.0   
+29   2026-06-03 08:29:00                batch       False      87.0   
+131  2026-06-03 10:11:00          combo_sutil        True      56.0   
+162  2026-06-03 10:42:00  latencia_silenciosa        True     176.0   
+26   2026-06-03 08:26:00                batch       False      86.0   
+84   2026-06-03 09:24:00             timeouts        True     121.0   
+1    2026-06-03 08:01:00               normal       False      62.0   
+85   2026-06-03 09:25:00             timeouts        True     135.0   
+4    2026-06-03 08:04:00               normal       False      58.0   
+133  2026-06-03 10:13:00          combo_sutil        True      61.0   
+129  2026-06-03 10:09:00          combo_sutil        True      50.0   
+28   2026-06-03 08:28:00                batch       False      85.0   
+83   2026-06-03 09:23:00             timeouts        True     127.0   
+25   2026-06-03 08:25:00                batch       False      78.0   
+130  2026-06-03 10:10:00          combo_sutil        True      52.0   
+82   2026-06-03 09:22:00             timeouts        True     126.0   
+65   2026-06-03 09:05:00          spike_error        True     125.0   
+163  2026-06-03 10:43:00  latencia_silenciosa        True     152.0   
+41   2026-06-03 08:41:00          spike_error        True     106.0   
+161  2026-06-03 10:41:00  latencia_silenciosa        True     153.0   
+226  2026-06-03 11:46:00                batch       False     165.0   
+205  2026-06-03 11:25:00           pico_carga       False     180.0   
+242  2026-06-03 12:02:00          degradacion        True     133.0   
+222  2026-06-03 11:42:00                batch       False     145.0   
+139  2026-06-03 10:19:00               normal       False     178.0   
+198  2026-06-03 11:18:00           pico_carga       False     183.0   
+258  2026-06-03 12:18:00               normal       False     139.0   
+
+     error_rate  latency_ms  cpu_pct  score_if  rank_if  flag_if  score_ocsvm  \
+282      0.0632    278.8722  35.5792    0.7327        1     True       1.7398   
+281      0.0632    275.9569  38.6287    0.7248        2     True       1.6776   
+115      0.0420    223.5171  30.2513    0.6695        3     True       0.0954   
+110      0.0442    249.3325  33.9591    0.6658        4     True      -0.0027   
+112      0.0363    253.9382  39.5850    0.6601        5     True       0.0211   
+117      0.0361    248.7454  38.5378    0.6597        6     True       0.0229   
+114      0.0462    238.2539  38.2677    0.6403        7     True       0.0966   
+113      0.0449    228.6530  39.5630    0.6334        8     True      -0.0001   
+116      0.0416    218.0294  35.1313    0.6313        9     True      -0.0903   
+111      0.0428    226.5358  34.4379    0.6234       10     True      -0.1745   
+262      0.0099    214.1564  89.5725    0.6203       11     True       0.1282   
+264      0.0107    213.0184  88.4076    0.6189       12     True       0.0735   
+266      0.0095    207.8526  87.9602    0.6109       13     True       0.0001   
+265      0.0107    184.4427  86.4941    0.6075       14     True      -0.0295   
+263      0.0087    209.4754  79.1314    0.6005       15     True      -0.0002   
+29       0.0073     75.8911  82.0439    0.5996       16     True       0.2217   
+131      0.0139    119.5576  19.4538    0.5883       17     True       0.0563   
+162      0.0098    225.4993  44.0941    0.5875       18     True       0.5128   
+26       0.0076     73.6615  75.9183    0.5863       19     True       0.0001   
+84       0.0271    190.1803  38.0675    0.5776       20     True       0.2374   
+1        0.0048     77.8860  26.9502    0.5686       21     True       0.0005   
+85       0.0254    185.6245  41.4779    0.5681       22     True       0.0239   
+4        0.0060     76.6220  23.3712    0.5679       23     True       0.0149   
+133      0.0139    127.1574  25.0411    0.5677       24     True      -0.2060   
+129      0.0138    118.5982  23.1777    0.5671       25     True      -0.0001   
+28       0.0069     77.6469  71.8857    0.5657       26     True      -0.0000   
+83       0.0235    199.5536  40.5323    0.5605       27     True      -0.0004   
+25       0.0088     81.5922  72.8978    0.5588       28     True       0.0867   
+130      0.0134    126.3471  28.0471    0.5538       29     True      -0.0001   
+82       0.0249    189.1098  38.3379    0.5531       30     True      -0.0387   
+65       0.0226     84.4133  31.7910    0.5502       32    False       0.0284   
+163      0.0083    217.1982  46.3689    0.5371       36    False       0.0801   
+41       0.0248     95.8648  37.5656    0.5324       39    False       0.1167   
+161      0.0096    217.8084  47.8262    0.5283       40    False       0.0001   
+226      0.0109    107.2678  75.3003    0.5255       41    False       0.1969   
+205      0.0124     99.6555  53.1082    0.5199       44    False       0.0005   
+242      0.0097    178.0708  30.6038    0.5106       46    False       0.0421   
+222      0.0108     99.3225  79.2225    0.5056       51    False       0.0001   
+139      0.0119     92.5528  48.9696    0.4799       68    False       0.0005   
+198      0.0113    104.4575  46.6767    0.4681       77    False       0.0432   
+258      0.0085     85.9897  29.8265    0.4243      106    False       0.0441   
+
+     rank_ocsvm  flag_ocsvm  
+282           1        True  
+281           2        True  
+115          10        True  
+110          40       False  
+112          21        True  
+117          20        True  
+114           9        True  
+113          31       False  
+116          51       False  
+111          63       False  
+262           7        True  
+264          13        True  
+266          28        True  
+265          42       False  
+263          35       False  
+29            5        True  
+131          14        True  
+162           3        True  
+26           26        True  
+84            4        True  
+1            23        True  
+85           19        True  
+4            22        True  
+133          68       False  
+129          32       False  
+28           30       False  
+83           39       False  
+25           11        True  
+130          33       False  
+82           43       False  
+65           18        True  
+163          12        True  
+41            8        True  
+161          27        True  
+226           6        True  
+205          25        True  
+242          17        True  
+222          29        True  
+139          24        True  
+198          16        True  
+258          15        True  
+===== [5] c15d0006 exec=5
+Anomalías reales según is_anomaly: 53 de 300 (17.7%)
+                  precision  recall     f1  alertas
+Isolation Forest      0.800   0.453  0.578     30.0
+One-Class SVM         0.621   0.340  0.439     29.0
+===== [6] c15d0007 exec=6
+<imagen>
+
+Resultado: mismas métricas que el laboratorio (IF 0.800/0.453/0.578 con 30 alertas; OCSVM 0.621/0.340/0.439 con 29).
+kind e is_anomaly no entran a FEATURES: is_anomaly solo se usa en la celda de evaluación.

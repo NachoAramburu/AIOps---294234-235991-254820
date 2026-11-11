@@ -1,0 +1,142 @@
+$ cd anomaly-detection && jupyter nbconvert --to notebook --execute --inplace laboratorio_comparacion_detectores.ipynb
+[NbConvertApp] Writing ... bytes to laboratorio_comparacion_detectores.ipynb   (exit 0, sin errores de celda)
+
+Salidas de texto de las celdas (los gráficos se omiten como <imagen>):
+===== [2] 023590b3 exec=1
+Semilla: 42
+===== [4] 2df1a7f0 exec=2
+Ventanas: 300  |  anomalías reales: 53 (17.7%)
+                    requests          error_rate        latency_ms           \
+                       count     mean      count   mean      count     mean   
+kind                                                                          
+batch                     20  121.750         20  0.009         20   92.201   
+combo_sutil                7   54.571          7  0.014          7  122.551   
+cpu_latencia               5  139.000          5  0.010          5  205.789   
+degradacion               18  144.722         18  0.010         18  154.781   
+incidente_5xx              8   36.750          8  0.042          8  235.876   
+latencia_silenciosa        6  158.333          6  0.010          6  213.073   
+micro_burst                2  123.500          2  0.063          2  277.415   
+normal                   219  131.137        219  0.009        219   96.067   
+pico_carga                 8  173.875          8  0.012          8  104.374   
+spike_error                3  107.333          3  0.023          3   88.102   
+timeouts                   4  127.250          4  0.025          4  191.117   
+
+                    cpu_pct          
+                      count    mean  
+kind                                 
+batch                    20  75.925  
+combo_sutil               7  24.982  
+cpu_latencia              5  86.313  
+degradacion              18  40.230  
+incidente_5xx             8  36.217  
+latencia_silenciosa       6  43.764  
+micro_burst               2  37.104  
+normal                  219  38.424  
+pico_carga                8  46.033  
+spike_error               3  35.427  
+timeouts                  4  39.604  
+===== [6] 00db7970 exec=3
+<imagen>
+===== [7] 1663d0a7 exec=4
+<imagen>
+===== [9] 950ea20c exec=5
+Minutos por kind:
+                       n
+kind                    
+normal               219
+batch                 20
+degradacion           18
+pico_carga             8
+incidente_5xx          8
+combo_sutil            7
+latencia_silenciosa    6
+cpu_latencia           5
+timeouts               4
+spike_error            3
+micro_burst            2
+Medias del scaler: {'requests': np.float64(128.497), 'error_rate': np.float64(0.011), 'latency_ms': np.float64(110.465), 'cpu_pct': np.float64(41.745)}
+Escalas del scaler: {'requests': np.float64(32.487), 'error_rate': np.float64(0.007), 'latency_ms': np.float64(38.48), 'cpu_pct': np.float64(12.56)}
+===== [11] 97f43e91 exec=6
+error_rate  μ=0.0112  σ=0.0072  umbral 3σ=0.0328
+latency_ms  μ=110.47  σ=38.54  umbral 3σ=226.1
+Alertas k-sigma error: 10 | latencia: 8
+===== [13] 43c6e9b2 exec=7
+error_rate  mediana=0.0097  MAD=0.0010  escala=0.0016  (σ k-sigma=0.0072)
+latency_ms  mediana=99.22  MAD=7.84  escala=11.62  (σ k-sigma=38.54)
+Alertas MAD error: 18 | latencia: 36
+===== [15] bd2086df exec=8
+Alertas Isolation Forest: 30
+===== [17] f3d2ee41 exec=9
+Alertas One-Class SVM: 29
+===== [19] 5bb3d05a exec=10
+                       n  anómalo?  k-sigma error  k-sigma lat  MAD error  \
+kind                                                                        
+batch                 20     False              0            0          0   
+combo_sutil            7      True              0            0          0   
+cpu_latencia           5      True              0            0          0   
+degradacion           18      True              0            0          0   
+incidente_5xx          8      True              8            6          8   
+latencia_silenciosa    6      True              0            0          0   
+micro_burst            2      True              2            2          2   
+normal               219     False              0            0          1   
+pico_carga             8     False              0            0          0   
+spike_error            3      True              0            0          3   
+timeouts               4      True              0            0          4   
+
+                     MAD lat  Isolation Forest  One-Class SVM  
+kind                                                           
+batch                      0                 4              5  
+combo_sutil                0                 4              1  
+cpu_latencia               5                 5              3  
+degradacion               11                 0              1  
+incidente_5xx              8                 8              4  
+latencia_silenciosa        6                 1              3  
+micro_burst                2                 2              2  
+normal                     0                 2              4  
+pico_carga                 0                 0              2  
+spike_error                0                 0              2  
+timeouts                   4                 4              2  
+Mediana del score por kind (el ranking, no la flag):
+                     k-sigma error  k-sigma lat  MAD error  MAD lat     IF  \
+kind                                                                         
+batch                        0.244        0.427      0.583    0.683  0.506   
+combo_sutil                  0.358        0.334      2.608    2.076  0.554   
+cpu_latencia                 0.184        2.569      0.639    9.488  0.611   
+degradacion                  0.239        1.199      0.340    4.944  0.463   
+incidente_5xx                4.317        3.191     21.011   11.552  0.650   
+latencia_silenciosa          0.185        2.677      0.106    9.847  0.524   
+micro_burst                  7.200        4.331     34.408   15.335  0.729   
+normal                       0.218        0.362      0.623    0.536  0.386   
+pico_carga                   0.045        0.154      1.050    0.458  0.427   
+spike_error                  1.578        0.676      8.276    1.274  0.534   
+timeouts                     1.934        2.054      9.931    7.782  0.564   
+
+                     OCSVM  
+kind                        
+batch               -0.136  
+combo_sutil         -0.138  
+cpu_latencia         0.000  
+degradacion         -0.458  
+incidente_5xx        0.011  
+latencia_silenciosa -0.000  
+micro_burst          1.709  
+normal              -0.512  
+pico_carga          -0.197  
+spike_error          0.028  
+timeouts             0.012  
+===== [20] 65bbdb28 exec=11
+Sobre las 300 ventanas (is_anomaly vs flag):
+                  precision  recall     f1  alertas
+k-sigma error         1.000   0.189  0.317     10.0
+k-sigma lat           1.000   0.151  0.262      8.0
+MAD error             0.944   0.321  0.479     18.0
+MAD lat               1.000   0.679  0.809     36.0
+Isolation Forest      0.800   0.453  0.578     30.0
+One-Class SVM         0.621   0.340  0.439     29.0
+===== [21] 713582d0 exec=12
+<imagen>
+===== [22] 2db3fb17 exec=13
+<imagen>
+
+Esperado según el plan: IF precisión 0.800, recall 0.453, F1 0.578, 30 alertas; OCSVM 0.621, 0.340, 0.439, 29 alertas.
+Obtenido: idéntico.
