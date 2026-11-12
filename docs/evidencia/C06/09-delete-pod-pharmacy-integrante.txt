@@ -1,0 +1,57 @@
+Corrida hecha por el integrante (Ignacio Aramburu) en Git Bash, como control antes de revisar, con minikube tunnel abierto.
+Salida copiada tal cual de su terminal.
+
+$ bash docs/evidencia/C06/loop-delete-pod.sh pharmago-pharmacy-service
+Deployment: pharmago-pharmacy-service | pod a borrar en t=10s: pharmago-pharmacy-service-6f5fdb99b4-9b4bs | URL: http://127.0.0.1/api/drug | 40 requests, 1 por segundo
+t= 0s  HTTP 200
+t= 1s  HTTP 200
+t= 2s  HTTP 200
+t= 3s  HTTP 200
+t= 4s  HTTP 200
+t= 5s  HTTP 200
+t= 6s  HTTP 200
+t= 7s  HTTP 200
+t= 8s  HTTP 200
+t= 9s  HTTP 200
+t=10s  kubectl delete pod pharmago-pharmacy-service-6f5fdb99b4-9b4bs
+t=10s  HTTP 502
+t=11s  HTTP 200
+t=12s  HTTP 200
+t=13s  HTTP 200
+t=14s  HTTP 200
+t=15s  HTTP 200
+t=16s  HTTP 200
+t=17s  HTTP 200
+t=18s  HTTP 200
+t=19s  HTTP 200
+t=20s  HTTP 200
+t=21s  HTTP 200
+t=22s  HTTP 200
+t=23s  HTTP 200
+t=24s  HTTP 200
+t=25s  HTTP 200
+t=26s  HTTP 200
+t=27s  HTTP 200
+t=28s  HTTP 200
+t=29s  HTTP 200
+t=30s  HTTP 200
+t=31s  HTTP 200
+t=32s  HTTP 200
+t=33s  HTTP 200
+t=34s  HTTP 200
+t=35s  HTTP 200
+t=36s  HTTP 200
+t=37s  HTTP 200
+t=38s  HTTP 200
+t=39s  HTTP 200
+
+Respuestas: 40 | 2xx: 39 | no-2xx: 1
+No-2xx:
+  t=10s HTTP 502
+Segundos desde el delete hasta volver a 2/2 Ready: 9.0
+pharmago-pharmacy-service-6f5fdb99b4-87l8x   1/1   Running   0     33s   10.244.59.136   minikube-m04   <none>   <none>
+pharmago-pharmacy-service-6f5fdb99b4-ghc74   1/1   Running   0     52m   10.244.59.135   minikube-m04   <none>   <none>
+
+Lectura: el 502 cae en el mismo segundo del delete. El pod recibe SIGTERM y se apaga mientras el cambio de endpoints del
+Service todavía se está propagando, y el gateway alcanza a mandarle una request. Sin preStop, esa carrera puede perder
+una request. Lo corrige C08 (preStop sleep 5, D20) y lo atenúa C07 (retry de GET en el gateway).

@@ -31,6 +31,7 @@
 | D15 | Rate limiting | El de `AspNetCoreRateLimit` que ya está, con whitelist exacta de `/health/live` y `/health/ready`. *Probado*: 150 probes sin 429, y 429 al superar 100/min | Ya existe. Sin el whitelist, los probes del gateway agotaban el límite de 1000/h en ~33 min. | Repo · [AspNetCoreRateLimit](https://github.com/stefanprodan/AspNetCoreRateLimit/wiki/IpRateLimitMiddleware) |
 | D16 | BD transitoria | `EnableRetryOnFailure(3, 2 s)` y reintentos de `Migrate()` al arrancar | Mecanismos nativos de EF Core. El repo no usa transacciones manuales, así que es compatible. | AGENTS · [Resiliencia EF Core](https://learn.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency) |
 | D17 | Cadena de conexión | `SA_PASSWORD` por `secretKeyRef` y expansión `$(SA_PASSWORD)` | No agrega secretos nuevos ni duplica el valor. | AGENTS · [Variables interdependientes](https://kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/) |
+| D18 | Mantenimiento voluntario | Un `PodDisruptionBudget` `minAvailable: 1` por microservicio (`k8s/pdb/`) | Con 2 réplicas, un `kubectl drain` o un mantenimiento podría desalojar las dos a la vez; el PDB obliga a dejar al menos una. No protege ante caídas involuntarias: eso lo cubren las réplicas y las probes. | [Disruptions](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/) · [Configurar un PDB](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) |
 
 ## Despliegue seguro
 

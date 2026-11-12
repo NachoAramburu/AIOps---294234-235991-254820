@@ -160,7 +160,11 @@ kubectl apply -f services/frontend/ui-service.yaml
 kubectl apply -f deployments/frontend/ui-deployment.yaml
 
 echo ""
-echo "10. Configurando Ingress (acceso a la app sin port-forward)..."
+echo "10. Creando PodDisruptionBudgets (al menos 1 réplica disponible por microservicio)..."
+kubectl apply -f pdb/
+
+echo ""
+echo "11. Configurando Ingress (acceso a la app sin port-forward)..."
 if ! kubectl get namespace ingress-nginx &> /dev/null; then
     echo "Error: falta el addon ingress. Corré ./cluster-up.sh y volvé a intentar."
     exit 1

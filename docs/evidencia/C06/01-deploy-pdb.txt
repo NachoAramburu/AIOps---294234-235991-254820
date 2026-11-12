@@ -1,0 +1,32 @@
+Cluster: PC de Ignacio Aramburu (el de C03). Antes de verificar: ./build-images.sh (exit 0), ./apply-k8s.sh (exit 0) y
+kubectl rollout restart de los 4 Deployments de la app.
+
+$ kubectl get deploy,pdb -n pharmago
+NAME                                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/elasticsearch               1/1     1            1           21m
+deployment.apps/grafana                     1/1     1            1           16m
+deployment.apps/kibana                      1/1     1            1           16m
+deployment.apps/otlp-collector              1/1     1            1           16m
+deployment.apps/pharmago-api-gateway        2/2     2            2           16m
+deployment.apps/pharmago-db                 1/1     1            1           23m
+deployment.apps/pharmago-pharmacy-service   2/2     2            2           16m
+deployment.apps/pharmago-ui                 2/2     2            2           16m
+deployment.apps/pharmago-users-service      2/2     2            2           16m
+deployment.apps/prometheus                  1/1     1            1           16m
+
+NAME                                                   MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+poddisruptionbudget.policy/pharmago-api-gateway        1               N/A               1                     44s
+poddisruptionbudget.policy/pharmago-pharmacy-service   1               N/A               1                     44s
+poddisruptionbudget.policy/pharmago-ui                 1               N/A               1                     44s
+poddisruptionbudget.policy/pharmago-users-service      1               N/A               1                     44s
+
+$ kubectl get pods -n pharmago -o wide -l "app in (pharmago-api-gateway,pharmago-users-service,pharmago-pharmacy-service,pharmago-ui)"
+NAME                                         READY   STATUS    RESTARTS   AGE   IP               NODE           NOMINATED NODE   READINESS GATES
+pharmago-api-gateway-dfbbc7b7f-6qhhq         1/1     Running   0          42s   10.244.205.198   minikube-m02   <none>           <none>
+pharmago-api-gateway-dfbbc7b7f-jx2dg         1/1     Running   0          35s   10.244.205.199   minikube-m02   <none>           <none>
+pharmago-pharmacy-service-6f5fdb99b4-5pftp   1/1     Running   0          41s   10.244.59.133    minikube-m04   <none>           <none>
+pharmago-pharmacy-service-6f5fdb99b4-9b4bs   1/1     Running   0          30s   10.244.59.134    minikube-m04   <none>           <none>
+pharmago-ui-56884bc4f4-88dc4                 1/1     Running   0          41s   10.244.120.74    minikube       <none>           <none>
+pharmago-ui-56884bc4f4-jlvcg                 1/1     Running   0          35s   10.244.120.75    minikube       <none>           <none>
+pharmago-users-service-749c8f689-bz4h9       1/1     Running   0          41s   10.244.151.5     minikube-m03   <none>           <none>
+pharmago-users-service-749c8f689-msb6z       1/1     Running   0          30s   10.244.151.6     minikube-m03   <none>           <none>

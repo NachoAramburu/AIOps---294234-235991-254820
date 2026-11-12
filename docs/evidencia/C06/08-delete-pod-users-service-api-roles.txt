@@ -1,0 +1,48 @@
+$ bash docs/evidencia/C06/loop-delete-pod.sh pharmago-users-service http://127.0.0.1/api/roles   (repetición de 06 con un endpoint que sí atiende users-service; /api/drug va a pharmacy)
+Deployment: pharmago-users-service | pod a borrar en t=10s: pharmago-users-service-749c8f689-msb6z | URL: http://127.0.0.1/api/roles | 40 requests, 1 por segundo
+t= 0s  HTTP 200
+t= 1s  HTTP 200
+t= 2s  HTTP 200
+t= 3s  HTTP 200
+t= 4s  HTTP 200
+t= 5s  HTTP 200
+t= 6s  HTTP 200
+t= 7s  HTTP 200
+t= 8s  HTTP 200
+t= 9s  HTTP 200
+t=10s  kubectl delete pod pharmago-users-service-749c8f689-msb6z
+t=10s  HTTP 200
+t=11s  HTTP 200
+t=12s  HTTP 200
+t=13s  HTTP 200
+t=14s  HTTP 200
+t=15s  HTTP 200
+t=16s  HTTP 200
+t=17s  HTTP 200
+t=18s  HTTP 200
+t=19s  HTTP 200
+t=20s  HTTP 200
+t=21s  HTTP 200
+t=22s  HTTP 200
+t=23s  HTTP 200
+t=24s  HTTP 200
+t=25s  HTTP 200
+t=26s  HTTP 200
+t=27s  HTTP 200
+t=28s  HTTP 200
+t=29s  HTTP 200
+t=30s  HTTP 200
+t=31s  HTTP 200
+t=32s  HTTP 200
+t=33s  HTTP 200
+t=34s  HTTP 200
+t=35s  HTTP 200
+t=36s  HTTP 200
+t=37s  HTTP 200
+t=38s  HTTP 200
+t=39s  HTTP 200
+
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+Segundos desde el delete hasta volver a 2/2 Ready: 7.2
+pharmago-users-service-749c8f689-q4chj   1/1   Running   0     32s    10.244.151.8   minikube-m03   <none>   <none>
+pharmago-users-service-749c8f689-v89gc   1/1   Running   0     3m3s   10.244.151.7   minikube-m03   <none>   <none>

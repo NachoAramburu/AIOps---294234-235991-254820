@@ -1,0 +1,21 @@
+$ bash "Implementacion K8S/Codigo/k8s/verify/check-separacion.sh"
+=== Pods por microservicio y nodo ===
+MICROSERVICIO              NODO          POD                                         FASE
+pharmago-api-gateway       minikube-m02  pharmago-api-gateway-dfbbc7b7f-6qhhq        Running
+pharmago-api-gateway       minikube-m02  pharmago-api-gateway-dfbbc7b7f-jx2dg        Running
+pharmago-pharmacy-service  minikube-m04  pharmago-pharmacy-service-6f5fdb99b4-5pftp  Running
+pharmago-pharmacy-service  minikube-m04  pharmago-pharmacy-service-6f5fdb99b4-9b4bs  Running
+pharmago-ui                minikube      pharmago-ui-56884bc4f4-88dc4                Running
+pharmago-ui                minikube      pharmago-ui-56884bc4f4-jlvcg                Running
+pharmago-users-service     minikube-m03  pharmago-users-service-749c8f689-bz4h9      Running
+pharmago-users-service     minikube-m03  pharmago-users-service-749c8f689-msb6z      Running
+
+=== Microservicios por nodo ===
+NODO          MICROSERVICIOS             ESTADO
+minikube      pharmago-ui                ok
+minikube-m02  pharmago-api-gateway       ok
+minikube-m03  pharmago-users-service     ok
+minikube-m04  pharmago-pharmacy-service  ok
+
+OK: ningún nodo aloja dos microservicios distintos.
+exit=0

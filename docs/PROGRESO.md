@@ -267,3 +267,48 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - **Calico v3.32.2 (el de minikube v1.39.0) no arranca con WSL 2.2.4 / kernel 5.15.153:** `calico-node` queda en CrashLoopBackOff porque no puede montar `/sys/kernel/security`, que ese kernel no tiene. Sin red no arranca nada más (CoreDNS, ingress, metrics-server). Se resolvió con `wsl --update` (WSL 3.0.5, kernel 6.18), `wsl --shutdown`, `minikube delete` y `cluster-up.sh`. Conviene que todo el equipo corra `wsl --version` antes de crear el cluster.
   - Confirmado: el addon ingress corre en el nodo `minikube` (control-plane), junto a la UI, como dice el diagrama.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+
+## C06 — Réplicas, probes rápidas y secretos — 2026-11-12 — Ignacio Aramburu
+- **Estado:** Hecho, con 1 error en 5 pruebas de borrado de pod (ver abajo); el arreglo de fondo es de C08.
+- **Ítem de rúbrica:** 2 (Alta disponibilidad)
+- **Commit:** `C06: dos replicas, probes rapidas, PDB y cadena de conexion por Secret` (SHA en `git log --grep "^C06:"`)
+- **Dónde se corrió:** PC de Ignacio Aramburu, cluster de C03, `minikube tunnel` abierto en PowerShell como administrador. Antes de verificar: `build-images.sh`, `apply-k8s.sh` y `rollout restart` de los 4 Deployments.
+- **Archivos creados / modificados** (rutas relativas a `Implementacion K8S/Codigo/k8s/`):
+  - Modificados: `deployments/backend/api-gateway-deployment.yaml`, `users-service-deployment.yaml`, `pharmacy-service-deployment.yaml`, `deployments/frontend/ui-deployment.yaml` (2 réplicas y probes; en users y pharmacy, `SA_PASSWORD` por `secretKeyRef` y cadena con `$(SA_PASSWORD)`), `deployments/ops/otel-collector-deployment.yaml` (resources), `apply-k8s.sh` (paso 10: PDB)
+  - Nuevos: `pdb/` (4 PodDisruptionBudget), `docs/evidencia/C06/` (incluye `loop-delete-pod.sh`, el script de la prueba)
+  - `docs/DECISIONES.md` (D18), `docs/USO_IA.md`, `docs/PROGRESO.md`
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: replicas: 1 en los 4; probes con period 10 a 30 s (tcpSocket en el gateway, /health en users y
+  pharmacy); contraseña en texto plano en la cadena de conexión de users y pharmacy.
+
+  $ kubectl get deploy,pdb -n pharmago   (01-deploy-pdb.txt)
+  pharmago-api-gateway 2/2 | pharmago-users-service 2/2 | pharmago-pharmacy-service 2/2 | pharmago-ui 2/2
+  4 PDB minAvailable 1, ALLOWED DISRUPTIONS 1
+
+  $ bash k8s/verify/check-separacion.sh   (02-check-separacion.txt)   OK, exit=0 (las 2 réplicas de cada uno en su nodo)
+
+  $ grep -rn "Str0ngP" k8s/deployments/   (03-secretos.txt)   sin resultados, exit=1
+  users y pharmacy Ready con readiness /health/ready, que consulta la BD: la cadena expandida desde el Secret funciona
+
+  $ probes aplicadas en el cluster   (04-probes-aplicadas.txt)
+  startup p=2 ft=60 t=2 | readiness p=2 ft=2 t=2 | liveness p=3 ft=2 t=2
+
+  $ loop-delete-pod.sh: 1 curl/s x 40 s, kubectl delete pod de una réplica en t=10 s   (05 a 08)
+  gateway   /api/drug   40/40 2xx, 0 no-2xx | vuelve a 2/2 Ready en 5,7 s
+  users     /api/drug   40/40 2xx, 0 no-2xx | vuelve a 2/2 Ready en 7,3 s   (este tráfico va a pharmacy, ver 08)
+  pharmacy  /api/drug   40/40 2xx, 0 no-2xx | vuelve a 2/2 Ready en 8,0 s
+  users     /api/roles  40/40 2xx, 0 no-2xx | vuelve a 2/2 Ready en 7,2 s   (tráfico que sí atiende users)
+  pharmacy  /api/drug   39/40 2xx, 1 x HTTP 502 en t=10 s, el segundo del delete | 2/2 en 9,0 s   (09, corrida del integrante)
+  ```
+- **Criterio de "hecho" de §3 (ítem 2):** parcial, como prevé el plan. Cumplido: `replicas: 2` en los 4, probes con period 2 a 3 s y failureThreshold 2, y vuelta a READY en menos de 15 s (5,7 a 9,0 s), medido. **No cumplido todavía:** "`kubectl delete pod` no produce errores": en 4 corridas hubo 0 errores, pero en la quinta (la del integrante) hubo un 502 justo al borrar el pod. Falta el apagado ordenado (`preStop`, C08) y el retry del gateway (C07).
+- **Decisiones tomadas:** D12 y D17 aplicadas tal cual. D18 nueva: un PDB `minAvailable: 1` por microservicio. Se agregó `Connect Timeout=2` a la cadena de conexión, como pide el plan, para que una BD caída no trabe la readiness más que su timeout.
+- **NO VERIFICADO / riesgos:**
+  - El loop va a 1 request por segundo (límite del rate limit, AGENTS §5): un error de menos de 1 s entre dos requests podría no verse. C09 hace la medición formal.
+  - No se probó el borrado de un pod de la UI con 2 réplicas. C04-verificación lo midió con 1 réplica (~14 s de corte); con 2 debería no cortar, y queda para C09.
+  - `kubectl delete pod` es un apagado ordenado (SIGTERM): no se probó un crash abrupto ni un pod que deje de responder sin morir (eso lo cubre la liveness y se prueba con el caos de C16).
+  - **Confirmado en la corrida 09:** sin `preStop`, el pod se apaga mientras el cambio de endpoints se propaga y el gateway puede mandarle una request (502). Con 1 request/s la ventana es de una fracción de segundo, por eso salió en 1 de 5 corridas. Lo corrige C08 (`preStop sleep 5`, D20) y lo atenúa C07 (retry de GET).
+- **Hallazgos nuevos que cambian el plan:**
+  - `GET /api/drug` va a pharmacy-service; para probar users hace falta otro endpoint. `GET /api/roles` responde 200 sin login y lo atiende users.
+  - Algunos archivos de la copia local tenían CRLF de un checkout viejo con `core.autocrlf=true` (en el repo están en LF). `otel-collector-deployment.yaml` se normalizó a LF al editarlo.
+- **Uso de IA registrado en docs/USO_IA.md:** sí

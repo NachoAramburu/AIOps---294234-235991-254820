@@ -1,0 +1,23 @@
+$ kubectl get deploy <d> -n pharmago -o jsonpath  (probes y recursos aplicados en el cluster)
+
+## pharmago-api-gateway  replicas=2
+startupProbe: {"failureThreshold":60,"httpGet":{"path":"/health/live","port":80,"scheme":"HTTP"},"periodSeconds":2,"successThreshold":1,"timeoutSeconds":2}
+readinessProbe: {"failureThreshold":2,"httpGet":{"path":"/health/ready","port":80,"scheme":"HTTP"},"periodSeconds":2,"successThreshold":1,"timeoutSeconds":2}
+livenessProbe: {"failureThreshold":2,"httpGet":{"path":"/health/live","port":80,"scheme":"HTTP"},"periodSeconds":3,"successThreshold":1,"timeoutSeconds":2}
+
+## pharmago-users-service  replicas=2
+startupProbe: {"failureThreshold":60,"httpGet":{"path":"/health/live","port":80,"scheme":"HTTP"},"periodSeconds":2,"successThreshold":1,"timeoutSeconds":2}
+readinessProbe: {"failureThreshold":2,"httpGet":{"path":"/health/ready","port":80,"scheme":"HTTP"},"periodSeconds":2,"successThreshold":1,"timeoutSeconds":2}
+livenessProbe: {"failureThreshold":2,"httpGet":{"path":"/health/live","port":80,"scheme":"HTTP"},"periodSeconds":3,"successThreshold":1,"timeoutSeconds":2}
+
+## pharmago-pharmacy-service  replicas=2
+startupProbe: {"failureThreshold":60,"httpGet":{"path":"/health/live","port":80,"scheme":"HTTP"},"periodSeconds":2,"successThreshold":1,"timeoutSeconds":2}
+readinessProbe: {"failureThreshold":2,"httpGet":{"path":"/health/ready","port":80,"scheme":"HTTP"},"periodSeconds":2,"successThreshold":1,"timeoutSeconds":2}
+livenessProbe: {"failureThreshold":2,"httpGet":{"path":"/health/live","port":80,"scheme":"HTTP"},"periodSeconds":3,"successThreshold":1,"timeoutSeconds":2}
+
+## pharmago-ui  replicas=2
+startupProbe: {"failureThreshold":60,"httpGet":{"path":"/","port":80,"scheme":"HTTP"},"periodSeconds":2,"successThreshold":1,"timeoutSeconds":2}
+readinessProbe: {"failureThreshold":2,"httpGet":{"path":"/","port":80,"scheme":"HTTP"},"periodSeconds":2,"successThreshold":1,"timeoutSeconds":2}
+livenessProbe: {"failureThreshold":2,"httpGet":{"path":"/","port":80,"scheme":"HTTP"},"periodSeconds":3,"successThreshold":1,"timeoutSeconds":2}
+
+## otlp-collector resources: {"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}

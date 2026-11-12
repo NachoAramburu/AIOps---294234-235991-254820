@@ -1,0 +1,12 @@
+# Un drain o mantenimiento voluntario no puede dejar a pharmago-users-service sin réplicas:
+# siempre queda al menos 1 disponible. No frena caídas involuntarias (un pod que muere).
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: pharmago-users-service
+  namespace: pharmago
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: pharmago-users-service

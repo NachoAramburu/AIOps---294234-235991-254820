@@ -4,7 +4,7 @@ metadata:
   name: pharmago-users-service
   namespace: pharmago
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: pharmago-users-service
@@ -38,8 +38,15 @@ spec:
         ports:
         - containerPort: 80
         env:
+        # La contraseña sale del Secret db-secret (D17). SA_PASSWORD tiene que ir antes:
+        # Kubernetes solo expande $(VAR) con variables definidas más arriba en la lista.
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: SA_PASSWORD
         - name: ConnectionStrings__DefaultConnection
-          value: "Server=pharmago-db;Database=PharmaDb;User Id=sa;Password=Str0ngP@ssword!"
+          value: "Server=pharmago-db;Database=PharmaDb;User Id=sa;Password=$(SA_PASSWORD);Connect Timeout=2"
         - name: ServiceUrls__PharmacyService
           value: "http://pharmago-pharmacy-service:80"
         - name: ASPNETCORE_ENVIRONMENT
@@ -56,23 +63,27 @@ spec:
           limits:
             memory: "384Mi"
             cpu: "500m"
+        # Probes rápidas (D12): la readiness saca de servicio a un pod enfermo en ~4 s (2 x 2 s)
+        # y la liveness lo reinicia en ~6 s (2 x 3 s). La startup da hasta 120 s al arranque
+        # sin que la liveness lo mate antes de tiempo.
         startupProbe:
           httpGet:
-            path: /health
+            path: /health/live
             port: 80
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          failureThreshold: 15
+          periodSeconds: 2
+          failureThreshold: 60
+          timeoutSeconds: 2
         readinessProbe:
           httpGet:
-            path: /health
+            path: /health/ready
             port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          periodSeconds: 2
+          failureThreshold: 2
+          timeoutSeconds: 2
         livenessProbe:
           httpGet:
-            path: /health
+            path: /health/live
             port: 80
-          initialDelaySeconds: 60
-          periodSeconds: 30
-
+          periodSeconds: 3
+          failureThreshold: 2
+          timeoutSeconds: 2
