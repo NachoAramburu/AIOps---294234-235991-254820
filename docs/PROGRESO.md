@@ -182,3 +182,46 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - `pharmago-users-service` acumulaba 7 reinicios después de prender el cluster (antes del rollout). Probablemente arrancó antes que la BD y fallaron sus probes; se normalizó solo. Lo cubren C05 (tolerancia a fallas de la BD) y C06 (probes).
 - **Hallazgos nuevos que cambian el plan:** ninguno. El corte de ~14 s con 1 réplica de UI es la línea base contra la que C06 tiene que mostrar 0 errores.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+
+## C05 — Endpoints de salud y resiliencia de la base — 2026-11-12 — Martin Roux
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 2 (Alta disponibilidad)
+- **Commit:** `C05: endpoints live y ready, y resiliencia ante fallas transitorias de la base` (SHA en `git log --grep "^C05:"`)
+- **Archivos creados / modificados** (en `Implementacion K8S/Codigo/Backend/`):
+  - `PharmaGo.UsersService.Factory` y `PharmaGo.PharmacyService.Factory`: paquete `Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore` 6.0.8 y `EnableRetryOnFailure(3, 2 s)` en `ServiceFactory.cs`.
+  - `PharmaGo.UsersService.Factory/ServiceFactory.cs`: `MigrateDatabase` con hasta 30 intentos, espera de min(intento, 5) s y un scope nuevo por intento.
+  - `PharmaGo.UsersService/Program.cs` y `PharmaGo.PharmacyService/Program.cs`: check `self` (tag live) y `AddDbContextCheck<DbContext>` (tag ready). `/health/live`, `/health/ready`, y `/health` sin mirar la BD.
+  - `PharmaGo.ApiGateway/Program.cs`: check `self` (live y ready, sin BD por D11) y los 3 endpoints antes de `MapReverseProxy`. `appsettings.json`: `get:/health/live` y `get:/health/ready` en `EndpointWhitelist`.
+  - `docs/DECISIONES.md` (D10), `docs/evidencia/C05/`.
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: users y pharmacy con AddHealthChecks() vacío y MapHealthChecks("/health");
+  gateway sin health checks; MigrateDatabase solo en users (y en el monolito, que no se toca), sin reintentos;
+  grep BeginTransaction|TransactionScope: sin resultados.
+
+  $ dotnet build PharmaGo.sln -c Release          (01)  0 Errores, 648 advertencias (igual que el baseline)
+  $ dotnet test ... --no-build                    (01)  Superado 290, Con error 1 (Test_GetOneByExpression, el mismo del baseline)
+
+  Pharmacy local SIN BD (Server=127.0.0.1,1; Connect Timeout=2)   (02)
+  /health/live  200 en 0,003 s | /health/ready 503 en 3,9 s | /health 200
+
+  Gateway local                                   (03)
+  150 GET a /health/live -> 200 x150 | 150 GET a /health/ready -> 200 x150
+  control: 150 GET a una ruta fuera del whitelist -> 404 x100, 429 x50
+
+  Cluster: build-images, apply-k8s, rollout restart de los 4 Deployments   (04, 05)
+  gateway, users y pharmacy: /health/live, /health/ready y /health -> 200 en los 9
+  ready en caliente: users 12-245 ms, pharmacy 12-94 ms (el primero de pharmacy, en frío: 3,5 s)
+
+  MigrateDatabase                                 (06)
+  cluster con BD: "migración aplicada (intento 1)"
+  local sin BD: intento 1/30 falló... reintentando en 1 s; 2/30 -> 2 s; 3/30 -> 3 s
+  ```
+- **Criterio de "hecho" de §3 (ítem 2):** parcial por diseño del plan. Cumplida la parte de C05: `/health/live` y `/health/ready` en los 3 servicios .NET, con `ready` chequeando la BD en users y pharmacy. Las réplicas, los probes rápidos y la medición de `kubectl delete pod` son de C06, y Polly de C07.
+- **Decisiones tomadas:** `/health` queda como estaba (no depende de la BD), con el mismo predicado que live, para no cambiar el comportamiento de los probes actuales antes de C06. D10 actualizada con lo medido.
+- **NO VERIFICADO / riesgos:**
+  - No se probó en el cluster la caída de la BD (ready 503 con pods vivos). Se probó en local. Corresponde a los experimentos de caos (C16-C18).
+  - No se probó en el cluster el arranque con la BD caída ni dos réplicas migrando a la vez. El reintento se vio en local, y las 2 réplicas llegan en C06.
+  - Con la BD inaccesible, ready tarda ~3,9 s en responder 503. Con el timeout de 2 s de C06 el probe falla igual (el resultado es el correcto), pero conviene tenerlo en cuenta al leer los eventos.
+- **Hallazgos nuevos que cambian el plan:** ninguno. Para C06: el primer ready de pharmacy tras arrancar tardó 3,5 s; con `failureThreshold` 2-3 no debería sacarlo de servicio, pero hay que mirarlo al medir el MTTR.
+- **Uso de IA registrado en docs/USO_IA.md:** sí

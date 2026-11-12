@@ -1,0 +1,9 @@
+$ dotnet build PharmaGo.sln -c Release
+648 Advertencia(s)
+0 Errores
+Tiempo transcurrido 00:00:52.74
+
+$ dotnet test PharnaGo.Test/PharmaGo.Test.csproj -c Release --no-build
+1 archivos de prueba en total coincidieron con el patrón especificado.
+Con error Test_GetOneByExpression [105 ms]
+Con error! - Con error:     1, Superado:   290, Omitido:     0, Total:   291, Duración: 4 s - PharmaGo.Test.dll (net6.0)

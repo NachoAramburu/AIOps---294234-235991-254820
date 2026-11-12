@@ -6,6 +6,8 @@ using PharmaGo.ApiGateway.Middleware;
 using Instrumentation;
 using InstrumentationInterface;
 using Yarp.ReverseProxy.Transforms;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +40,9 @@ builder.Services.AddReverseProxy()
             return default;
         });
     });
+
+builder.Services.AddHealthChecks()
+    .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "live", "ready" });
 
 builder.Services.AddSingleton<ICustomMetrics, CustomMetrics>();
 
@@ -89,6 +94,10 @@ else if (rateLimitMode.Equals("User", StringComparison.OrdinalIgnoreCase))
 }
 
 app.UseAuthorization();
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Tags.Contains("live") });
+app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
+app.MapHealthChecks("/health");
 
 app.MapReverseProxy();
 app.MapPrometheusScrapingEndpoint();

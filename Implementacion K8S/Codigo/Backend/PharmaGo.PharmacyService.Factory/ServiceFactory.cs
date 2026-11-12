@@ -52,7 +52,11 @@ namespace PharmaGo.PharmacyService.Factory
             {
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
-                    sqlOptions => { sqlOptions.MigrationsAssembly("PharmaGo.DataAccess"); });
+                    sqlOptions =>
+                    {
+                        sqlOptions.MigrationsAssembly("PharmaGo.DataAccess");
+                        sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(2), null);
+                    });
                 options.ConfigureWarnings(w =>
                 {
                     w.Ignore(RelationalEventId.CommandExecuted);

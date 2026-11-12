@@ -2,6 +2,9 @@ using PharmaGo.UsersService.Factory;
 using PharmaGo.UsersService.Filters;
 using System.Diagnostics.CodeAnalysis;
 using Instrumentation;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +17,9 @@ builder.Services.AddControllers(options => options.Filters.Add(typeof(ExceptionF
 
 builder.Services.AddControllers();
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "live" })
+    .AddDbContextCheck<DbContext>("db", tags: new[] { "ready" });
 
 builder.Services.AddPharmaGoOpenTelemetryMetrics("PharmaGo.UsersService");
 
@@ -46,7 +51,9 @@ app.UseServiceCorrelationScope();
 
 app.UseAuthorization();
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Tags.Contains("live") });
+app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
+app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = check => check.Tags.Contains("live") });
 app.UseMetricsMiddleware();
 
 app.MapControllers();

@@ -1,0 +1,8 @@
+$ kubectl logs -n pharmago deploy/pharmago-users-service | grep MigrateDatabase   (cluster, BD disponible)
+MigrateDatabase: migración aplicada (intento 1).
+
+$ users-service en local SIN BD (Server=127.0.0.1,1): reintentos de MigrateDatabase con espera min(intento,5) s
+MigrateDatabase: intento 1/30 falló (SqlException: no se puede conectar a SQL Server). Reintentando en 1 s.
+MigrateDatabase: intento 2/30 falló (SqlException: no se puede conectar a SQL Server). Reintentando en 2 s.
+MigrateDatabase: intento 3/30 falló (SqlException: no se puede conectar a SQL Server). Reintentando en 3 s.
+(proceso detenido a mano tras varios intentos; sin BD no llega a escuchar HTTP, que es lo esperado)

@@ -1,0 +1,5 @@
+Gateway en local (http://127.0.0.1:5180). Límite general: 100/min por IP y endpoint.
+
+150 GET seguidos a /health/live -> 200 x150
+150 GET seguidos a /health/ready -> 200 x150
+Control: 150 GET a /health/ruta-no-whitelisteada (no está en el whitelist) -> 404 x100, 429 x50

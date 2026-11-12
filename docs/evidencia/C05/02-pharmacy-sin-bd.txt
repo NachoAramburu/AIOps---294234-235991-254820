@@ -1,0 +1,8 @@
+Pharmacy en local, SIN BD: ConnectionStrings__DefaultConnection="Server=127.0.0.1,1;...;Connect Timeout=2" (puerto 1, nada escucha)
+
+$ curl http://127.0.0.1:5182/health/live
+Healthy  -> HTTP 200 en 0.003020 s
+$ curl http://127.0.0.1:5182/health/ready
+Unhealthy  -> HTTP 503 en 3.926698 s
+$ curl http://127.0.0.1:5182/health
+Healthy  -> HTTP 200 en 0.001365 s

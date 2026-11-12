@@ -45,7 +45,11 @@ namespace PharmaGo.UsersService.Factory
             {
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
-                    sqlOptions => { sqlOptions.MigrationsAssembly("PharmaGo.DataAccess"); });
+                    sqlOptions =>
+                    {
+                        sqlOptions.MigrationsAssembly("PharmaGo.DataAccess");
+                        sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(2), null);
+                    });
                 options.ConfigureWarnings(w =>
                 {
                     w.Ignore(RelationalEventId.CommandExecuted);
@@ -58,13 +62,26 @@ namespace PharmaGo.UsersService.Factory
 
         public static IHost MigrateDatabase(this IHost host)
         {
-            using (var scope = host.Services.CreateScope())
+            const int maxAttempts = 30;
+            for (var attempt = 1; ; attempt++)
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
-                dbContext.Database.Migrate();
+                try
+                {
+                    using (var scope = host.Services.CreateScope())
+                    {
+                        var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+                        dbContext.Database.Migrate();
+                    }
+                    Console.WriteLine($"MigrateDatabase: migración aplicada (intento {attempt}).");
+                    return host;
+                }
+                catch (Exception ex) when (attempt < maxAttempts)
+                {
+                    var delay = TimeSpan.FromSeconds(Math.Min(attempt, 5));
+                    Console.WriteLine($"MigrateDatabase: intento {attempt}/{maxAttempts} falló ({ex.GetType().Name}: {ex.Message}). Reintentando en {delay.TotalSeconds} s.");
+                    Thread.Sleep(delay);
+                }
             }
-
-            return host;
         }
 
     }

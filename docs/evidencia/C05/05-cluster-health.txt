@@ -1,0 +1,24 @@
+Cluster: imágenes reconstruidas, apply-k8s.sh y rollout restart de los 4 Deployments.
+$ kubectl port-forward svc/<servicio> 1808X:80 -n pharmago   (los pods no tienen curl ni wget)
+
+pharmago-api-gateway       /health/live   Healthy HTTP 200 (0.262167 s)
+pharmago-api-gateway       /health/ready  Healthy HTTP 200 (0.020511 s)
+pharmago-api-gateway       /health        Healthy HTTP 200 (0.012098 s)
+pharmago-users-service     /health/live   Healthy HTTP 200 (0.087095 s)
+pharmago-users-service     /health/ready  Healthy HTTP 200 (0.407560 s)
+pharmago-users-service     /health        Healthy HTTP 200 (0.011292 s)
+pharmago-pharmacy-service  /health/live   Healthy HTTP 200 (0.022913 s)
+pharmago-pharmacy-service  /health/ready  Healthy HTTP 200 (3.502245 s)
+pharmago-pharmacy-service  /health        Healthy HTTP 200 (0.010196 s)
+
+$ kubectl get pods -n pharmago -o wide (app)
+NAME                                         READY   STATUS    RESTARTS      AGE   IP               NODE           NOMINATED NODE   READINESS GATES
+pharmago-api-gateway-fb4878dff-tvt4h         1/1     Running   0             59s   10.244.205.203   minikube-m02   <none>           <none>
+pharmago-db-79bd8977ff-7hbxd                 1/1     Running   2 (23m ago)   2d    10.244.149.18    minikube-m05   <none>           <none>
+pharmago-pharmacy-service-595bd77bdb-4zfw6   1/1     Running   0             59s   10.244.59.136    minikube-m04   <none>           <none>
+pharmago-ui-56d69bf7d7-frtnz                 1/1     Running   0             59s   10.244.120.82    minikube       <none>           <none>
+pharmago-users-service-6f75cd8dd-4s2rp       1/1     Running   0             59s   10.244.151.8     minikube-m03   <none>           <none>
+
+Repetición de /health/ready (5 veces, 1 por segundo) para ver la latencia en caliente:
+pharmago-users-service     200/0.245269s  200/0.017584s  200/0.012234s  200/0.012183s  200/0.013273s
+pharmago-pharmacy-service  200/0.020603s  200/0.093761s  200/0.014118s  200/0.013897s  200/0.012136s
