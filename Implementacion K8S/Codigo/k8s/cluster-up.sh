@@ -59,6 +59,10 @@ echo "Habilitando addon metrics-server..."
 minikube addons enable metrics-server -p "$PROFILE"
 
 echo ""
+echo "Habilitando addon ingress (acceso a la app sin port-forward)..."
+minikube addons enable ingress -p "$PROFILE"
+
+echo ""
 echo "Etiquetando nodos (node-type)..."
 label() {
     local node="$1" type="$2"
@@ -83,3 +87,4 @@ echo ""
 kubectl get nodes -L node-type
 echo ""
 echo "Siguiente paso: ./build-images.sh, ./apply-k8s.sh y ./seed-db.sh"
+echo "Para entrar a la app: en PowerShell como administrador, minikube tunnel (dejalo abierto) y abrí http://127.0.0.1/"

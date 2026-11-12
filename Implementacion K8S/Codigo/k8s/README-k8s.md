@@ -16,6 +16,8 @@ cd "Implementacion K8S/Codigo/k8s"
 
 `seed-db.sh` es imprescindible: sin él no hay roles ni usuarios y no se puede iniciar sesión. Se puede correr más de una vez.
 
+Después, para entrar a la app, abrí **PowerShell como administrador**, corré `minikube tunnel` y **dejá esa ventana abierta**. La app queda en http://127.0.0.1/ (ver [Acceso a los Servicios](#acceso-a-los-servicios)).
+
 ## Arquitectura
 
 Cada nodo tiene una etiqueta `node-type` y cada Deployment usa `nodeAffinity` sobre esa etiqueta:
@@ -185,53 +187,35 @@ kubectl logs -n pharmago -f <pod-name>
 
 ## Acceso a los Servicios
 
-Hay dos opciones para acceder a los servicios: **port-forward** (recomendado en Windows) o **minikube service**.
+### La aplicación: Ingress + `minikube tunnel`
 
-### Opción 1: Port-forward (Recomendado en Windows)
+La UI y la API se acceden por un Ingress (`ingress/pharmago-ingress.yaml`): `/api` va al gateway y `/` a la UI. El Ingress reparte entre los pods sanos, así que sigue funcionando aunque se caiga un pod. Un `port-forward`, en cambio, se corta cuando muere el pod al que apunta.
 
-En Windows, `localhost` puede fallar con `kubectl port-forward` y herramientas como `sqlcmd`. Usa **127.0.0.1** para todas las conexiones.
+En Windows con el driver docker, el Ingress se expone en tu PC con `minikube tunnel`. Abrí **PowerShell como administrador** (usa los puertos 80 y 443), corré esto y **dejá esa ventana abierta** mientras uses la app:
+
+```bash
+minikube tunnel
+```
+
+Con el túnel activo:
+- **App**: http://127.0.0.1/
+- **API**: http://127.0.0.1/api/... (por ejemplo http://127.0.0.1/api/drug)
+
+El frontend usa `apiUrl: ''` en producción, así que llama a `/api/...` en el mismo host desde el que se cargó.
+
+### Herramientas de operación: port-forward
 
 ```bash
 cd k8s
 ./port-forward.sh
 ```
 
-Servicios disponibles en:
-- **Frontend**: http://127.0.0.1:4200
-- **API Gateway**: http://127.0.0.1:5000
-- **BD (SQL Server)**: `127.0.0.1,11433` (sa / Str0ngP@ssword!)
 - **Prometheus**: http://127.0.0.1:9090
 - **Grafana**: http://127.0.0.1:3000 (admin/admin)
 - **Kibana**: http://127.0.0.1:5601
+- **Elasticsearch**: http://127.0.0.1:9200 (o el puerto de `ES_LOCAL_PORT`)
 
 Para detener: `./port-forward.sh --stop`
-
-### Opción 2: Minikube service
-
-### Frontend
-
-```bash
-minikube service pharmago-ui -n pharmago --url
-```
-
-### Grafana
-
-```bash
-minikube service grafana -n pharmago --url
-# Credenciales: admin / admin
-```
-
-### Kibana
-
-```bash
-minikube service kibana -n pharmago --url
-```
-
-### Prometheus
-
-```bash
-minikube service prometheus -n pharmago --url
-```
 
 ## Configuración de Replicas
 

@@ -1,0 +1,26 @@
+NO VERIFICADO en la PC de Franco: no tiene Docker, Minikube ni kubectl instalados (2026-11-12).
+Lo corre quien tenga el cluster levantado (Martin), después de git pull --rebase, desde Git Bash:
+
+cd "Implementacion K8S/Codigo/k8s"
+./cluster-up.sh          # ahora también habilita el addon ingress
+./build-images.sh        # reconstruye gateway y UI con los cambios de C04
+./apply-k8s.sh           # al final espera al controlador de ingress-nginx y aplica el Ingress
+kubectl rollout restart deployment pharmago-api-gateway pharmago-ui -n pharmago
+kubectl rollout status deployment pharmago-api-gateway -n pharmago
+kubectl rollout status deployment pharmago-ui -n pharmago
+kubectl get ingress -n pharmago
+
+En PowerShell como administrador, dejar abierto:
+minikube tunnel
+
+Verificaciones (máximo 1 request por segundo por el rate limit):
+1. for p in / /api/drug /api/presentations /api/unitmeasures; do curl -s -o /dev/null -w "$p %{http_code}\n" "http://127.0.0.1$p"; sleep 1; done
+   Esperado: 200 en las cuatro.
+2. POST http://127.0.0.1/api/login con un usuario de seed-data.sql. Esperado: 200. No imprimir la contraseña.
+3. Loop de curl a http://127.0.0.1/ cada 1 s durante 40 s y, mientras corre, borrar el pod de la UI:
+   kubectl delete pod -n pharmago -l app=pharmago-ui --wait=false
+   Hoy la UI tiene 1 réplica (las 2 réplicas llegan en C06), así que se esperan unos segundos de error
+   hasta que el pod nuevo esté Ready. Lo que se verifica en C04 es que el acceso vuelve solo, con la misma URL
+   y sin reabrir nada, cosa que con port-forward no pasa (el túnel muere con el pod). El "0 errores" se mide en C06.
+
+Guardar las salidas en docs/evidencia/C04/ y commitear como "C04-verificacion: evidencia de C04 en el cluster".

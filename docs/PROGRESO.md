@@ -122,3 +122,27 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - Con 30 alertas sobre 53 anomalías reales, el recall máximo posible es 0.566: el presupuesto de alertas (0.10) limita el resultado, como se discute en el README.
 - **Hallazgos nuevos que cambian el plan:** en esta PC, `python -m venv` falla porque la instalación de Python 3.12.10 no trae el wheel de pip para `ensurepip`. Se resolvió con `--without-pip` y el pip global; el README explica cómo. Puede pasarle a otro integrante.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+
+## C04 — Acceso estable por Ingress y rutas del gateway — 2026-11-12 — francokbd
+- **Estado:** 🟡 Parcial. Cambios hechos y verificados en local; la verificación en el cluster queda pendiente porque esta PC no tiene Docker ni Minikube.
+- **Ítem de rúbrica:** 8 (Defensa: acceso sin port-forward)
+- **Commit:** `C04: acceso por Ingress sin port-forward y rutas del gateway corregidas` (SHA en `git log --grep "^C04:"`)
+- **Archivos creados / modificados:** `Backend/PharmaGo.ApiGateway/appsettings.json`, `Frontend/src/environments/environment.prod.ts`, `k8s/cluster-up.sh`, `k8s/apply-k8s.sh`, `k8s/port-forward.sh`, `k8s/README-k8s.md`, `k8s/ingress/pharmago-ingress.yaml` (nuevo), `docs/evidencia/C04/` (rutas relativas a `Implementacion K8S/Codigo/` salvo `docs/`)
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: apiUrl 'http://127.0.0.1:5000' en environment.prod.ts; rutas /api/unitmeasure
+  y /api/presentation en el gateway; el frontend llama a /api/unitmeasures y /api/presentations.
+
+  $ bash -n cluster-up.sh apply-k8s.sh port-forward.sh        -> sintaxis OK
+  $ ingress/pharmago-ingress.yaml (PyYAML)                     -> /api -> pharmago-api-gateway:80, / -> pharmago-ui:80
+  $ gateway real contra backend falso
+    /api/presentations 200, /api/unitmeasures 200, /api/presentations/3 200 (path intacto)
+    /api/presentation 404, /api/unitmeasure 404 (rutas viejas eliminadas)
+  $ npx ng build (producción)                                  -> exit 0; "127.0.0.1:5000" aparece 0 veces en main.js
+  ```
+  Detalle en `docs/evidencia/C04/01-sintaxis.txt`, `02-gateway-rutas.txt` y `03-frontend-build.txt`.
+- **Criterio de "hecho":** cumplido en código. La parte de cluster (Ingress respondiendo 200 por `minikube tunnel`, login y recuperación tras borrar un pod) está NO VERIFICADA.
+- **Decisiones tomadas:** `apply-k8s.sh` espera a que el controlador de ingress-nginx esté listo antes de aplicar el Ingress; si no, el apply falla porque su webhook de admisión todavía no responde. `port-forward.sh` dejó de exponer la BD, que además imprimía la contraseña.
+- **NO VERIFICADO / riesgos:** todo lo de cluster. Comandos exactos en `docs/evidencia/C04/04-cluster-pendiente.txt`, para que los corra quien tenga el cluster (Martin) y lo suba como `C04-verificacion`.
+- **Hallazgos nuevos que cambian el plan:** la prueba de "borrar un pod de la UI sin que se corte el loop" supone 2 réplicas, que llegan en C06. En C04 se verifica que el acceso vuelve solo; el "0 errores" se mide en C06. La URL del tablero sigue pendiente: no se creó el Project todavía.
+- **Uso de IA registrado en docs/USO_IA.md:** sí

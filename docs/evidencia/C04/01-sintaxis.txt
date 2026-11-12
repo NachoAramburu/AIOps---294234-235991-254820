@@ -1,0 +1,17 @@
+Verificación local de C04, 2026-11-12 00:09. En esta PC no hay Docker ni Minikube: la parte de cluster queda NO VERIFICADA (ver 04-cluster-pendiente.txt).
+
+$ bash -n cluster-up.sh apply-k8s.sh port-forward.sh
+  cluster-up.sh: sintaxis OK
+  apply-k8s.sh: sintaxis OK
+  port-forward.sh: sintaxis OK
+
+$ port-forward.sh: servicios que reenvía
+  port-forward svc/prometheus
+  port-forward svc/grafana
+  port-forward svc/kibana
+  port-forward svc/elasticsearch
+
+$ ingress/pharmago-ingress.yaml: estructura
+  YAML válido (PyYAML 6.0.3). kind: Ingress | apiVersion: networking.k8s.io/v1 | ingressClassName: nginx | namespace: pharmago
+  /api (Prefix) -> pharmago-api-gateway:80
+  / (Prefix) -> pharmago-ui:80

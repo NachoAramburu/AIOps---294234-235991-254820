@@ -1,0 +1,26 @@
+# Acceso a la app sin port-forward: /api va al gateway y / a la UI.
+# En Windows con driver docker se expone en 127.0.0.1 con `minikube tunnel`.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pharmago-ingress
+  namespace: pharmago
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: pharmago-api-gateway
+            port:
+              number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pharmago-ui
+            port:
+              number: 80

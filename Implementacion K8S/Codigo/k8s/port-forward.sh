@@ -1,5 +1,7 @@
 #!/bin/bash
-# Ejecuta todos los port-forwards en background (mismos puertos que docker-compose)
+# Port-forwards en background SOLO para las herramientas de operación:
+# Prometheus, Grafana, Kibana y Elasticsearch.
+# La app (UI y API) se accede por el Ingress: minikube tunnel + http://127.0.0.1/
 # Uso: ./port-forward.sh
 # Para detener: ./port-forward.sh --stop
 #
@@ -29,31 +31,6 @@ echo "=== Iniciando port-forwards en background ==="
 echo ""
 
 > "$PID_FILE"
-
-# Frontend
-kubectl port-forward svc/pharmago-ui 4200:80 -n pharmago &
-echo $! >> "$PID_FILE"
-echo "  Frontend:      http://127.0.0.1:4200"
-
-# API Gateway
-kubectl port-forward svc/pharmago-api-gateway 5000:80 -n pharmago &
-echo $! >> "$PID_FILE"
-echo "  API Gateway:  http://127.0.0.1:5000"
-
-# Users Service
-kubectl port-forward svc/pharmago-users-service 5001:80 -n pharmago &
-echo $! >> "$PID_FILE"
-echo "  Users:        http://127.0.0.1:5001"
-
-# Pharmacy Service
-kubectl port-forward svc/pharmago-pharmacy-service 5002:80 -n pharmago &
-echo $! >> "$PID_FILE"
-echo "  Pharmacy:     http://127.0.0.1:5002"
-
-# SQL Server
-kubectl port-forward svc/pharmago-db 11433:1433 -n pharmago &
-echo $! >> "$PID_FILE"
-echo "  BD:           127.0.0.1,11433 (sa / Str0ngP@ssword!)"
 
 # Prometheus
 kubectl port-forward svc/prometheus 9090:9090 -n pharmago &

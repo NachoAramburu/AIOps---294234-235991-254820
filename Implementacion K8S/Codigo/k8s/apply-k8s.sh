@@ -160,18 +160,27 @@ kubectl apply -f services/frontend/ui-service.yaml
 kubectl apply -f deployments/frontend/ui-deployment.yaml
 
 echo ""
+echo "10. Configurando Ingress (acceso a la app sin port-forward)..."
+if ! kubectl get namespace ingress-nginx &> /dev/null; then
+    echo "Error: falta el addon ingress. Corré ./cluster-up.sh y volvé a intentar."
+    exit 1
+fi
+echo "   Esperando al controlador de ingress-nginx (su webhook tiene que estar listo)..."
+kubectl wait --namespace ingress-nginx --for=condition=ready pod \
+    --selector=app.kubernetes.io/component=controller --timeout=180s
+kubectl apply -f ingress/pharmago-ingress.yaml
+
+echo ""
 echo "=== Despliegue completado ==="
 echo ""
 echo "Verificando estado de los pods..."
 kubectl get pods -n pharmago -o wide
 
 echo ""
-echo "Para acceder a los servicios (usa 127.0.0.1 en Windows):"
-echo "  ./port-forward.sh"
+echo "Para entrar a la app (sin port-forward):"
+echo "  1. En PowerShell como administrador: minikube tunnel   (dejalo abierto)"
+echo "  2. Abrí http://127.0.0.1/   (la API queda en http://127.0.0.1/api/...)"
 echo ""
-echo "O con minikube service:"
-echo "  Frontend:     minikube service pharmago-ui -n pharmago --url"
-echo "  Grafana:      minikube service grafana -n pharmago --url"
-echo "  Kibana:       minikube service kibana -n pharmago --url"
-echo "  Prometheus:   minikube service prometheus -n pharmago --url"
+echo "Herramientas de operación (Prometheus, Grafana, Kibana, Elasticsearch):"
+echo "  ./port-forward.sh"
 

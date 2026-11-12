@@ -1,0 +1,18 @@
+Build de producción del frontend en una copia aparte del repo (Node v22.12.0, Angular CLI del proyecto).
+
+$ npm ci && npx ng build      (configuración por defecto: production, usa environment.prod.ts)
+  main.77510e680587bce3.js      | main          | 761.74 kB |               171.27 kB
+  | Initial Total |   1.17 MB |               218.85 kB
+  Build at: 2026-11-12T03:13:07.379Z - Hash: fc4a38a08bae16f0 - Time: 45216ms
+  Resultado: exit 0. Los warnings son de dependencias de terceros (CSS de @coreui, angularx-qrcode) y ya existían.
+
+$ grep sobre dist/pharma-go/main.77510e680587bce3.js
+  apariciones de "127.0.0.1:5000": 0
+  apariciones de "/api/presentations": 1
+  apariciones de "/api/unitmeasures": 1
+  apariciones de "/api/login": 1
+  apariciones de "/api/drug": 1
+  fragmento donde se arma la URL de presentaciones:
+    his.storageManager=r,this.url="/api/presentations"}getHttpHe
+
+Conclusión: el build de producción ya no apunta a 127.0.0.1:5000; las llamadas van a /api/... del mismo host, que el Ingress manda al gateway.

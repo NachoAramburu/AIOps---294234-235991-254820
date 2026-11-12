@@ -1,0 +1,18 @@
+Gateway real (PharmaGo.ApiGateway, Release) contra un backend falso que responde 200 y registra el path recibido.
+Destinos de users-cluster y pharmacy-cluster apuntados a 127.0.0.1:5921 por variables de entorno.
+
+$ dotnet build PharmaGo.ApiGateway -c Release
+  7 Warning(s)
+  0 Error(s)
+
+Request al gateway       HTTP   Path que recibió el servicio
+/api/presentations       200    /api/presentations
+/api/unitmeasures        200    /api/unitmeasures
+/api/presentations/3     200    /api/presentations/3
+/api/drug                200    /api/drug
+/api/Export              200    /api/Export
+/api/login               200    /api/login
+
+Rutas viejas en singular (ya no existen en el gateway):
+/api/presentation        404    (no llegó al servicio)
+/api/unitmeasure         404    (no llegó al servicio)
