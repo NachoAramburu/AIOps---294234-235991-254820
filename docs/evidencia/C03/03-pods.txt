@@ -1,0 +1,22 @@
+$ kubectl get pods -n pharmago -o wide
+NAME                                         READY   STATUS    RESTARTS   AGE     IP               NODE           NOMINATED NODE   READINESS GATES
+elasticsearch-757964844b-frtbk               1/1     Running   0          9m25s   10.244.149.2     minikube-m05   <none>           <none>
+fluent-bit-6m2pg                             1/1     Running   0          4m51s   10.244.151.1     minikube-m03   <none>           <none>
+fluent-bit-dxpmj                             1/1     Running   0          4m51s   10.244.149.7     minikube-m05   <none>           <none>
+fluent-bit-htnsn                             1/1     Running   0          4m51s   10.244.120.70    minikube       <none>           <none>
+fluent-bit-nj7tm                             1/1     Running   0          4m51s   10.244.59.129    minikube-m04   <none>           <none>
+fluent-bit-x7t5v                             1/1     Running   0          4m51s   10.244.205.194   minikube-m02   <none>           <none>
+grafana-854bbd78d7-hndx9                     1/1     Running   0          4m53s   10.244.149.5     minikube-m05   <none>           <none>
+kibana-7d8cfc6546-ctk5h                      1/1     Running   0          4m52s   10.244.149.6     minikube-m05   <none>           <none>
+node-exporter-8jnw4                          1/1     Running   0          4m54s   192.168.49.6     minikube-m05   <none>           <none>
+node-exporter-bkhrt                          1/1     Running   0          4m54s   192.168.49.2     minikube       <none>           <none>
+node-exporter-dnd58                          1/1     Running   0          4m54s   192.168.49.3     minikube-m02   <none>           <none>
+node-exporter-hj9d9                          1/1     Running   0          4m54s   192.168.49.4     minikube-m03   <none>           <none>
+node-exporter-st4n7                          1/1     Running   0          4m54s   192.168.49.5     minikube-m04   <none>           <none>
+otlp-collector-759bcf6d77-w2v4k              1/1     Running   0          4m55s   10.244.149.3     minikube-m05   <none>           <none>
+pharmago-api-gateway-587464d858-lxvsk        1/1     Running   0          4m48s   10.244.205.195   minikube-m02   <none>           <none>
+pharmago-db-79bd8977ff-gczpb                 1/1     Running   0          11m     10.244.149.1     minikube-m05   <none>           <none>
+pharmago-pharmacy-service-6946b8c8c5-85kc4   1/1     Running   0          4m49s   10.244.59.130    minikube-m04   <none>           <none>
+pharmago-ui-7d65cbc9c5-8ht4x                 1/1     Running   0          4m47s   10.244.120.71    minikube       <none>           <none>
+pharmago-users-service-7f488dd6cd-9grhr      1/1     Running   0          4m50s   10.244.151.2     minikube-m03   <none>           <none>
+prometheus-76c6c4f5d5-vwjhw                  1/1     Running   0          4m54s   10.244.149.4     minikube-m05   <none>           <none>

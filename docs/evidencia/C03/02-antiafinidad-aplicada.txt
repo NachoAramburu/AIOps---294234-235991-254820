@@ -1,0 +1,13 @@
+$ kubectl get deploy -n pharmago <microservicio> -o jsonpath="{.spec.template.spec.affinity.podAntiAffinity}"
+
+## pharmago-api-gateway
+{"requiredDuringSchedulingIgnoredDuringExecution":[{"labelSelector":{"matchExpressions":[{"key":"app","operator":"In","values":["pharmago-users-service","pharmago-pharmacy-service","pharmago-ui"]}]},"topologyKey":"kubernetes.io/hostname"}]}
+
+## pharmago-users-service
+{"requiredDuringSchedulingIgnoredDuringExecution":[{"labelSelector":{"matchExpressions":[{"key":"app","operator":"In","values":["pharmago-api-gateway","pharmago-pharmacy-service","pharmago-ui"]}]},"topologyKey":"kubernetes.io/hostname"}]}
+
+## pharmago-pharmacy-service
+{"requiredDuringSchedulingIgnoredDuringExecution":[{"labelSelector":{"matchExpressions":[{"key":"app","operator":"In","values":["pharmago-api-gateway","pharmago-users-service","pharmago-ui"]}]},"topologyKey":"kubernetes.io/hostname"}]}
+
+## pharmago-ui
+{"requiredDuringSchedulingIgnoredDuringExecution":[{"labelSelector":{"matchExpressions":[{"key":"app","operator":"In","values":["pharmago-api-gateway","pharmago-users-service","pharmago-pharmacy-service"]}]},"topologyKey":"kubernetes.io/hostname"}]}

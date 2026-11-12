@@ -21,6 +21,16 @@ spec:
               - key: node-type
                 operator: In
                 values: [pharmacy]
+        # Letra: dos microservicios distintos no pueden compartir nodo (D02).
+        # Solo se excluye a los otros microservicios: las réplicas propias sí pueden compartir nodo.
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values: [pharmago-api-gateway, pharmago-users-service, pharmago-ui]
       containers:
       - name: pharmago-pharmacy-service
         image: pharmago-pharmacy-service:latest

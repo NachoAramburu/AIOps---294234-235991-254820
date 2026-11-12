@@ -1,0 +1,44 @@
+C03 - cluster usado para la verificaci√≥n: PC de Ignacio Aramburu (16 GB RAM, 12 CPU), creado desde cero el 2026-11-12.
+
+$ docker info (memoria asignada por .wslconfig memory=10GB)
+Docker 29.9.3 | memoria 10429939712 bytes | CPUs 12
+
+$ wsl --version
+VersiÛn de WSL: 3.0.5.0
+VersiÛn de kernel: 6.18.58.1-1
+
+Primer intento con WSL 2.2.4 (kernel 5.15.153): calico-node en CrashLoopBackOff en los 5 nodos:
+  Error: failed to start container "calico-node": ... error while creating mount source path
+  '/sys/kernel/security': mkdir /sys/kernel/security: read-only file system
+Soluci√≥n: wsl --update (WSL 3.0.5, kernel 6.18), wsl --shutdown, minikube delete y cluster-up.sh de nuevo.
+
+$ ./cluster-up.sh   (exit 0)
+NAME           STATUS   ROLES           AGE     VERSION    NODE-TYPE
+minikube       Ready    control-plane   2m28s   v1.33.13   frontend
+minikube-m02   Ready    <none>          117s    v1.33.13   gateway
+minikube-m03   Ready    <none>          91s     v1.33.13   users
+minikube-m04   Ready    <none>          62s     v1.33.13   pharmacy
+minikube-m05   Ready    <none>          32s     v1.33.13   ops
+
+Siguiente paso: ./build-images.sh, ./apply-k8s.sh y ./seed-db.sh
+Para entrar a la app: en PowerShell como administrador, minikube tunnel (dejalo abierto) y abr√≠ http://127.0.0.1/
+
+$ kubectl get pods -n kube-system -l k8s-app=calico-node
+NAME                READY   STATUS    RESTARTS   AGE
+calico-node-44cjf   1/1     Running   0          19m
+calico-node-fbbzv   1/1     Running   0          19m
+calico-node-jfksn   1/1     Running   0          20m
+calico-node-sfg4z   1/1     Running   0          20m
+calico-node-tm9gk   1/1     Running   0          20m
+
+$ ./build-images.sh   (exit 0)
+docker.io/library/pharmago-users-service:latest
+docker.io/library/pharmago-ui:latest
+docker.io/library/pharmago-pharmacy-service:latest
+docker.io/library/pharmago-api-gateway:latest
+
+$ ./apply-k8s.sh   (exit 0)
+$ ./seed-db.sh   (exit 0)
+Roles=3
+Users=3
+Drugs=4

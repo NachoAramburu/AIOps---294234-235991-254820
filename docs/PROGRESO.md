@@ -225,3 +225,45 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - Con la BD inaccesible, ready tarda ~3,9 s en responder 503. Con el timeout de 2 s de C06 el probe falla igual (el resultado es el correcto), pero conviene tenerlo en cuenta al leer los eventos.
 - **Hallazgos nuevos que cambian el plan:** ninguno. Para C06: el primer ready de pharmacy tras arrancar tardó 3,5 s; con `failureThreshold` 2-3 no debería sacarlo de servicio, pero hay que mirarlo al medir el MTTR.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+
+## C03 — Separación de microservicios por nodo y diagrama — 2026-11-12 — Ignacio Aramburu
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 1 (Plataforma)
+- **Commit:** `C03: anti-afinidad entre microservicios y diagrama de despliegue` (SHA en `git log --grep "^C03:"`)
+- **Dónde se corrió:** PC de Ignacio Aramburu (16 GB, 12 CPU, Docker con 9,7 GiB por `.wslconfig memory=10GB`), cluster de 5 nodos creado desde cero con `cluster-up.sh`, `build-images.sh`, `apply-k8s.sh` y `seed-db.sh`.
+- **Archivos creados / modificados:**
+  - Modificados: `podAntiAffinity` en `k8s/deployments/backend/api-gateway-deployment.yaml`, `users-service-deployment.yaml`, `pharmacy-service-deployment.yaml` y `k8s/deployments/frontend/ui-deployment.yaml` (rutas relativas a `Implementacion K8S/Codigo/`)
+  - Nuevos: `Implementacion K8S/Codigo/k8s/verify/check-separacion.sh`, `docs/diagrama-despliegue.md`, `docs/evidencia/C03/`
+  - `docs/DECISIONES.md` (D07), `docs/USO_IA.md`, `docs/PROGRESO.md`
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: los 4 Deployments tenían nodeAffinity por node-type (C02) y ninguna podAntiAffinity.
+
+  $ check-separacion.sh con kubectl falso (antes del cluster): caso OK -> exit 0; caso con gateway y ui en el mismo nodo -> VIOLACION, exit 1
+
+  $ ./cluster-up.sh && ./build-images.sh && ./apply-k8s.sh && ./seed-db.sh   (01-cluster.txt)
+  5 nodos Ready con node-type; calico-node 5/5 Running; 4 imágenes cargadas; Roles=3 Users=3 Drugs=4
+
+  $ kubectl get deploy <microservicio> -o jsonpath='{...podAntiAffinity}'   (02-antiafinidad-aplicada.txt)
+  cada uno: required, topologyKey kubernetes.io/hostname, app In [los otros tres]
+
+  $ kubectl get pods -n pharmago -o wide   (03-pods.txt)   20/20 Running
+  pharmago-ui -> minikube | api-gateway -> m02 | users -> m03 | pharmacy -> m04 | BD y observabilidad -> m05
+
+  $ bash k8s/verify/check-separacion.sh   (04-check-separacion.txt)
+  OK: ningún nodo aloja dos microservicios distintos.   exit=0
+
+  $ Pod busybox:1.36 con app=pharmago-users-service y nodeSelector minikube-m02   (05-prueba-negativa.txt)
+  STATUS Pending | FailedScheduling: 0/5 nodes are available: 1 node(s) didn't satisfy existing pods
+  anti-affinity rules, 4 node(s) didn't match Pod's node affinity/selector.
+  endpoints de pharmago-users-service sin cambios (no recibe tráfico); pod borrado al terminar.
+  ```
+- **Criterio de "hecho" de §3 (ítem 1):** cumplido. 5 nodos (≥ 3), ningún nodo aloja dos microservicios distintos (lo garantiza la `podAntiAffinity` required y lo comprueba `check-separacion.sh`) y `docs/diagrama-despliegue.md` (Mermaid) es coherente con los manifiestos y con `kubectl get pods -o wide`.
+- **Decisiones tomadas:** se aplicó D02 tal cual (anti-afinidad solo contra los otros tres microservicios, sin label común). D07 actualizada: además del `.wslconfig`, hace falta WSL actualizado para que arranque Calico.
+- **NO VERIFICADO / riesgos:**
+  - Con 1 réplica por microservicio la prueba no muestra réplicas compartiendo nodo; eso se ve en C06 (2 réplicas). Con `maxSurge: 1` (C08) el pod extra del rollout también va al mismo nodo, así que la anti-afinidad no lo bloquea.
+  - El diagrama no se renderizó con una herramienta automática (no se permitió instalar `mermaid-cli`); la sintaxis se revisó a mano. Verlo en la vista previa de GitHub o VS Code.
+- **Hallazgos nuevos que cambian el plan:**
+  - **Calico v3.32.2 (el de minikube v1.39.0) no arranca con WSL 2.2.4 / kernel 5.15.153:** `calico-node` queda en CrashLoopBackOff porque no puede montar `/sys/kernel/security`, que ese kernel no tiene. Sin red no arranca nada más (CoreDNS, ingress, metrics-server). Se resolvió con `wsl --update` (WSL 3.0.5, kernel 6.18), `wsl --shutdown`, `minikube delete` y `cluster-up.sh`. Conviene que todo el equipo corra `wsl --version` antes de crear el cluster.
+  - Confirmado: el addon ingress corre en el nodo `minikube` (control-plane), junto a la UI, como dice el diagrama.
+- **Uso de IA registrado en docs/USO_IA.md:** sí
