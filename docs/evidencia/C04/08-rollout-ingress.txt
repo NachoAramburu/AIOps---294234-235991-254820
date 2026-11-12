@@ -1,0 +1,39 @@
+10. Configurando Ingress (acceso a la app sin port-forward)...
+   Esperando al controlador de ingress-nginx (su webhook tiene que estar listo)...
+pod/ingress-nginx-controller-5dd7bb8666-kw5rw condition met
+ingress.networking.k8s.io/pharmago-ingress created
+$ kubectl rollout restart deployment pharmago-api-gateway pharmago-users-service pharmago-pharmacy-service pharmago-ui -n pharmago
+deployment.apps/pharmago-api-gateway restarted
+deployment.apps/pharmago-users-service restarted
+deployment.apps/pharmago-pharmacy-service restarted
+deployment.apps/pharmago-ui restarted
+$ kubectl rollout status deployment pharmago-api-gateway -n pharmago
+deployment "pharmago-api-gateway" successfully rolled out
+$ kubectl rollout status deployment pharmago-users-service -n pharmago
+deployment "pharmago-users-service" successfully rolled out
+$ kubectl rollout status deployment pharmago-pharmacy-service -n pharmago
+deployment "pharmago-pharmacy-service" successfully rolled out
+$ kubectl rollout status deployment pharmago-ui -n pharmago
+deployment "pharmago-ui" successfully rolled out
+
+$ kubectl get ingress -n pharmago
+NAME               CLASS   HOSTS   ADDRESS        PORTS   AGE
+pharmago-ingress   nginx   *       192.168.49.2   80      33s
+
+$ kubectl get pods -n ingress-nginx -o wide
+NAME                                        READY   STATUS      RESTARTS   AGE     IP              NODE       NOMINATED NODE   READINESS GATES
+ingress-nginx-admission-create-qsdn5        0/1     Completed   0          6m45s   10.244.120.73   minikube   <none>           <none>
+ingress-nginx-admission-patch-8w5ds         0/1     Completed   0          6m45s   10.244.120.74   minikube   <none>           <none>
+ingress-nginx-controller-5dd7bb8666-kw5rw   1/1     Running     0          6m45s   10.244.120.79   minikube   <none>           <none>
+
+$ kubectl get pods -n pharmago -o wide (app)
+NAME                                         READY   STATUS        RESTARTS        AGE   IP               NODE           NOMINATED NODE   READINESS GATES
+pharmago-api-gateway-5b8c447866-hcwcn        1/1     Terminating   2 (8m52s ago)   2d    10.244.205.200   minikube-m02   <none>           <none>
+pharmago-api-gateway-789c85577-4lhwp         1/1     Running       0               22s   10.244.205.202   minikube-m02   <none>           <none>
+pharmago-db-79bd8977ff-7hbxd                 1/1     Running       2 (6m59s ago)   2d    10.244.149.18    minikube-m05   <none>           <none>
+pharmago-pharmacy-service-5b64675944-98cdn   1/1     Running       0               22s   10.244.59.135    minikube-m04   <none>           <none>
+pharmago-pharmacy-service-f858cd56f-6zcrj    1/1     Terminating   2 (7m34s ago)   2d    10.244.59.134    minikube-m04   <none>           <none>
+pharmago-ui-69ccf8b66-xnvcc                  0/1     Completed     2 (9m40s ago)   2d    10.244.120.78    minikube       <none>           <none>
+pharmago-ui-8877cc78f-4hmmr                  1/1     Running       0               22s   10.244.120.80    minikube       <none>           <none>
+pharmago-users-service-5875d9d9c5-6z6gk      1/1     Terminating   7 (6m10s ago)   2d    10.244.151.6     minikube-m03   <none>           <none>
+pharmago-users-service-6cdccdd6b-4sbp2       1/1     Running       0               22s   10.244.151.7     minikube-m03   <none>           <none>

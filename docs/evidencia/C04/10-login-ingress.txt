@@ -1,0 +1,10 @@
+(sin port-forward: minikube tunnel + Ingress)
+$ POST http://127.0.0.1/api/login  body={"userName":"admin","password":"<tomada de seed-data.sql, no se imprime>"}
+HTTP 200
+Campos de la respuesta: token, role, userName
+  token = <36 caracteres, no se imprime>
+  role = Administrator
+  userName = admin
+
+$ POST /api/login con contraseña incorrecta (control negativo)
+HTTP 400

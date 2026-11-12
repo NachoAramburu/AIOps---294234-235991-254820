@@ -1,0 +1,93 @@
+=== Cluster Minikube de PharmaGo (5 nodos) ===
+Verificando herramientas y Docker...
+Buscando si el cluster ya existe (puede tardar unos segundos)...
+El cluster 'minikube' ya existe.
+No está corriendo: arrancando los 5 nodos (unos 3 a 5 minutos)...
+* minikube v1.39.0 en Microsoft Windows 11 Pro 25H2
+  - MINIKUBE_IN_STYLE=false
+* Kubernetes 1.37.0 is now available. If you would like to upgrade, specify: --kubernetes-version=v1.37.0
+* Using the docker driver based on existing profile
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Verifying Kubernetes components...
+  - Using image registry.k8s.io/metrics-server/metrics-server:v0.9.0
+* Complementos habilitados: metrics-server
+
+* Starting "minikube-m02" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2
+  - NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2
+* Verifying Kubernetes components...
+
+* Starting "minikube-m03" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3
+  - NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+* Verifying Kubernetes components...
+
+* Starting "minikube-m04" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+* Verifying Kubernetes components...
+
+* Starting "minikube-m05" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+* Verifying Kubernetes components...
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+Habilitando addon metrics-server...
+* metrics-server is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+  - Using image registry.k8s.io/metrics-server/metrics-server:v0.9.0
+* The 'metrics-server' addon is enabled
+
+Habilitando addon ingress (acceso a la app sin port-forward)...
+* ingress is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+* After the addon is enabled, please run "minikube tunnel" and your ingress resources would be available at "127.0.0.1"
+  - Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.9
+  - Using image registry.k8s.io/ingress-nginx/controller:v1.15.1
+  - Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.9
+* Verifying ingress addon...
+* The 'ingress' addon is enabled
+
+Etiquetando nodos (node-type)...
+node/minikube not labeled
+node/minikube-m02 not labeled
+node/minikube-m03 not labeled
+node/minikube-m04 not labeled
+node/minikube-m05 not labeled
+
+Esperando a que todos los nodos estén Ready...
+node/minikube condition met
+node/minikube-m02 condition met
+node/minikube-m03 condition met
+node/minikube-m04 condition met
+node/minikube-m05 condition met
+
+NAME           STATUS   ROLES           AGE   VERSION    NODE-TYPE
+minikube       Ready    control-plane   2d    v1.33.13   frontend
+minikube-m02   Ready    <none>          2d    v1.33.13   gateway
+minikube-m03   Ready    <none>          2d    v1.33.13   users
+minikube-m04   Ready    <none>          2d    v1.33.13   pharmacy
+minikube-m05   Ready    <none>          2d    v1.33.13   ops
+
+Siguiente paso: ./build-images.sh, ./apply-k8s.sh y ./seed-db.sh
+Para entrar a la app: en PowerShell como administrador, minikube tunnel (dejalo abierto) y abrí http://127.0.0.1/

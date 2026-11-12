@@ -146,3 +146,39 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
 - **NO VERIFICADO / riesgos:** todo lo de cluster. Comandos exactos en `docs/evidencia/C04/04-cluster-pendiente.txt`, para que los corra quien tenga el cluster (Martin) y lo suba como `C04-verificacion`.
 - **Hallazgos nuevos que cambian el plan:** la prueba de "borrar un pod de la UI sin que se corte el loop" supone 2 réplicas, que llegan en C06. En C04 se verifica que el acceso vuelve solo; el "0 errores" se mide en C06. La URL del tablero sigue pendiente: no se creó el Project todavía.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+
+## C04-verificacion — Evidencia de C04 en el cluster — 2026-11-12 — Martin Roux
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 8 (Defensa: app accesible sin port-forward)
+- **Commit:** `C04-verificacion: evidencia de C04 en el cluster` (SHA en `git log --grep "^C04-verificacion:"`)
+- **Archivos creados / modificados:** `docs/evidencia/C04/05-cluster-up.txt` a `11-delete-pod-ui.txt`, `docs/PROGRESO.md`, `docs/USO_IA.md`. No se tocó código: se verificó tal cual quedó en C04 (`708f4f9`).
+- **Dónde se corrió:** PC de Martin, cluster Minikube de 5 nodos de C02, `minikube tunnel` abierto en PowerShell como administrador.
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ ./cluster-up.sh       (05)  The 'ingress' addon is enabled; 5 nodos Ready con su node-type
+  $ ./build-images.sh     (06)  4 imágenes reconstruidas, 0 Error(s)
+  $ ./apply-k8s.sh        (07)  ingress-nginx-controller condition met; ingress.networking.k8s.io/pharmago-ingress created
+  $ kubectl rollout restart deployment pharmago-api-gateway pharmago-users-service pharmago-pharmacy-service pharmago-ui -n pharmago
+  $ kubectl rollout status ...   (08)  los 4 "successfully rolled out"
+  $ kubectl get ingress -n pharmago
+  pharmago-ingress   nginx   *   192.168.49.2   80
+
+  1. Rutas por http://127.0.0.1 (sin port-forward)   (09)
+  / 200 | /api/drug 200 | /api/presentations 200 | /api/unitmeasures 200
+  control: /api/presentation 404 | /api/unitmeasure 404 (rutas viejas en singular)
+  control: el bundle main.*.js servido ya no contiene "127.0.0.1:5000"
+
+  2. POST http://127.0.0.1/api/login (admin, contraseña de seed-data.sql)   (10)
+  HTTP 200, role = Administrator | contraseña incorrecta: HTTP 400
+
+  3. Loop curl http://127.0.0.1/ cada 1 s x 40 s, borrando el pod de la UI en t=10 s   (11)
+  t=1..10 200 | t=11 000 | t=12..24 503 | t=25..40 200
+  40 requests: 26 con 200, 14 con error (000 x1, 503 x13); pod nuevo pharmago-ui-...-xqz9p
+  ```
+- **Criterio de "hecho":** cumplido para C04. La app (UI y API) responde por `http://127.0.0.1` con el Ingress y `minikube tunnel`, sin port-forward. Las rutas corregidas dan 200 y el login funciona. Tras borrar el pod de la UI, el acceso vuelve solo con la misma URL, sin reabrir nada. El "0 errores" no aplica todavía: con 1 réplica hubo ~14 s de corte (503 del ingress mientras no había pod Ready). Eso se mide en C06 con 2 réplicas.
+- **Decisiones tomadas:** ninguna nueva.
+- **NO VERIFICADO / riesgos:**
+  - Login probado por API a través del Ingress, no haciendo clic en la UI desde el navegador.
+  - `pharmago-users-service` acumulaba 7 reinicios después de prender el cluster (antes del rollout). Probablemente arrancó antes que la BD y fallaron sus probes; se normalizó solo. Lo cubren C05 (tolerancia a fallas de la BD) y C06 (probes).
+- **Hallazgos nuevos que cambian el plan:** ninguno. El corte de ~14 s con 1 réplica de UI es la línea base contra la que C06 tiene que mostrar 0 errores.
+- **Uso de IA registrado en docs/USO_IA.md:** sí

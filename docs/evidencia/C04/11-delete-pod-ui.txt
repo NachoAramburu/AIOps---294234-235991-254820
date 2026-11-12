@@ -1,0 +1,46 @@
+Loop: curl http://127.0.0.1/ cada 1 s durante 40 s; en el segundo 10: kubectl delete pod -n pharmago -l app=pharmago-ui --wait=false
+UI con 1 réplica (las 2 llegan en C06): se esperan errores hasta que el pod nuevo esté Ready.
+Pod antes: pharmago-ui-8877cc78f-4hmmr
+t= 1 s  01:18:02  200
+t= 2 s  01:18:03  200
+t= 3 s  01:18:04  200
+t= 4 s  01:18:05  200
+t= 5 s  01:18:06  200
+t= 6 s  01:18:07  200
+t= 7 s  01:18:08  200
+t= 8 s  01:18:09  200
+t= 9 s  01:18:10  200
+t=10 s  >>> pod "pharmago-ui-8877cc78f-4hmmr" deleted from pharmago namespace
+t=10 s  01:18:11  200
+t=11 s  01:18:14  000
+t=12 s  01:18:14  503
+t=13 s  01:18:14  503
+t=14 s  01:18:15  503
+t=15 s  01:18:16  503
+t=16 s  01:18:17  503
+t=17 s  01:18:18  503
+t=18 s  01:18:19  503
+t=19 s  01:18:20  503
+t=20 s  01:18:21  503
+t=21 s  01:18:22  503
+t=22 s  01:18:23  503
+t=23 s  01:18:24  503
+t=24 s  01:18:25  503
+t=25 s  01:18:26  200
+t=26 s  01:18:27  200
+t=27 s  01:18:28  200
+t=28 s  01:18:29  200
+t=29 s  01:18:30  200
+t=30 s  01:18:31  200
+t=31 s  01:18:32  200
+t=32 s  01:18:33  200
+t=33 s  01:18:34  200
+t=34 s  01:18:35  200
+t=35 s  01:18:36  200
+t=36 s  01:18:37  200
+t=37 s  01:18:38  200
+t=38 s  01:18:39  200
+t=39 s  01:18:40  200
+t=40 s  01:18:41  200
+Pod después: pharmago-ui-8877cc78f-xqz9p
+Resumen: 40 requests, 26 con 200, 14 con error (000 x1, 503 x13)

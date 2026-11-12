@@ -1,0 +1,12 @@
+$ for p in / /api/drug /api/presentations /api/unitmeasures; do curl -s -o /dev/null -w "$p %{http_code}\n" "http://127.0.0.1$p"; sleep 1; done   (minikube tunnel abierto, sin port-forward)
+/ 200
+/api/drug 200
+/api/presentations 200
+/api/unitmeasures 200
+
+Control: rutas viejas en singular (antes de C04 el gateway las tenía así)
+/api/presentation 404
+/api/unitmeasure 404
+
+Control: la UI ya no apunta a 127.0.0.1:5000 (busca la cadena en el JS servido)
+bundle: main.77510e680587bce3.js  |  contiene '127.0.0.1:5000': False
