@@ -1,0 +1,12 @@
+Build y tests de la solución después de corregir Test_GetOneByExpression (2026-11-14, .NET SDK 10.0.401).
+
+$ dotnet build PharmaGo.sln -c Release
+  638 Warning(s)
+  0 Error(s)
+
+$ dotnet test PharnaGo.Test/PharmaGo.Test.csproj -c Release --no-build
+  Passed!  - Failed:     0, Passed:   291, Skipped:     0, Total:   291
+
+Corrección: el test buscaba el detalle con Id == 1, pero la base en memoria es compartida entre tests y los Id
+se autoincrementan, así que el 1 podía no existir. Ahora busca por el Id del detalle que acaba de insertar.
+No se ignoró ni se borró el test.

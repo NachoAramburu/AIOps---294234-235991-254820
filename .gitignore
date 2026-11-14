@@ -64,3 +64,5 @@ docker-compose.override.yml
 anomaly-detection/.venv/
 **/cypress/videos/
 **/cypress/screenshots/
+# Build del frontend que se copia para las pruebas BDD (C22)
+**/e2e/app/

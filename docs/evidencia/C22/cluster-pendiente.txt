@@ -1,0 +1,10 @@
+NO VERIFICADO en la PC de Franco (sin Docker ni Minikube, 2026-11-14): los escenarios @e2e van contra la app real.
+Lo corre quien tenga el cluster, después de git pull --rebase. En PowerShell como administrador, dejar abierto: minikube tunnel
+
+cd "Implementacion K8S/Codigo/e2e"
+npm ci
+CYPRESS_BASE_URL=http://127.0.0.1 CYPRESS_E2E_PASSWORD='<contraseña del usuario admin de Backend/seed-data.sql>' npm run test:e2e
+
+Esperado: 2 escenarios en verde ("La API de medicamentos responde" y "El administrador del seed inicia sesión de verdad").
+No pegar la contraseña en la evidencia. Máximo 10 logins por minuto por réplica del gateway (rate limit).
+Guardar la salida en docs/evidencia/C22/ y commitear como "B5-verificacion: escenarios @e2e de C22 en el cluster".

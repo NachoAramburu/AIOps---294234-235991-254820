@@ -1,0 +1,25 @@
+{
+  "name": "pharmago-e2e",
+  "private": true,
+  "description": "Pruebas BDD de PharmaGo con Cypress y Cucumber (C22). Ver docs/bdd.md.",
+  "scripts": {
+    "test:smoke": "cypress run --env tags=@smoke",
+    "test:e2e": "cypress run --env tags=@e2e",
+    "serve:app": "serve -s app -l 4200"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "20.1.2",
+    "@bahmutov/cypress-esbuild-preprocessor": "2.2.4",
+    "cypress": "13.17.0",
+    "esbuild": "0.21.5",
+    "serve": "14.2.4"
+  },
+  "cypress-cucumber-preprocessor": {
+    "filterSpecs": true,
+    "omitFiltered": true,
+    "stepDefinitions": "cypress/support/step_definitions/**/*.js"
+  }
+}

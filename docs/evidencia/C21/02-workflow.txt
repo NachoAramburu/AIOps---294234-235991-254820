@@ -1,0 +1,23 @@
+Validación local del workflow .github/workflows/ci.yml (2026-11-14).
+La ejecución real en GitHub Actions queda NO VERIFICADA hasta el push (ver docs/PROGRESO.md, C21).
+
+YAML válido (PyYAML). Disparadores: {'push': {'branches': ['team/obligatorio', 'main']}, 'pull_request': {'branches': ['main']}}
+  job backend: needs=[] actions=['actions/checkout@v7', 'actions/setup-dotnet@v6']
+  job frontend: needs=[] actions=['actions/checkout@v7', 'actions/setup-node@v7', 'actions/upload-artifact@v7']
+  job manifests: needs=[] actions=['actions/checkout@v7']
+  job bdd-smoke: needs=['frontend'] actions=['actions/checkout@v7', 'actions/download-artifact@v8', 'actions/setup-node@v7', 'cypress-io/github-action@v7']
+  job images: needs=['backend', 'frontend', 'manifests', 'bdd-smoke'] actions=['actions/checkout@v7', 'docker/login-action@v4']
+Todas las actions fijadas en una versión mayor (vN).
+Imágenes: ['pharmago-api-gateway', 'pharmago-users-service', 'pharmago-pharmacy-service', 'pharmago-ui']
+
+Rutas de la matriz de imágenes y de los jobs, comprobadas contra el repo:
+  existe: Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/Dockerfile
+  existe: Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Dockerfile
+  existe: Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Dockerfile
+  existe: Implementacion K8S/Codigo/Frontend/Dockerfile
+  existe: Implementacion K8S/Codigo/Backend/PharmaGo.sln
+  existe: Implementacion K8S/Codigo/Backend/PharnaGo.Test/PharmaGo.Test.csproj
+  existe: Implementacion K8S/Codigo/k8s
+  existe: Implementacion K8S/Codigo/e2e/package-lock.json
+
+Manifiestos que valida kubeconform: 50 archivos .yaml, todos con 'kind:'.

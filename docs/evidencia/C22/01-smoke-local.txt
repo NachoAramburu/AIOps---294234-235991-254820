@@ -1,0 +1,42 @@
+Escenarios BDD @smoke corridos en local (2026-11-14), igual que el job bdd-smoke del pipeline:
+build de producción del frontend actual copiado a e2e/app, servido con 'npx serve -s app -l 4200', API simulada con cy.intercept.
+
+$ CYPRESS_BASE_URL=http://localhost:4200 npm run test:smoke
+  (en esta PC hubo que agregar ELECTRON_EXTRA_LAUNCH_ARGS="--no-sandbox --disable-gpu --disable-software-rasterizer --in-process-gpu":
+   la sesión de la IA corre en un entorno restringido donde Electron no puede usar la GPU ni su sandbox.
+   En GitHub Actions y en una PC normal no hace falta.)
+
+  (Run Starting)
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.12.0 (C:\nvm4w\nodejs\node.exe)                                            │
+  │ Specs:          1 found (login.feature)                                                        │
+  │ Searched:       C:/Users/elpen/Desktop/aiops/AIOps/Implementacion K8S/Codigo/e2e/cypress/e2e/l │
+  │                 ogin.feature                                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+────────────────────────────────────────────────────────────────────────────────────────────────────
+  Running:  login.feature                                                                   (1 of 1)
+  Inicio de sesión
+    √ Un administrador con credenciales válidas entra a su página (1544ms)
+    √ Con credenciales inválidas sigo en el login y veo el error (1179ms)
+  2 passing (3s)
+  (Results)
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     2 seconds                                                                        │
+  │ Spec Ran:     login.feature                                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+====================================================================================================
+  (Run Finished)
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  login.feature                            00:02        2        2        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:02        2        2        -        -        -

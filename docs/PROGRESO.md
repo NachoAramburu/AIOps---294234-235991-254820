@@ -686,3 +686,44 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - Los logs de error de YARP tienen las claves `Message` y `message` en `State`. Son JSON válido (Python y Elasticsearch los aceptan), pero `ConvertFrom-Json` de PowerShell los rechaza. Para validar se usó Python.
   - Después del corte de luz, Fluent Bit tuvo errores de conexión mientras Elasticsearch arrancaba; los reintentos (`Retry_Limit False`) evitaron perder datos.
 - **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B6)
+
+## C21 — Pipeline CI/CD en GitHub Actions — 2026-11-14 — francokbd (bloque B5)
+- **Estado:** 🟡 Parcial. Workflow y corrección del test hechos y verificados en local; la corrida real en GitHub queda pendiente hasta el push.
+- **Ítem de rúbrica:** Transversal ("Tableros, repositorios y pipelines CI/CD: GitHub")
+- **Commit:** `C21-C22: pipeline CI/CD en GitHub Actions y pruebas BDD con Cypress y Cucumber` (SHA en `git log --grep "^C21-C22:"`)
+- **Archivos creados / modificados:** `.github/workflows/ci.yml` (nuevo), `docs/ci-cd.md` (nuevo), `Backend/PharnaGo.Test/DataAccess.Test/PurchasesDetailRepositoryTest.cs`
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ dotnet build PharmaGo.sln -c Release                 -> 0 Error(s)
+  $ dotnet test PharnaGo.Test/PharmaGo.Test.csproj        -> Passed! 291 de 291 (antes 290)
+  $ ci.yml con PyYAML (02-workflow.txt)
+    disparadores: push a team/obligatorio y main, pull_request a main
+    jobs: backend, frontend, manifests, bdd-smoke (needs frontend), images (needs los otros cuatro)
+    todas las actions fijadas en versión mayor; rutas de Dockerfiles, solución, tests y k8s comprobadas
+  ```
+- **Criterio de "hecho":** cumplido en local. Falta ver el pipeline en verde en GitHub Actions.
+- **Decisiones tomadas:** D47 aplicada: el pipeline construye y valida, y el despliegue es local con `deploy.sh`. Actions en su última versión mayor, publicada hace meses: checkout v7, setup-dotnet v6, setup-node v7, upload-artifact v7, download-artifact v8, docker/login-action v4, cypress-io/github-action v7. kubeconform v0.8.0. El build del frontend se pasa como artefacto al job de BDD, para no compilar dos veces. `images` también espera a `bdd-smoke`: no se publica una imagen si el login está roto. Las imágenes se publican en `ghcr.io` solo en push a `main`.
+- **NO VERIFICADO / riesgos:** la corrida real en GitHub Actions. En Linux las rutas distinguen mayúsculas: si algún `ProjectReference` del monolito o de los tests tiene una diferencia de mayúsculas, el job `backend` lo va a mostrar (las imágenes de los 3 servicios ya se construyen en Linux sin problema). kubeconform no se corrió en local: se valida en el pipeline.
+- **Hallazgos nuevos que cambian el plan:** ninguno.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B5)
+
+## C22 — Pruebas BDD con Cypress y Cucumber — 2026-11-14 — francokbd (bloque B5)
+- **Estado:** 🟡 Parcial. Escenarios `@smoke` en verde en local; los `@e2e` quedan pendientes porque esta PC no tiene cluster.
+- **Ítem de rúbrica:** Transversal ("BDD: Cypress + Cucumber")
+- **Commit:** `C21-C22: pipeline CI/CD en GitHub Actions y pruebas BDD con Cypress y Cucumber`
+- **Archivos creados / modificados:** `Implementacion K8S/Codigo/e2e/` (nuevo: `package.json`, `package-lock.json`, `cypress.config.js`, `cypress/e2e/login.feature`, `cypress/e2e/salud.feature`, `cypress/support/step_definitions/pasos.js`), job `bdd-smoke` en `.github/workflows/ci.yml`, `docs/bdd.md` (nuevo), `.gitignore` (`**/e2e/app/`)
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ npm install (e2e)        -> 462 paquetes; npx cypress verify -> Verified Cypress 13.17.0
+  $ npx ng build             -> build de producción del frontend actual, copiado a e2e/app
+  $ npx serve -s app -l 4200 && CYPRESS_BASE_URL=http://localhost:4200 npm run test:smoke   (01-smoke-local.txt)
+    Specs: 1 found (login.feature)      <- el filtro @smoke deja afuera salud.feature
+    √ Un administrador con credenciales válidas entra a su página
+    √ Con credenciales inválidas sigo en el login y veo el error
+    2 passing
+  ```
+- **Criterio de "hecho":** cumplido para `@smoke`. `@e2e` está NO VERIFICADO.
+- **Decisiones tomadas:** D49 aplicada con las versiones exactas. La contraseña del escenario real sale de `CYPRESS_E2E_PASSWORD` y se escribe con `log: false`. Los escenarios `@smoke` simulan también los GET de la app (`**/api/**`), para que la página de destino no dependa de un backend.
+- **NO VERIFICADO / riesgos:** `npm run test:e2e` contra el cluster. Comandos en `docs/evidencia/C22/cluster-pendiente.txt`. El job `bdd-smoke` en GitHub Actions se ve después del push.
+- **Hallazgos nuevos que cambian el plan:** las pruebas encontraron un bug de la app: con credenciales inválidas, `LoginComponent` lanza un `TypeError` al leer `login.userName` de un resultado vacío. No se corrigió, porque es código de negocio; los pasos ignoran solo ese error y está documentado en `docs/bdd.md`. Además, en esta PC Electron necesitó `--no-sandbox --disable-gpu` por el entorno restringido de la sesión de IA; en GitHub Actions no hace falta.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B5)
