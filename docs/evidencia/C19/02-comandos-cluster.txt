@@ -1,0 +1,47 @@
+# Comandos de solo lectura del plan (§6, §7 y §9), ejecutados contra el cluster el 2026-11-14T16:23:53Z
+
+$ kubectl get deploy -n pharmago
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+elasticsearch               1/1     1            1           2d2h
+grafana                     1/1     1            1           2d2h
+jaeger                      1/1     1            1           30m
+kibana                      1/1     1            1           2d2h
+otlp-collector              1/1     1            1           2d2h
+pharmago-api-gateway        2/2     2            2           2d2h
+pharmago-db                 1/1     1            1           2d2h
+pharmago-pharmacy-service   2/2     2            2           2d2h
+pharmago-ui                 2/2     2            2           2d2h
+pharmago-users-service      2/2     2            2           2d2h
+prometheus                  1/1     1            1           2d2h
+
+$ kubectl get nodes
+NAME           STATUS   ROLES           AGE    VERSION
+minikube       Ready    control-plane   2d2h   v1.33.13
+minikube-m02   Ready    <none>          2d2h   v1.33.13
+minikube-m03   Ready    <none>          2d2h   v1.33.13
+minikube-m04   Ready    <none>          2d2h   v1.33.13
+minikube-m05   Ready    <none>          2d2h   v1.33.13
+
+$ kubectl get networkpolicy -n pharmago
+No resources found in pharmago namespace.
+
+$ kubectl get events -n pharmago --sort-by=.lastTimestamp | tail -5
+19m         Normal    Started             pod/otel-agent-ztcc8                              Started container otel-agent
+18m         Normal    SuccessfulCreate    daemonset/otel-agent                              Created pod: otel-agent-hcdmj
+18m         Normal    Started             pod/otel-agent-hcdmj                              Started container otel-agent
+18m         Normal    Created             pod/otel-agent-hcdmj                              Created container: otel-agent
+18m         Normal    Pulled              pod/otel-agent-hcdmj                              Container image "otel/opentelemetry-collector-contrib:0.111.0" already present on machine
+
+$ kubectl logs -n pharmago -l app=pharmago-api-gateway --since=5m | grep circuit_breaker   (sin fallas activas: vacío es lo esperado)
+  (líneas: 0)
+
+$ índice de logs de Kibana: curl localhost:9200/_cat/indices/pharmago-logs-* (dentro del pod de Elasticsearch)
+pharmago-logs-2026.11.13  30491
+pharmago-logs-2026.11.14  26070
+pharmago-logs-2026.11.12 147432
+
+$ minikube node --help | grep start   (comando del riesgo D03)
+  start         Starts a node.
+
+$ kubectl rollout restart --help | head -1   (mitigación del Collector y de microservicios)
+Restart a resource.

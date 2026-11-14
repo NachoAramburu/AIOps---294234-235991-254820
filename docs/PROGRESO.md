@@ -593,3 +593,28 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - `k8s_*_cpu_utilization_ratio` mide núcleos, no porcentaje. Las alertas de B6 tienen que usar `k8s_*_cpu_limit_utilization_ratio` si quieren un porcentaje.
   - `k8s_container_restarts` es un gauge acumulado: para alertar, usar `increase()` o `delta()`.
 - **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B3)
+
+## C19 — Plan de contención de incidentes — 2026-11-14 — Ignacio Aramburu (bloque B4)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 6 (Plan de incidentes)
+- **Commit:** `C19: plan de contención de incidentes, roles y plantillas` (SHA en `git log --grep "^C19:"`)
+- **Archivos creados / modificados:** `docs/plan-incidentes.md`, `docs/plantillas/registro-incidente.md`, `docs/plantillas/postmortem.md` y `docs/incidentes/ejemplo-postmortem.md` (nuevos).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ python docs/evidencia/C19/check_c19.py .        (01)
+    archivos y scripts nombrados en los 4 documentos, paneles de Grafana contra los dashboards provisionados,
+    decisiones Dxx, alertas pg-* contra el plan de C13 y playbooks contra el plan de C20
+    Resumen: 56 OK, 32 PENDIENTE (B6/B7), 0 FALTA  -> exit=0
+  $ comandos de solo lectura del plan contra el cluster   (02)
+    kubectl get deploy/nodes/networkpolicy/events, grep circuit_breaker en el gateway,
+    índices pharmago-logs-* en Elasticsearch, minikube node start, kubectl rollout restart: todos responden
+  ```
+- **Criterio de "hecho" de §3 (ítem 6):** cumplido en lo que corresponde a C19: plan con severidades medibles, roles, war room, comunicación y riesgos, más las plantillas de registro y postmortem blameless. Los playbooks por tipo de falla son de C20 (bloque B7).
+- **Decisiones tomadas:** ninguna técnica nueva. Se citan D45 y D46 en el plan y en las plantillas. Roles para la defensa, asignados por sorteo (`random.SystemRandom`) a pedido del integrante: IC Martin Roux, Ops Ignacio Aramburu, Comms Franco (francokbd).
+- **NO VERIFICADO / riesgos:**
+  - Las 10 alertas `pg-*` (B6), los 8 playbooks, `steady-state.sh` y `EXPERIMENTOS.md` (B7) todavía no existen. El plan los nombra por el uid y el nombre del plan, y el chequeo (01) confirma que coinciden con los prompts de C13 y C20. B7 tiene que verificar que el plan nombre las alertas y paneles reales.
+  - El plan no se ensayó con un experimento en vivo: eso es de C20 (seguir un playbook durante un experimento) y de C23 (ensayo de la defensa).
+- **Hallazgos nuevos que cambian el plan:**
+  - Todavía no existe `chaos-engineering/EXPERIMENTOS.md`. El postmortem de ejemplo usa un experimento real ya medido: `disconnect.sh pharmago-db 45`, de `docs/evidencia/C17/03-disconnect-db.txt`. Las 64 requests entre 04:48:44 y 04:50:18 fallaron (6 × 500, 4 × 502, 54 × 503) y la recuperación fue automática, 8 s después de que la BD volvió a Ready. Las acciones del postmortem quedan asignadas a B6, B7 y B8.
+  - El postmortem deja una lección operativa para la defensa: si se cae la BD, restaurarla y esperar unos 50 s, sin reiniciar los microservicios.
+- **Uso de IA registrado en docs/USO_IA.md:** sí

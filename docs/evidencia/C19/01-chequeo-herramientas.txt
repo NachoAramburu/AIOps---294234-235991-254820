@@ -1,0 +1,102 @@
+$ python docs/evidencia/C19/check_c19.py .   (2026-11-14T16:23:40Z)
+# 1. Archivos y scripts nombrados en los 4 documentos (texto y bloques de código)
+  [OK] ./disconnect.sh  -> Implementacion K8S/Codigo/chaos-engineering/disconnect.sh
+  [PENDIENTE] EXPERIMENTOS.md  -> B7 (C18)
+  [OK] RATE_LIMITING_GUIDE.md  -> Implementacion K8S/Codigo/Backend/RATE_LIMITING_GUIDE.md
+  [PENDIENTE] chaos-engineering/EXPERIMENTOS.md  -> B7 (C18)
+  [PENDIENTE] chaos-engineering/steady-state.sh  -> B7 (C18)
+  [OK] deploy.sh  -> Implementacion K8S/Codigo/k8s/deploy.sh
+  [PENDIENTE] desconexion.md  -> B7 (C20), nombre corto de docs/playbooks/desconexion.md
+  [OK] disconnect.sh  -> Implementacion K8S/Codigo/chaos-engineering/disconnect.sh
+  [OK] docs/evidencia/C17/03-disconnect-db.txt  -> docs/evidencia/C17/03-disconnect-db.txt
+  [OK] docs/evidencia/C19/  -> docs/evidencia/C19
+  [OK] docs/incidentes/  -> docs/incidentes
+  [OK] docs/metricas.md  -> docs/metricas.md
+  [OK] docs/mttr.md  -> docs/mttr.md
+  [OK] docs/plan-incidentes.md  -> docs/plan-incidentes.md
+  [OK] docs/plantillas/  -> docs/plantillas
+  [OK] docs/plantillas/postmortem.md  -> docs/plantillas/postmortem.md
+  [OK] docs/plantillas/registro-incidente.md  -> docs/plantillas/registro-incidente.md
+  [PENDIENTE] docs/playbooks/  -> B7 (C20)
+  [PENDIENTE] docs/playbooks/cpu.md  -> B7 (C20)
+  [PENDIENTE] docs/playbooks/desconexion.md  -> B7 (C20)
+  [PENDIENTE] docs/playbooks/memoria.md  -> B7 (C20)
+  [PENDIENTE] docs/playbooks/pod-caido.md  -> B7 (C20)
+  [PENDIENTE] docs/playbooks/red.md  -> B7 (C20)
+  [PENDIENTE] docs/playbooks/requests.md  -> B7 (C20)
+  [PENDIENTE] docs/playbooks/rollout-fallido.md  -> B7 (C20)
+  [PENDIENTE] docs/playbooks/storage.md  -> B7 (C20)
+  [OK] docs/resiliencia.md  -> docs/resiliencia.md
+  [OK] docs/trazas.md  -> docs/trazas.md
+  [OK] k8s/deploy.sh  -> Implementacion K8S/Codigo/k8s/deploy.sh
+  [OK] k8s/port-forward.sh  -> Implementacion K8S/Codigo/k8s/port-forward.sh
+  [OK] k8s/rollback.sh  -> Implementacion K8S/Codigo/k8s/rollback.sh
+  [OK] k8s/verify/measure-mttr.sh  -> Implementacion K8S/Codigo/k8s/verify/measure-mttr.sh
+  [OK] registro-incidente.md  -> docs/plantillas/registro-incidente.md
+  [PENDIENTE] requests.md  -> B7 (C20), nombre corto de docs/playbooks/requests.md
+  [PENDIENTE] steady-state.sh  -> B7 (C18)
+
+# 2. Paneles de Grafana nombrados entre comillas, contra los dashboards provisionados
+  [OK] panel "CPU del contenedor contra su límite"  -> grafana-dashboard-infra.yaml
+  [OK] panel "Distribución de Status Codes (%)"  -> grafana-dashboards.yaml
+  [OK] panel "Latencia Promedio por Endpoint"  -> grafana-dashboards.yaml
+  [OK] panel "Memoria del pod contra su límite"  -> grafana-dashboard-infra.yaml
+  [OK] panel "Nodos Ready"  -> grafana-dashboard-infra.yaml
+  [OK] panel "Peticiones por Segundo por Endpoint"  -> grafana-dashboards.yaml
+  [OK] panel "PharmaGo - Infra"  -> grafana-dashboard-infra.yaml
+  [OK] panel "PharmaGo - Overview"  -> grafana-dashboards.yaml
+  [OK] panel "Reinicios por contenedor"  -> grafana-dashboard-infra.yaml
+  [OK] panel "Réplicas deseadas y disponibles por Deployment"  -> grafana-dashboard-infra.yaml
+  [OK] panel "Tasa de Error por Endpoint (%)"  -> grafana-dashboards.yaml
+  [OK] panel "Throughput Total"  -> grafana-dashboards.yaml
+  (las frases entre comillas que no son paneles, como ejemplos de mensajes, no se listan)
+  [OK] nombrado "Tasa de Error por Endpoint (%)"  -> grafana-dashboards.yaml
+  [OK] nombrado "Distribución de Status Codes (%)"  -> grafana-dashboards.yaml
+  [OK] nombrado "Latencia Promedio por Endpoint"  -> grafana-dashboards.yaml
+  [OK] nombrado "Throughput Total"  -> grafana-dashboards.yaml
+  [OK] nombrado "Peticiones por Segundo por Endpoint"  -> grafana-dashboards.yaml
+  [OK] nombrado "CPU del contenedor contra su límite"  -> grafana-dashboard-infra.yaml
+  [OK] nombrado "Memoria del pod contra su límite"  -> grafana-dashboard-infra.yaml
+  [OK] nombrado "Filesystem por pod"  -> título completo "Filesystem por pod (ephemeral-storage usado)"
+  [OK] nombrado "Red por nodo"  -> título completo "Red por nodo (rx y tx)"
+  [OK] nombrado "Réplicas deseadas y disponibles por Deployment"  -> grafana-dashboard-infra.yaml
+  [OK] nombrado "Reinicios por contenedor"  -> grafana-dashboard-infra.yaml
+  [OK] nombrado "Nodos Ready"  -> grafana-dashboard-infra.yaml
+  [OK] nombrado "PharmaGo - Overview"  -> grafana-dashboards.yaml
+  [OK] nombrado "PharmaGo - Infra"  -> grafana-dashboard-infra.yaml
+
+# 3. Decisiones citadas (Dxx) existen en docs/DECISIONES.md
+  [OK] D03
+  [OK] D04
+  [OK] D12
+  [OK] D13
+  [OK] D34
+  [OK] D36
+  [OK] D41
+  [OK] D42
+  [OK] D45
+  [OK] D46
+
+# 4. Alertas pg-* citadas: deben coincidir con los uid del plan de C13 (se provisionan en B6)
+  [PENDIENTE] pg-429  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-5xx  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-breaker  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-cpu  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-latency  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-latency-anomaly  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-memory  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-replicas  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-restarts  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+  [PENDIENTE] pg-storage  -> uid del plan de C13; grafana-alerting.yaml llega en B6
+
+# 5. Playbooks citados: deben coincidir con los nombres del plan de C20 (se crean en B7)
+  [PENDIENTE] docs/playbooks/cpu.md  -> nombre del plan de C20
+  [PENDIENTE] docs/playbooks/memoria.md  -> nombre del plan de C20
+  [PENDIENTE] docs/playbooks/pod-caido.md  -> nombre del plan de C20
+  [PENDIENTE] docs/playbooks/red.md  -> nombre del plan de C20
+  [PENDIENTE] docs/playbooks/requests.md  -> nombre del plan de C20
+  [PENDIENTE] docs/playbooks/rollout-fallido.md  -> nombre del plan de C20
+  [PENDIENTE] docs/playbooks/storage.md  -> nombre del plan de C20
+
+Resumen: 56 OK, 32 PENDIENTE (B6/B7), 0 FALTA
+exit=0
