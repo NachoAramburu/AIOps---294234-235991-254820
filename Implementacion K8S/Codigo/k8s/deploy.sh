@@ -30,9 +30,10 @@ done
 
 for app in "${APPS[@]}"; do
     echo "$(date -u +%H:%M:%S) ${app} -> ${TAG}"
-    # change-cause queda en "kubectl rollout history": así se ve qué tag tiene cada revisión.
-    kubectl annotate "deployment/${app}" kubernetes.io/change-cause="deploy.sh ${TAG}" --overwrite -n "$NS" > /dev/null
     kubectl set image "deployment/${app}" "${app}=${app}:${TAG}" -n "$NS"
+    # change-cause va DESPUÉS del set image: el controlador la copia a la revisión nueva, la que corre este tag.
+    # Si se anotara antes, también quedaría en la revisión vigente y "rollout history" mostraría el tag equivocado.
+    kubectl annotate "deployment/${app}" kubernetes.io/change-cause="deploy.sh ${TAG}" --overwrite -n "$NS" > /dev/null
     if ! kubectl rollout status "deployment/${app}" -n "$NS" --timeout=180s; then
         echo "Error: el rollout de ${app} no terminó en 180 s. Volviendo a la revisión anterior..."
         kubectl rollout undo "deployment/${app}" -n "$NS"

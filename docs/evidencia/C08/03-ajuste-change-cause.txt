@@ -1,0 +1,31 @@
+Ajuste de C08 (2026-11-14): orden de la anotación kubernetes.io/change-cause, con kubectl simulado.
+Problema que vio B1-verificación: deploy.sh anotaba ANTES del set image, la etiqueta nueva también quedaba en la revisión
+vigente y 'rollout history' mostraba el tag equivocado; rollback.sh no anotaba nada.
+
+--- deploy.sh: ahora set image primero y annotate después
+$ bash deploy.sh be11702-v2
+  exit=0
+  llamadas a kubectl, en orden:
+    kubectl set image deployment/pharmago-users-service pharmago-users-service=pharmago-users-service:be11702-v2
+    kubectl annotate deployment/pharmago-users-service kubernetes.io/change-cause=deploy.sh be11702-v2
+    kubectl rollout status deployment/pharmago-users-service
+    kubectl set image deployment/pharmago-pharmacy-service pharmago-pharmacy-service=pharmago-pharmacy-service:be11702-v2
+    kubectl annotate deployment/pharmago-pharmacy-service kubernetes.io/change-cause=deploy.sh be11702-v2
+    kubectl rollout status deployment/pharmago-pharmacy-service
+    kubectl set image deployment/pharmago-api-gateway pharmago-api-gateway=pharmago-api-gateway:be11702-v2
+    kubectl annotate deployment/pharmago-api-gateway kubernetes.io/change-cause=deploy.sh be11702-v2
+    kubectl rollout status deployment/pharmago-api-gateway
+    kubectl set image deployment/pharmago-ui pharmago-ui=pharmago-ui:be11702-v2
+    kubectl annotate deployment/pharmago-ui kubernetes.io/change-cause=deploy.sh be11702-v2
+    kubectl rollout status deployment/pharmago-ui
+
+--- rollback.sh de un Deployment: anota a qué tag volvió
+$ bash rollback.sh pharmago-ui
+  exit=0
+  llamadas a kubectl, en orden:
+    kubectl rollout undo deployment/pharmago-ui
+    kubectl rollout status deployment/pharmago-ui
+    kubectl get deployment/pharmago-ui -o jsonpath={.spec.template.spec.containers[0].image}
+    kubectl annotate deployment/pharmago-ui kubernetes.io/change-cause=rollback.sh, vuelve a be11702
+
+Verificación real de 'kubectl rollout history' en el cluster: pendiente (docs/evidencia/C08/04-ajuste-cluster-pendiente.txt).

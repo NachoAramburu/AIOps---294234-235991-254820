@@ -1,0 +1,10 @@
+NO VERIFICADO en la PC de Franco (sin cluster, 2026-11-14). Lo corre quien tenga el cluster, después de git pull --rebase:
+
+cd "Implementacion K8S/Codigo/k8s"
+./build-images.sh <sha>-v2
+./deploy.sh <sha>-v2
+kubectl rollout history deployment/pharmago-api-gateway -n pharmago
+  Esperado: la última revisión dice "deploy.sh <sha>-v2" y la anterior conserva su propio tag.
+./rollback.sh pharmago-api-gateway
+kubectl rollout history deployment/pharmago-api-gateway -n pharmago
+  Esperado: la revisión vigente dice "rollback.sh, vuelve a <sha>".

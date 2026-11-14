@@ -33,6 +33,9 @@ for app in "${APPS[@]}"; do
         continue
     fi
     kubectl rollout status "deployment/${app}" -n "$NS" --timeout=180s || fail=1
+    # Deja en "rollout history" a qué versión se volvió (el tag de la imagen que quedó corriendo).
+    img=$(kubectl get "deployment/${app}" -n "$NS" -o jsonpath='{.spec.template.spec.containers[0].image}')
+    kubectl annotate "deployment/${app}" kubernetes.io/change-cause="rollback.sh, vuelve a ${img##*:}" --overwrite -n "$NS" > /dev/null
 done
 
 kubectl get deploy -n "$NS" "${APPS[@]}" -o custom-columns=DEPLOYMENT:.metadata.name,LISTOS:.status.readyReplicas,IMAGEN:.spec.template.spec.containers[0].image

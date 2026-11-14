@@ -727,3 +727,10 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
 - **NO VERIFICADO / riesgos:** `npm run test:e2e` contra el cluster. Comandos en `docs/evidencia/C22/cluster-pendiente.txt`. El job `bdd-smoke` en GitHub Actions se ve después del push.
 - **Hallazgos nuevos que cambian el plan:** las pruebas encontraron un bug de la app: con credenciales inválidas, `LoginComponent` lanza un `TypeError` al leer `login.userName` de un resultado vacío. No se corrigió, porque es código de negocio; los pasos ignoran solo ese error y está documentado en `docs/bdd.md`. Además, en esta PC Electron necesitó `--no-sandbox --disable-gpu` por el entorno restringido de la sesión de IA; en GitHub Actions no hace falta.
 - **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B5)
+
+### C08-ajuste — Etiqueta correcta en rollout history — 2026-11-14 — francokbd
+- **Estado:** 🟡 Parcial. Corregido y verificado con kubectl simulado; falta mirarlo en el cluster.
+- **Problema:** lo encontró B1-verificación. `deploy.sh` anotaba `kubernetes.io/change-cause` antes del `set image`, así la etiqueta nueva también quedaba en la revisión vigente, y después de un rollback `rollout history` mostraba el tag equivocado. Las imágenes y el rollback eran correctos; solo confundía la etiqueta.
+- **Cambio:** `deploy.sh` anota después del `set image`. `rollback.sh` anota a qué tag volvió (`rollback.sh, vuelve a <tag>`).
+- **Evidencia:** `docs/evidencia/C08/03-ajuste-change-cause.txt` (orden de las llamadas con kubectl simulado). Pendiente en el cluster: `docs/evidencia/C08/04-ajuste-cluster-pendiente.txt`.
+- **Uso de IA registrado en docs/USO_IA.md:** sí
