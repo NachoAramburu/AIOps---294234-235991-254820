@@ -688,9 +688,9 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
 - **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B6)
 
 ## C21 — Pipeline CI/CD en GitHub Actions — 2026-11-14 — francokbd (bloque B5)
-- **Estado:** 🟡 Parcial. Workflow y corrección del test hechos y verificados en local; la corrida real en GitHub queda pendiente hasta el push.
+- **Estado:** ✅ Hecho. Verificado en local y en GitHub Actions: la corrida [43641145486](https://github.com/NachoAramburu/AIOps---294234-235991-254820/actions/runs/43641145486) terminó con los 8 jobs en verde (actualizado en `C21-evidencia`).
 - **Ítem de rúbrica:** Transversal ("Tableros, repositorios y pipelines CI/CD: GitHub")
-- **Commit:** `C21-C22: pipeline CI/CD en GitHub Actions y pruebas BDD con Cypress y Cucumber` (SHA en `git log --grep "^C21-C22:"`)
+- **Commit:** `c1e03c8 C21-C22: pipeline CI/CD en GitHub Actions y pruebas BDD con Cypress y Cucumber`
 - **Archivos creados / modificados:** `.github/workflows/ci.yml` (nuevo), `docs/ci-cd.md` (nuevo), `Backend/PharnaGo.Test/DataAccess.Test/PurchasesDetailRepositoryTest.cs`
 - **Evidencia (comandos ejecutados y salida resumida):**
   ```
@@ -700,15 +700,19 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
     disparadores: push a team/obligatorio y main, pull_request a main
     jobs: backend, frontend, manifests, bdd-smoke (needs frontend), images (needs los otros cuatro)
     todas las actions fijadas en versión mayor; rutas de Dockerfiles, solución, tests y k8s comprobadas
+  $ curl https://api.github.com/repos/.../actions/runs/43641145486/jobs   (03-corrida-github.txt)
+    commit 94ad41a, push a team/obligatorio, completed / success en 3 min 26 s
+    kubeconform, backend, frontend, bdd-smoke y las 4 imágenes (tag 94ad41a): success
+    login y publicación en ghcr.io: skipped, como corresponde fuera de main
   ```
-- **Criterio de "hecho":** cumplido en local. Falta ver el pipeline en verde en GitHub Actions.
+- **Criterio de "hecho":** cumplido. El pipeline construye, testea, valida los manifiestos, corre las pruebas BDD y construye las 4 imágenes con el SHA corto en GitHub Actions.
 - **Decisiones tomadas:** D47 aplicada: el pipeline construye y valida, y el despliegue es local con `deploy.sh`. Actions en su última versión mayor, publicada hace meses: checkout v7, setup-dotnet v6, setup-node v7, upload-artifact v7, download-artifact v8, docker/login-action v4, cypress-io/github-action v7. kubeconform v0.8.0. El build del frontend se pasa como artefacto al job de BDD, para no compilar dos veces. `images` también espera a `bdd-smoke`: no se publica una imagen si el login está roto. Las imágenes se publican en `ghcr.io` solo en push a `main`.
-- **NO VERIFICADO / riesgos:** la corrida real en GitHub Actions. En Linux las rutas distinguen mayúsculas: si algún `ProjectReference` del monolito o de los tests tiene una diferencia de mayúsculas, el job `backend` lo va a mostrar (las imágenes de los 3 servicios ya se construyen en Linux sin problema). kubeconform no se corrió en local: se valida en el pipeline.
+- **NO VERIFICADO / riesgos:** la publicación en `ghcr.io`, que solo corre en push a `main` (se ve en la entrega, al mergear). Los logs de cada job piden login para bajarlos, así que la cantidad de tests y escenarios de la corrida no se copió a la evidencia: se ve abriendo la corrida en GitHub. El resultado `success` de los pasos `Tests`, `Validar los YAML` y Cypress sí está confirmado. El riesgo de mayúsculas en las rutas en Linux quedó descartado: el job `backend` compiló.
 - **Hallazgos nuevos que cambian el plan:** ninguno.
 - **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B5)
 
 ## C22 — Pruebas BDD con Cypress y Cucumber — 2026-11-14 — francokbd (bloque B5)
-- **Estado:** 🟡 Parcial. Escenarios `@smoke` en verde en local; los `@e2e` quedan pendientes porque esta PC no tiene cluster.
+- **Estado:** 🟡 Parcial. Escenarios `@smoke` en verde en local y en GitHub Actions; los `@e2e` quedan pendientes porque esta PC no tiene cluster.
 - **Ítem de rúbrica:** Transversal ("BDD: Cypress + Cucumber")
 - **Commit:** `C21-C22: pipeline CI/CD en GitHub Actions y pruebas BDD con Cypress y Cucumber`
 - **Archivos creados / modificados:** `Implementacion K8S/Codigo/e2e/` (nuevo: `package.json`, `package-lock.json`, `cypress.config.js`, `cypress/e2e/login.feature`, `cypress/e2e/salud.feature`, `cypress/support/step_definitions/pasos.js`), job `bdd-smoke` en `.github/workflows/ci.yml`, `docs/bdd.md` (nuevo), `.gitignore` (`**/e2e/app/`)
@@ -721,10 +725,12 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
     √ Un administrador con credenciales válidas entra a su página
     √ Con credenciales inválidas sigo en el login y veo el error
     2 passing
+  $ job bdd-smoke en GitHub Actions, corrida 43641145486   (../C21/03-corrida-github.txt)
+    Pruebas BDD @smoke (Cypress y Cucumber): success
   ```
-- **Criterio de "hecho":** cumplido para `@smoke`. `@e2e` está NO VERIFICADO.
+- **Criterio de "hecho":** cumplido para `@smoke`, en local y en GitHub Actions. `@e2e` está NO VERIFICADO.
 - **Decisiones tomadas:** D49 aplicada con las versiones exactas. La contraseña del escenario real sale de `CYPRESS_E2E_PASSWORD` y se escribe con `log: false`. Los escenarios `@smoke` simulan también los GET de la app (`**/api/**`), para que la página de destino no dependa de un backend.
-- **NO VERIFICADO / riesgos:** `npm run test:e2e` contra el cluster. Comandos en `docs/evidencia/C22/cluster-pendiente.txt`. El job `bdd-smoke` en GitHub Actions se ve después del push.
+- **NO VERIFICADO / riesgos:** `npm run test:e2e` contra el cluster. Comandos en `docs/evidencia/C22/cluster-pendiente.txt`.
 - **Hallazgos nuevos que cambian el plan:** las pruebas encontraron un bug de la app: con credenciales inválidas, `LoginComponent` lanza un `TypeError` al leer `login.userName` de un resultado vacío. No se corrigió, porque es código de negocio; los pasos ignoran solo ese error y está documentado en `docs/bdd.md`. Además, en esta PC Electron necesitó `--no-sandbox --disable-gpu` por el entorno restringido de la sesión de IA; en GitHub Actions no hace falta.
 - **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B5)
 

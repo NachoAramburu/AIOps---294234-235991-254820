@@ -1,0 +1,59 @@
+Corrida real del pipeline en GitHub Actions (C21 y job bdd-smoke de C22)
+=========================================================================
+
+Corrida: https://github.com/NachoAramburu/AIOps---294234-235991-254820/actions/runs/43641145486
+
+Cómo se obtuvo: API REST pública de GitHub, sin login (el repo es público), el 2026-11-14.
+  $ curl -sL https://api.github.com/repos/NachoAramburu/AIOps---294234-235991-254820/actions/runs/43641145486
+  $ curl -sL https://api.github.com/repos/NachoAramburu/AIOps---294234-235991-254820/actions/runs/43641145486/jobs
+  $ curl -sL https://api.github.com/repos/NachoAramburu/AIOps---294234-235991-254820/check-runs/<id>/annotations
+
+Datos de la corrida
+-------------------
+commit   94ad41a506fbb4be97226e699506374ed7fc4ea1 (C08-ajuste, incluye C21-C22 de c1e03c8)
+rama     team/obligatorio
+evento   push
+estado   completed / success
+inicio   2026-11-14T21:07:46Z
+fin      2026-11-14T21:11:12Z   (3 min 26 s en total)
+
+Jobs (id | nombre | resultado | inicio -> fin, UTC)
+---------------------------------------------------
+132588776949 | Manifiestos de Kubernetes (kubeconform)  | success | 21:07:48 -> 21:07:56
+132588776881 | Backend .NET (build y tests)             | success | 21:07:48 -> 21:08:32
+132588776754 | Frontend Angular (build)                 | success | 21:07:48 -> 21:08:47
+132589057924 | Pruebas BDD @smoke (Cypress y Cucumber)  | success | 21:08:49 -> 21:09:35   (arranca después de frontend)
+132589278126 | Imagen pharmago-api-gateway              | success | 21:09:37 -> 21:10:05   (arrancan después de los 4 anteriores)
+132589278156 | Imagen pharmago-pharmacy-service         | success | 21:09:37 -> 21:10:09
+132589278117 | Imagen pharmago-users-service            | success | 21:09:37 -> 21:10:10
+132589278150 | Imagen pharmago-ui                       | success | 21:09:37 -> 21:11:11
+
+Pasos de cada job (todos success salvo los marcados)
+----------------------------------------------------
+kubeconform:  checkout@v7 / Instalar kubeconform v0.8.0 / Validar los YAML de k8s
+backend:      checkout@v7 / setup-dotnet@v6 / Restore / Build / Tests
+frontend:     checkout@v7 / setup-node@v7 / Instalar dependencias / Build de producción / Guardar el build para las pruebas BDD
+bdd-smoke:    checkout@v7 / Traer el build del frontend / setup-node@v7 / cypress-io/github-action@v7
+imágenes (x4): checkout@v7 / Calcular el tag / Construir <imagen>:94ad41a
+               Login a GitHub Container Registry -> skipped
+               Publicar en ghcr.io (solo en main) -> skipped
+  Los dos skipped son lo esperado: el push fue a team/obligatorio, y el pipeline publica en ghcr.io solo en push a main.
+  El tag de las 4 imágenes es 94ad41a, el SHA corto del commit.
+
+Anotaciones (advertencias que deja GitHub, ninguna es un error)
+---------------------------------------------------------------
+- Los 8 jobs: notice "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026".
+  Aviso informativo de GitHub sobre la imagen del runner; la corrida terminó bien igual.
+- Backend: 14 warnings del compilador, ya presentes en el código heredado:
+  - 8 x "The target framework 'net6.0' is out of support": la app es .NET 6 y no se cambia.
+  - 6 x nullable (1 en Drug.cs, 3 en DrugExportationModel.cs, 2 en Parameter.cs): código de negocio heredado, no se toca.
+
+NO VERIFICADO desde esta PC
+---------------------------
+La API devuelve 403 al bajar los logs de cada job sin login. Por eso no se copiaron acá:
+- la cantidad de tests del job backend (en local fueron 291 de 291, ver 01-build-test.txt);
+- la cantidad de escenarios del job bdd-smoke (en local fueron 2 de 2, ver ../C22/01-smoke-local.txt);
+- el resumen de kubeconform.
+Para verlos: abrir la corrida con la URL de arriba y entrar a cada job (cualquier integrante con sesión en GitHub).
+El resultado "success" de los pasos Tests, cypress-io/github-action y Validar los YAML sí está confirmado por la API:
+si un test, un escenario o un manifiesto fallara, ese paso terminaría en failure.
