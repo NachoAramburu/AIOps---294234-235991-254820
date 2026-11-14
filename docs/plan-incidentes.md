@@ -4,7 +4,7 @@ Letra: *"implementar un plan de contención de incidentes operacionales"* y, en 
 
 Este documento es para usar **durante** el incidente: quién hace qué, qué se mira y en qué orden. El detalle de cada falla está en los playbooks (`docs/playbooks/`) y las plantillas en `docs/plantillas/`.
 
-> **Estado de los vínculos (14/11).** Las alertas `pg-*` se provisionan en el bloque B6 (C13) y los playbooks, `steady-state.sh` y `EXPERIMENTOS.md` en el bloque B7 (C18 y C20). Acá se nombran por el uid y el nombre que tienen en el plan. Lo marcado *(B6)* o *(B7)* todavía no existe en el repo. B7 revisa que este plan nombre las alertas y paneles reales. Todo lo demás existe y está verificado en `docs/evidencia/C19/`.
+> **Vínculos verificados (B7, 14/11).** Las alertas `pg-*` (C13), los playbooks (C20), `chaos-engineering/steady-state.sh` y `EXPERIMENTOS.md` (C18) existen. `k8s/verify/check-playbooks.sh` confirma que los playbooks nombran alertas y paneles reales, y los tiempos de este plan son los medidos en los experimentos de C18. Evidencia: `docs/evidencia/C19/`, `docs/evidencia/C18/` y `docs/evidencia/C20/`.
 
 ## 1. Alcance
 
@@ -18,10 +18,10 @@ Ciclo del curso: Prepare, Detect, Respond, Recover, Learn (D46).
 
 | Fase | Qué hacemos | Con qué |
 |---|---|---|
-| **Prepare** | Antes de la defensa: cluster arriba, app accesible, observabilidad abierta y steady state verificado. Roles asignados, plantillas a mano. | `minikube status`, `minikube tunnel` (PowerShell como administrador), `k8s/port-forward.sh`, Grafana, `chaos-engineering/steady-state.sh` *(B7)*, sección 4 |
-| **Detect** | Una alerta de Grafana pasa a *Firing*, o un panel muestra un cambio de Golden Signals. Comms anota la hora UTC. | Grafana → Alerting *(B6)*; dashboards "PharmaGo - Overview" y "PharmaGo - Infra" |
-| **Respond** | El IC asigna severidad y playbook. Ops confirma con telemetría y diagnostica. Primero se **espera el mecanismo automático** el tiempo que dice el playbook; si no alcanza, se mitiga a mano. | `docs/playbooks/*.md` *(B7)*, `kubectl`, Jaeger, Kibana, sección 7 |
-| **Recover** | Se valida que el sistema volvió al steady state y se cierra el incidente. | `steady-state.sh` *(B7)*; mientras tanto, el chequeo manual de la sección 6 |
+| **Prepare** | Antes de la defensa: cluster arriba, app accesible, observabilidad abierta y steady state verificado. Roles asignados, plantillas a mano. | `minikube status`, `minikube tunnel` (PowerShell como administrador), `k8s/port-forward.sh`, Grafana, `chaos-engineering/steady-state.sh`, sección 4 |
+| **Detect** | Una alerta de Grafana pasa a *Firing*, o un panel muestra un cambio de Golden Signals. Comms anota la hora UTC. | Grafana → Alerting; dashboards "PharmaGo - Overview" y "PharmaGo - Infra" |
+| **Respond** | El IC asigna severidad y playbook. Ops confirma con telemetría y diagnostica. Primero se **espera el mecanismo automático** el tiempo que dice el playbook; si no alcanza, se mitiga a mano. | `docs/playbooks/*.md`, `kubectl`, Jaeger, Kibana, sección 7 |
+| **Recover** | Se valida que el sistema volvió al steady state y se cierra el incidente. | `steady-state.sh`, o el chequeo manual de la sección 6 |
 | **Learn** | Registro completo y postmortem blameless: qué permitió la falla, no quién la causó. Acciones con responsable. | `docs/plantillas/registro-incidente.md`, `docs/plantillas/postmortem.md`, `docs/incidentes/` |
 
 ## 3. Severidades
@@ -31,8 +31,8 @@ Los criterios se miden en los paneles y alertas que se nombran. Ante la duda, se
 | Severidad | Criterio medible (cualquiera alcanza) | Respuesta | A quién involucra |
 |---|---|---|---|
 | **SEV1: servicio caído** | 5xx del gateway > 50 % durante 1 min · un microservicio o la BD con 0 réplicas disponibles · circuit breaker abierto más de 30 s (`pharmago_circuit_breaker_state == 1`) · nodo NotReady | Inmediata, en menos de 1 min. Actualización cada 1 min | Los 3. Ops no toma otra tarea hasta mitigar |
-| **SEV2: degradado** | 5xx del gateway entre 5 % y 50 % durante 30 s (`pg-5xx` *(B6)*) · P95 del gateway > 1000 ms durante 1 min (`pg-latency` *(B6)*) · réplicas disponibles < deseadas durante 30 s (`pg-replicas` *(B6)*) · CPU > 80 % o memoria > 85 % del límite durante 30 s (`pg-cpu`, `pg-memory` *(B6)*) | En menos de 2 min. Actualización cada 2 min | IC y Ops. Comms registra |
-| **SEV3: sin impacto visible** | Un pod se reinició y volvió solo (`pg-restarts` *(B6)*) · 429 del rate limit (`pg-429` *(B6)*): es la protección funcionando · storage del pod creciendo sin llegar al límite (`pg-storage` *(B6)*) · anomalía de latencia sin errores (`pg-latency-anomaly` *(B6)*) | En menos de 5 min o al terminar lo urgente. Se registra | Ops verifica, Comms registra |
+| **SEV2: degradado** | 5xx del gateway entre 5 % y 50 % durante 30 s (`pg-5xx`) · P95 del gateway > 1000 ms durante 1 min (`pg-latency`) · réplicas disponibles < deseadas durante 30 s (`pg-replicas`) · CPU > 80 % o memoria > 85 % del límite durante 30 s (`pg-cpu`, `pg-memory`) | En menos de 2 min. Actualización cada 2 min | IC y Ops. Comms registra |
+| **SEV3: sin impacto visible** | Un pod se reinició y volvió solo (`pg-restarts`) · 429 del rate limit (`pg-429`): es la protección funcionando · storage del pod creciendo sin llegar al límite (`pg-storage`) · anomalía de latencia sin errores (`pg-latency-anomaly`) | En menos de 5 min o al terminar lo urgente. Se registra | Ops verifica, Comms registra |
 
 **Escalar:** si una SEV2 o SEV3 sigue sin mejorar después del tiempo de mitigación automática del playbook, sube un nivel. **Bajar:** cuando el criterio deja de cumplirse durante 1 min y la causa está identificada.
 
@@ -59,7 +59,7 @@ Patrón del curso: Incident Commander, Ops y Comms (D46, [Managing incidents](ht
 
 | Rol | Pantallas |
 |---|---|
-| IC | Grafana "PharmaGo - Overview" (Golden Signals de la app) y Grafana → Alerting *(B6)* con la lista de alertas. El playbook del incidente abierto. |
+| IC | Grafana "PharmaGo - Overview" (Golden Signals de la app) y Grafana → Alerting con la lista de alertas. El playbook del incidente abierto. |
 | Ops | Terminal con `kubectl get pods -n pharmago -o wide -w`; una segunda terminal libre para diagnosticar; Grafana "PharmaGo - Infra" (nodo, pod y contenedor); Jaeger (`http://127.0.0.1:16686`) y Kibana (`http://127.0.0.1:5601`, índice `pharmago-logs-*`) cuando hace falta. |
 | Comms | `docs/plantillas/registro-incidente.md` copiado a `docs/incidentes/<fecha>-<tema>.md`, reloj en UTC (`date -u +%T`) y la app (`http://127.0.0.1/`) para ver lo mismo que el usuario. |
 
@@ -96,25 +96,25 @@ IC declara cierre; Comms envía mensaje de cierre y completa el registro
 Postmortem blameless (docs/plantillas/postmortem.md)
 ```
 
-**Steady state, para validar** (lo automatiza `steady-state.sh` *(B7)*; mientras tanto se chequea a mano):
+**Steady state, para validar** (lo automatiza `chaos-engineering/steady-state.sh`, que sale con 0 solo si se cumplen los 4 puntos; también se puede chequear a mano):
 
 1. `kubectl get deploy -n pharmago`: los 4 microservicios 2/2 y la BD 1/1.
 2. `kubectl get nodes`: los 5 nodos Ready.
 3. 20 s de loop a 1 request/s por el Ingress (`/api/drug`, `/api/roles`, `/`): 0 respuestas no-2xx.
-4. Grafana → Alerting: sin alertas *Firing* *(B6)*.
+4. Grafana → Alerting: sin alertas *Firing*.
 
-**Alerta, playbook y mecanismo automático** (las alertas son de B6 y los playbooks de B7; los tiempos son los medidos hasta hoy):
+**Alerta, playbook y mecanismo automático** (tiempos medidos en `chaos-engineering/EXPERIMENTOS.md`; la detección tiene un piso de unos 30 s por la cadena de métricas, así que una alerta con ventana de 30 s pasa a Firing a los 50-76 s):
 
-| Alerta (uid, B6) | Playbook (B7) | Mecanismo automático que se espera | Tiempo de referencia |
+| Alerta (uid) | Playbook | Mecanismo automático que se espera | Tiempo medido |
 |---|---|---|---|
-| `pg-429` | `docs/playbooks/requests.md` | Rate limit del gateway: corta con 429 | Inmediato (`RATE_LIMITING_GUIDE.md`) |
-| `pg-cpu` | `docs/playbooks/cpu.md` | Throttling en el límite de CPU; la readiness saca al pod si deja de responder | Readiness: unos 4 s (D12) |
-| `pg-memory` | `docs/playbooks/memoria.md` | El OOM killer mata el proceso que se pasa del límite | Ver C16: la app sigue viva |
-| `pg-storage` | `docs/playbooks/storage.md` | Desalojo por `ephemeral-storage` > 512Mi y reemplazo del pod | C16: el pod de reemplazo queda Ready |
-| `pg-5xx`, `pg-breaker` | `docs/playbooks/red.md` o `desconexion.md` | Circuit breaker: 503 rápido; readiness fuera de balanceo | Breaker abierto 5 s por ciclo (D13); readiness unos 6 s (C17) |
-| `pg-replicas`, `pg-restarts` | `docs/playbooks/pod-caido.md` | Reemplazo o reinicio del pod; la otra réplica atiende | MTTR de 3,0 a 8,8 s, 0 errores (`docs/mttr.md`) |
-| `pg-latency`, `pg-latency-anomaly` | Según la causa (Jaeger: qué tramo tarda) | Timeout de 3 s por intento y reintento de GET (D13) | 3 s por intento |
-| (rollout que no termina) | `docs/playbooks/rollout-fallido.md` | `deploy.sh` vuelve atrás solo si el rollout no termina en 180 s | 180 s (`k8s/deploy.sh`) |
+| `pg-429` | `docs/playbooks/requests.md` | Rate limit del gateway: corta con 429 | Inmediato; `pg-429` Firing a los 50 s (E1) |
+| `pg-cpu` | `docs/playbooks/cpu.md` | Throttling en el límite de CPU; la readiness saca al pod si deja de responder | Con el pod al 100 %: 0 errores, P95 60 ms; `pg-cpu` Firing a los 70 s (E2) |
+| `pg-memory` | `docs/playbooks/memoria.md` | El OOM killer mata el proceso que se pasa del límite (no el contenedor entero) | Presión sostenida: `pg-memory` Firing a los 59 s (E3b). Pico brusco: OOM a los 7 s, sin alerta (E3a) |
+| `pg-storage` | `docs/playbooks/storage.md` | Desalojo por `ephemeral-storage` > 512Mi y reemplazo del pod | Llenado brusco: desalojo a los 47 s, 2/2 en 9 s, sin alerta (E4). Sostenido: `pg-storage` Firing a los 76 s (E4c) |
+| `pg-5xx`, `pg-breaker` | `docs/playbooks/red.md` o `desconexion.md` | Circuit breaker: 503 rápido (necesita ≥ 8 requests en 10 s por réplica del gateway) | Breaker abierto a los 14 s; `pg-breaker` Firing a los 33 s, `pg-5xx` a los 55-61 s (E5b, E6). Con poco tráfico el breaker no abre (E5a) |
+| `pg-replicas`, `pg-restarts` | `docs/playbooks/pod-caido.md` | Reemplazo o reinicio del pod; la otra réplica atiende | MTTR 8,6 s, 0 errores, `pg-replicas` sin Firing (E7); 3,0 a 8,8 s en `docs/mttr.md` |
+| `pg-latency`, `pg-latency-anomaly` | `docs/playbooks/red.md` (red o servicio que no responde) y `cpu.md` (saturación); Jaeger dice qué tramo tarda | Timeout de 3 s por intento y hasta 2 reintentos de GET (D13) | Hasta 9 s por request; `pg-latency` llegó tarde, después del fin del corte (E5) |
+| Ninguna (rollout que no termina) | `docs/playbooks/rollout-fallido.md` | `maxUnavailable: 0` mantiene las réplicas viejas; `deploy.sh` vuelve atrás solo a los 180 s | 0 errores y ninguna alerta; `rollback.sh` en 1 s (E8) |
 
 ## 7. Ante el script de los docentes (falla desconocida)
 
@@ -124,9 +124,9 @@ No sabemos qué va a romper. Se diagnostica **de afuera hacia adentro** con los 
    - **429:** rate limit, inyección de requests → `requests.md`. SEV3, salvo que bloquee a usuarios legítimos.
    - **503:** circuito abierto o ningún pod Ready detrás del gateway. `kubectl logs -n pharmago -l app=pharmago-api-gateway --since=5m | grep circuit_breaker` dice qué cluster (`users-cluster` o `pharmacy-cluster`).
    - **500 o 502:** el servicio responde mal o la conexión se corta. Ver qué endpoint (`/api/drug` es pharmacy; `/api/login` y `/api/roles` son users).
-2. **Latencia.** Overview: "Latencia Promedio por Endpoint". Si sube, Jaeger: abrí una traza lenta y mirá qué tramo ocupa el tiempo (gateway, servicio o `PharmaDb`). Si el tramo de SQL es el lento o tiene error, el problema es la base.
+2. **Latencia.** Overview: "Latencia Promedio por Endpoint". Si sube, Jaeger: abrí una traza lenta y mirá qué tramo ocupa el tiempo (gateway, servicio o `PharmaDb`). Si el tramo de SQL es el lento o tiene error, el problema es la base. Con poco tráfico, un servicio que no responde **no** abre el breaker (necesita 8 requests en 10 s) y se ve solo como latencia de 3 a 9 s, sin 503: seguir `docs/playbooks/red.md` (E5a de `chaos-engineering/EXPERIMENTOS.md`).
 3. **Tráfico.** Overview: "Throughput Total" y "Peticiones por Segundo por Endpoint". Un salto brusco indica inyección de requests; una caída a 0 indica corte (red, desconexión o Ingress).
-4. **Saturación.** Infra: "CPU del contenedor contra su límite", "Memoria del pod contra su límite", "Filesystem por pod" y "Red por nodo". El pod que está cerca del 100 % es el blanco.
+4. **Saturación.** Infra: "CPU del contenedor contra su límite", "Memoria del pod contra su límite", "Filesystem por pod (ephemeral-storage usado)" y "Red por nodo (rx y tx)". El pod que está cerca del 100 % es el blanco.
 5. **Estado de Kubernetes.** Infra: "Réplicas deseadas y disponibles por Deployment", "Reinicios por contenedor" y "Nodos Ready". En la terminal: `kubectl get pods -n pharmago -o wide` y `kubectl get events -n pharmago --sort-by=.lastTimestamp | tail -20`. Buscar `Evicted`, `OOMKilled`, `CrashLoopBackOff`, `Pending` o una réplica en 0 (desconexión, D42).
 6. **Red.** `kubectl get networkpolicy -n pharmago`: una policy `chaos-*` o desconocida que niega tráfico corta la red (D41). Los pods pueden seguir Ready aunque el usuario vea errores (C17).
 

@@ -1,0 +1,282 @@
+##### Experimento 08-rollout-fallido
+##### 1. Steady state ANTES
+$ ./steady-state.sh
+[inicio] 2026-11-14T21:58:11Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 112, Pending: 0)
+
+[fin] 2026-11-14T21:58:34Z
+RESULTADO: steady state OK
+exit=0
+
+##### 2. Experimento: observar.sh en paralelo con el caos
+$ ./observar.sh 150 /api/drug /api/roles   (en otra terminal)
+$ bash docs/evidencia/C18/scripts/rollout_roto.sh
+--- salida del caos
+$ kubectl rollout history deploy/pharmago-pharmacy-service -n pharmago | tail -3
+5         <none>
+6         <none>
+
+21:58:39 $ kubectl set image deploy/pharmago-pharmacy-service pharmago-pharmacy-service=pharmago-pharmacy-service:no-existe -n pharmago
+deployment.apps/pharmago-pharmacy-service image updated
+21:59:24 $ kubectl rollout status deploy/pharmago-pharmacy-service -n pharmago --timeout=10s   (se espera que NO termine)
+Waiting for deployment "pharmago-pharmacy-service" rollout to finish: 1 out of 2 new replicas have been updated...
+error: timed out waiting for the condition
+exit=1
+21:59:35 $ kubectl get pods -l app=pharmago-pharmacy-service
+NAME                                         READY   STATUS              RESTARTS   AGE
+pharmago-pharmacy-service-76895545c5-xnwxj   0/1     ErrImageNeverPull   0          56s
+pharmago-pharmacy-service-7cd9b87485-l6plc   1/1     Running             0          7m15s
+pharmago-pharmacy-service-7cd9b87485-wdkpk   1/1     Running             0          7m15s
+$ kubectl get deploy pharmago-pharmacy-service
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+pharmago-pharmacy-service   2/2     1            2           2d7h
+$ eventos del pod nuevo
+4s          Warning   Failed              pod/pharmago-pharmacy-service-76895545c5-xnwxj    Error: ErrImageNeverPull
+4s          Warning   ErrImageNeverPull   pod/pharmago-pharmacy-service-76895545c5-xnwxj    Container image "pharmago-pharmacy-service:no-existe" is not present with pull policy of Never
+21:59:35 $ ../k8s/rollback.sh pharmago-pharmacy-service
+21:59:35 rollback de pharmago-pharmacy-service
+Warning: resource deployments/pharmago-pharmacy-service was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
+deployment.apps/pharmago-pharmacy-service rolled back
+Waiting for deployment "pharmago-pharmacy-service" rollout to finish: 1 old replicas are pending termination...
+deployment "pharmago-pharmacy-service" successfully rolled out
+DEPLOYMENT                  LISTOS   IMAGEN
+pharmago-pharmacy-service   2        pharmago-pharmacy-service:ff313b7
+exit=0
+rollback: 1 s
+NAME                                         READY   STATUS        RESTARTS   AGE
+pharmago-pharmacy-service-76895545c5-xnwxj   0/1     Terminating   0          57s
+pharmago-pharmacy-service-7cd9b87485-l6plc   1/1     Running       0          7m16s
+pharmago-pharmacy-service-7cd9b87485-wdkpk   1/1     Running       0          7m16s
+exit=0
+--- duración del caos: 57 s
+--- salida de observar.sh
+[inicio] 2026-11-14T21:58:34Z
+Observando 150 s: tráfico a 1 request/s por http://127.0.0.1 (/api/drug /api/roles) y alertas de Grafana cada 5 s
+21:58:34 http /api/drug 200 15
+21:58:34 alertas 
+21:58:36 http /api/roles 200 10
+21:58:37 http /api/drug 200 8
+21:58:38 http /api/roles 200 10
+21:58:39 http /api/drug 200 9
+21:58:40 http /api/roles 200 9
+21:58:40 alertas 
+21:58:41 http /api/drug 200 9
+21:58:42 http /api/roles 200 9
+21:58:43 http /api/drug 200 11
+21:58:44 http /api/roles 200 9
+21:58:45 http /api/drug 200 8
+21:58:45 alertas 
+21:58:46 http /api/roles 200 13
+21:58:47 http /api/drug 200 8
+21:58:48 http /api/roles 200 7
+21:58:49 http /api/drug 200 9
+21:58:50 http /api/roles 200 8
+21:58:51 alertas 
+21:58:51 http /api/drug 200 12
+21:58:52 http /api/roles 200 9
+21:58:54 http /api/drug 200 10
+21:58:55 http /api/roles 200 7
+21:58:56 http /api/drug 200 9
+21:58:56 alertas 
+21:58:57 http /api/roles 200 8
+21:58:58 http /api/drug 200 8
+21:58:59 http /api/roles 200 9
+21:59:00 http /api/drug 200 9
+21:59:01 http /api/roles 200 7
+21:59:01 alertas 
+21:59:02 http /api/drug 200 15
+21:59:03 http /api/roles 200 9
+21:59:04 http /api/drug 200 9
+21:59:05 http /api/roles 200 8
+21:59:06 http /api/drug 200 9
+21:59:07 alertas 
+21:59:07 http /api/roles 200 8
+21:59:08 http /api/drug 200 8
+21:59:09 http /api/roles 200 10
+21:59:10 http /api/drug 200 9
+21:59:12 http /api/roles 200 7
+21:59:12 alertas 
+21:59:13 http /api/drug 200 11
+21:59:14 http /api/roles 200 8
+21:59:15 http /api/drug 200 8
+21:59:16 http /api/roles 200 9
+21:59:17 http /api/drug 200 17
+21:59:17 alertas 
+21:59:18 http /api/roles 200 10
+21:59:19 http /api/drug 200 13
+21:59:20 http /api/roles 200 9
+21:59:21 http /api/drug 200 8
+21:59:22 http /api/roles 200 11
+21:59:23 http /api/drug 200 11
+21:59:23 alertas 
+21:59:24 http /api/roles 200 9
+21:59:25 http /api/drug 200 15
+21:59:27 http /api/roles 200 17
+21:59:28 http /api/drug 200 13
+21:59:29 http /api/roles 200 9
+21:59:29 alertas 
+21:59:30 http /api/drug 200 9
+21:59:31 http /api/roles 200 7
+21:59:32 http /api/drug 200 8
+21:59:33 http /api/roles 200 10
+21:59:34 http /api/drug 200 8
+21:59:35 alertas 
+21:59:35 http /api/roles 200 11
+21:59:36 http /api/drug 200 8
+21:59:37 http /api/roles 200 7
+21:59:38 http /api/drug 200 17
+21:59:39 http /api/roles 200 8
+21:59:40 http /api/drug 200 10
+21:59:40 alertas 
+21:59:41 http /api/roles 200 12
+21:59:42 http /api/drug 200 10
+21:59:43 http /api/roles 200 8
+21:59:45 http /api/drug 200 11
+21:59:46 http /api/roles 200 8
+21:59:45 alertas 
+21:59:47 http /api/drug 200 10
+21:59:48 http /api/roles 200 7
+21:59:49 http /api/drug 200 9
+21:59:50 http /api/roles 200 10
+21:59:51 http /api/drug 200 10
+21:59:51 alertas 
+21:59:52 http /api/roles 200 9
+21:59:53 http /api/drug 200 11
+21:59:54 http /api/roles 200 9
+21:59:55 http /api/drug 200 8
+21:59:56 http /api/roles 200 8
+21:59:56 alertas 
+21:59:57 http /api/drug 200 8
+21:59:58 http /api/roles 200 9
+21:59:59 http /api/drug 200 9
+22:00:00 http /api/roles 200 7
+22:00:01 http /api/drug 200 8
+22:00:02 alertas 
+22:00:02 http /api/roles 200 8
+22:00:04 http /api/drug 200 10
+22:00:05 http /api/roles 200 7
+22:00:06 http /api/drug 200 8
+22:00:07 http /api/roles 200 8
+22:00:07 alertas 
+22:00:08 http /api/drug 200 11
+22:00:09 http /api/roles 200 9
+22:00:10 http /api/drug 200 9
+22:00:11 http /api/roles 200 9
+22:00:12 http /api/drug 200 13
+22:00:12 alertas 
+22:00:13 http /api/roles 200 9
+22:00:14 http /api/drug 200 8
+22:00:15 http /api/roles 200 7
+22:00:16 http /api/drug 200 8
+22:00:17 http /api/roles 200 7
+22:00:17 alertas 
+22:00:18 http /api/drug 200 8
+22:00:19 http /api/roles 200 7
+22:00:21 http /api/drug 200 10
+22:00:22 http /api/roles 200 10
+22:00:23 http /api/drug 200 8
+22:00:23 alertas 
+22:00:24 http /api/roles 200 9
+22:00:25 http /api/drug 200 10
+22:00:26 http /api/roles 200 8
+22:00:27 http /api/drug 200 8
+22:00:28 http /api/roles 200 9
+22:00:28 alertas 
+22:00:29 http /api/drug 200 9
+22:00:30 http /api/roles 200 11
+22:00:31 http /api/drug 200 10
+22:00:32 http /api/roles 200 9
+22:00:33 http /api/drug 200 8
+22:00:33 alertas 
+22:00:34 http /api/roles 200 7
+22:00:35 http /api/drug 200 16
+22:00:36 http /api/roles 200 7
+22:00:37 http /api/drug 200 8
+22:00:39 http /api/roles 200 8
+22:00:39 alertas 
+22:00:40 http /api/drug 200 10
+22:00:41 http /api/roles 200 9
+22:00:42 http /api/drug 200 10
+22:00:43 http /api/roles 200 8
+22:00:44 http /api/drug 200 9
+22:00:44 alertas 
+22:00:45 http /api/roles 200 13
+22:00:46 http /api/drug 200 8
+22:00:47 http /api/roles 200 8
+22:00:48 http /api/drug 200 9
+22:00:49 http /api/roles 200 8
+22:00:49 alertas 
+22:00:50 http /api/drug 200 9
+22:00:51 http /api/roles 200 11
+22:00:52 http /api/drug 200 8
+22:00:53 http /api/roles 200 8
+22:00:54 http /api/drug 200 8
+22:00:55 alertas 
+22:00:55 http /api/roles 200 9
+22:00:57 http /api/drug 200 8
+22:00:58 http /api/roles 200 10
+22:00:59 http /api/drug 200 13
+22:01:00 http /api/roles 200 8
+22:01:00 alertas 
+22:01:01 http /api/drug 200 9
+22:01:02 http /api/roles 200 7
+22:01:03 http /api/drug 200 10
+22:01:04 http /api/roles 200 9
+22:01:05 http /api/drug 200 8
+22:01:06 http /api/roles 200 9
+22:01:07 http /api/drug 200 7
+22:01:08 http /api/roles 200 9
+22:01:09 http /api/drug 200 8
+22:01:10 http /api/roles 200 7
+22:01:11 http /api/drug 200 12
+22:01:12 http /api/roles 200 8
+
+Resumen (150 s):
+  Respuestas por código HTTP:
+    200 x150
+  no-2xx: 0
+  Alertas (primera vez en cada estado):
+    ninguna salió de Normal
+[fin] 2026-11-14T22:01:14Z
+
+##### 3. Steady state DESPUÉS (se repite hasta OK, máximo 8 veces)
+$ ./steady-state.sh   (intento 1, 98 s después del fin del caos)
+[inicio] 2026-11-14T22:01:14Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 111, Pending: 0)
+
+[fin] 2026-11-14T22:01:36Z
+RESULTADO: steady state OK
+exit=0
+Steady state recuperado 120 s después del fin del caos (al terminar el chequeo)

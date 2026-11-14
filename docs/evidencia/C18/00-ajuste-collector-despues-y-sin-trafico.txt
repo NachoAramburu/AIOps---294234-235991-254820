@@ -1,0 +1,11 @@
+Sin tráfico a la app durante 4 min (después del cambio del Collector): estado de las reglas cada 30 s
+21:02:20 collector= rate_gateway=0 | pg-5xx=Pending: pg-latency=Pending: pg-memory=Alerting:otlp-collector-6576cb5
+21:02:51 collector=182Mi rate_gateway=0 | pg-5xx=Alerting: pg-latency=Pending:
+21:03:23 collector=182Mi rate_gateway=0 | pg-5xx=Alerting: pg-latency=Alerting:
+21:03:53 collector=201Mi rate_gateway=0 | pg-5xx=Alerting: pg-latency=Alerting:
+21:04:24 collector=201Mi rate_gateway=0 | pg-5xx=Alerting: pg-latency=Alerting:
+21:04:54 collector=199Mi rate_gateway=0 | pg-5xx=Alerting: pg-latency=Alerting:
+21:05:25 collector=199Mi rate_gateway=0 | pg-5xx=Alerting: pg-latency=Alerting:
+21:05:56 collector=201Mi rate_gateway=0 | pg-5xx=Alerting: pg-latency=Alerting:
+21:06:26 collector=201Mi rate_gateway=0 | pg-5xx=Alerting: pg-latency=Alerting:
+Lectura: con 512Mi el Collector queda en 182-201Mi (~39 %) y pg-memory deja de disparar. pg-5xx y pg-latency llegan a Firing sin tráfico (NaN): se corrige en D56 (00b).

@@ -1,0 +1,324 @@
+##### Experimento 04c-storage-400
+##### 1. Steady state ANTES
+$ ./steady-state.sh
+[inicio] 2026-11-14T21:36:23Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 111, Pending: 0)
+
+[fin] 2026-11-14T21:36:46Z
+RESULTADO: steady state OK
+exit=0
+
+##### 2. Experimento: observar.sh en paralelo con el caos
+$ ./observar.sh 210 /api/roles /api/drug   (en otra terminal)
+$ ./volume-spike.sh pharmago-users-service 400 150
+--- salida del caos
+[inicio] 2026-11-14T21:36:51Z
+Storage: pharmago-users-service-554477fd46-jhwcz escribe 400 MB en /tmp/chaos_fill y los mantiene 150 s
+-rw-r--r-- 1 root root 419430400 Nov 14 21:36 /tmp/chaos_fill
+Archivo /tmp/chaos_fill borrado en pharmago-users-service-554477fd46-jhwcz.
+[fin] 2026-11-14T21:39:24Z
+exit=0
+--- duración del caos: 153 s
+--- salida de observar.sh
+[inicio] 2026-11-14T21:36:46Z
+Observando 210 s: tráfico a 1 request/s por http://127.0.0.1 (/api/roles /api/drug) y alertas de Grafana cada 5 s
+21:36:46 http /api/roles 200 13
+21:36:46 alertas 
+21:36:47 http /api/drug 200 12
+21:36:48 http /api/roles 200 8
+21:36:49 http /api/drug 200 11
+21:36:50 http /api/roles 200 9
+21:36:52 http /api/drug 200 12
+21:36:52 alertas 
+21:36:53 http /api/roles 200 20
+21:36:54 http /api/drug 200 13
+21:36:55 http /api/roles 200 10
+21:36:56 http /api/drug 200 9
+21:36:57 http /api/roles 200 16
+21:36:57 alertas 
+21:36:58 http /api/drug 200 17
+21:36:59 http /api/roles 200 9
+21:37:00 http /api/drug 200 8
+21:37:01 http /api/roles 200 11
+21:37:02 http /api/drug 200 10
+21:37:02 alertas 
+21:37:03 http /api/roles 200 10
+21:37:04 http /api/drug 200 9
+21:37:05 http /api/roles 200 12
+21:37:06 http /api/drug 200 8
+21:37:08 http /api/roles 200 7
+21:37:08 alertas 
+21:37:09 http /api/drug 200 8
+21:37:10 http /api/roles 200 8
+21:37:11 http /api/drug 200 10
+21:37:12 http /api/roles 200 8
+21:37:13 http /api/drug 200 8
+21:37:13 alertas 
+21:37:14 http /api/roles 200 9
+21:37:15 http /api/drug 200 13
+21:37:16 http /api/roles 200 8
+21:37:17 http /api/drug 200 14
+21:37:18 http /api/roles 200 10
+21:37:19 alertas 
+21:37:19 http /api/drug 200 9
+21:37:20 http /api/roles 200 11
+21:37:21 http /api/drug 200 9
+21:37:22 http /api/roles 200 8
+21:37:24 http /api/drug 200 8
+21:37:24 alertas 
+21:37:25 http /api/roles 200 9
+21:37:26 http /api/drug 200 8
+21:37:27 http /api/roles 200 8
+21:37:28 http /api/drug 200 10
+21:37:29 http /api/roles 200 9
+21:37:29 alertas 
+21:37:30 http /api/drug 200 8
+21:37:31 http /api/roles 200 9
+21:37:32 http /api/drug 200 11
+21:37:33 http /api/roles 200 9
+21:37:34 http /api/drug 200 10
+21:37:35 alertas pg-storage=pending 
+21:37:35 http /api/roles 200 9
+21:37:36 http /api/drug 200 9
+21:37:37 http /api/roles 200 10
+21:37:38 http /api/drug 200 10
+21:37:40 http /api/roles 200 7
+21:37:40 alertas pg-storage=pending 
+21:37:41 http /api/drug 200 8
+21:37:42 http /api/roles 200 14
+21:37:43 http /api/drug 200 9
+21:37:44 http /api/roles 200 8
+21:37:45 http /api/drug 200 9
+21:37:46 alertas pg-storage=pending 
+21:37:46 http /api/roles 200 11
+21:37:47 http /api/drug 200 8
+21:37:48 http /api/roles 200 9
+21:37:49 http /api/drug 200 14
+21:37:50 http /api/roles 200 9
+21:37:51 alertas pg-storage=pending 
+21:37:51 http /api/drug 200 23
+21:37:52 http /api/roles 200 11
+21:37:53 http /api/drug 200 12
+21:37:54 http /api/roles 200 10
+21:37:56 http /api/drug 200 10
+21:37:57 http /api/roles 200 10
+21:37:56 alertas pg-storage=pending 
+21:37:58 http /api/drug 200 11
+21:37:59 http /api/roles 200 9
+21:38:00 http /api/drug 200 10
+21:38:01 http /api/roles 200 8
+21:38:02 http /api/drug 200 9
+21:38:02 alertas pg-storage=pending 
+21:38:03 http /api/roles 200 8
+21:38:04 http /api/drug 200 9
+21:38:05 http /api/roles 200 10
+21:38:06 http /api/drug 200 9
+21:38:07 http /api/roles 200 10
+21:38:07 alertas pg-storage=firing 
+21:38:08 http /api/drug 200 8
+21:38:09 http /api/roles 200 10
+21:38:10 http /api/drug 200 10
+21:38:11 http /api/roles 200 9
+21:38:13 http /api/drug 200 10
+21:38:13 alertas pg-storage=firing 
+21:38:14 http /api/roles 200 7
+21:38:15 http /api/drug 200 10
+21:38:16 http /api/roles 200 14
+21:38:17 http /api/drug 200 11
+21:38:18 http /api/roles 200 12
+21:38:18 alertas pg-storage=firing 
+21:38:19 http /api/drug 200 8
+21:38:20 http /api/roles 200 9
+21:38:21 http /api/drug 200 8
+21:38:22 http /api/roles 200 7
+21:38:23 http /api/drug 200 12
+21:38:23 alertas pg-storage=firing 
+21:38:24 http /api/roles 200 9
+21:38:25 http /api/drug 200 8
+21:38:26 http /api/roles 200 16
+21:38:27 http /api/drug 200 12
+21:38:29 http /api/roles 200 13
+21:38:29 alertas pg-storage=firing 
+21:38:30 http /api/drug 200 11
+21:38:31 http /api/roles 200 10
+21:38:32 http /api/drug 200 9
+21:38:33 http /api/roles 200 9
+21:38:34 http /api/drug 200 11
+21:38:34 alertas pg-storage=firing 
+21:38:35 http /api/roles 200 8
+21:38:36 http /api/drug 200 9
+21:38:37 http /api/roles 200 9
+21:38:38 http /api/drug 200 11
+21:38:39 http /api/roles 200 13
+21:38:40 alertas pg-storage=firing 
+21:38:40 http /api/drug 200 8
+21:38:41 http /api/roles 200 11
+21:38:42 http /api/drug 200 8
+21:38:43 http /api/roles 200 11
+21:38:45 http /api/drug 200 15
+21:38:45 alertas pg-storage=firing 
+21:38:46 http /api/roles 200 12
+21:38:47 http /api/drug 200 18
+21:38:48 http /api/roles 200 22
+21:38:49 http /api/drug 200 13
+21:38:50 http /api/roles 200 12
+21:38:51 http /api/drug 200 9
+21:38:51 alertas pg-storage=firing 
+21:38:52 http /api/roles 200 11
+21:38:53 http /api/drug 200 8
+21:38:54 http /api/roles 200 9
+21:38:55 http /api/drug 200 8
+21:38:56 http /api/roles 200 8
+21:38:56 alertas pg-storage=firing 
+21:38:57 http /api/drug 200 12
+21:38:58 http /api/roles 200 9
+21:39:00 http /api/drug 200 9
+21:39:01 http /api/roles 200 8
+21:39:02 http /api/drug 200 9
+21:39:02 alertas pg-storage=firing 
+21:39:03 http /api/roles 200 7
+21:39:04 http /api/drug 200 12
+21:39:05 http /api/roles 200 7
+21:39:06 http /api/drug 200 9
+21:39:07 http /api/roles 200 10
+21:39:07 alertas pg-storage=firing 
+21:39:08 http /api/drug 200 8
+21:39:09 http /api/roles 200 8
+21:39:10 http /api/drug 200 9
+21:39:11 http /api/roles 200 9
+21:39:12 http /api/drug 200 8
+21:39:13 alertas pg-storage=firing 
+21:39:13 http /api/roles 200 8
+21:39:14 http /api/drug 200 8
+21:39:15 http /api/roles 200 12
+21:39:17 http /api/drug 200 8
+21:39:18 http /api/roles 200 9
+21:39:18 alertas pg-storage=firing 
+21:39:19 http /api/drug 200 16
+21:39:20 http /api/roles 200 9
+21:39:21 http /api/drug 200 11
+21:39:22 http /api/roles 200 9
+21:39:23 http /api/drug 200 10
+21:39:23 alertas pg-storage=firing 
+21:39:24 http /api/roles 200 11
+21:39:25 http /api/drug 200 8
+21:39:26 http /api/roles 200 9
+21:39:27 http /api/drug 200 8
+21:39:28 http /api/roles 200 8
+21:39:28 alertas pg-storage=firing 
+21:39:29 http /api/drug 200 8
+21:39:30 http /api/roles 200 13
+21:39:31 http /api/drug 200 8
+21:39:32 http /api/roles 200 7
+21:39:33 http /api/drug 200 8
+21:39:34 alertas pg-storage=firing 
+21:39:35 http /api/roles 200 8
+21:39:36 http /api/drug 200 9
+21:39:37 http /api/roles 200 10
+21:39:38 http /api/drug 200 9
+21:39:39 http /api/roles 200 7
+21:39:39 alertas pg-storage=firing 
+21:39:40 http /api/drug 200 10
+21:39:41 http /api/roles 200 8
+21:39:42 http /api/drug 200 8
+21:39:43 http /api/roles 200 9
+21:39:44 http /api/drug 200 8
+21:39:45 alertas pg-storage=firing 
+21:39:45 http /api/roles 200 8
+21:39:46 http /api/drug 200 12
+21:39:47 http /api/roles 200 9
+21:39:48 http /api/drug 200 8
+21:39:49 http /api/roles 200 10
+21:39:50 alertas pg-storage=firing 
+21:39:50 http /api/drug 200 9
+21:39:51 http /api/roles 200 9
+21:39:53 http /api/drug 200 8
+21:39:54 http /api/roles 200 9
+21:39:55 http /api/drug 200 9
+21:39:55 alertas pg-storage=firing 
+21:39:56 http /api/roles 200 13
+21:39:57 http /api/drug 200 11
+21:39:58 http /api/roles 200 10
+21:39:59 http /api/drug 200 10
+21:40:00 http /api/roles 200 8
+21:40:00 alertas pg-storage=firing 
+21:40:01 http /api/drug 200 8
+21:40:02 http /api/roles 200 9
+21:40:03 http /api/drug 200 8
+21:40:04 http /api/roles 200 8
+21:40:05 http /api/drug 200 8
+21:40:06 alertas pg-storage=firing 
+21:40:06 http /api/roles 200 9
+21:40:07 http /api/drug 200 8
+21:40:08 http /api/roles 200 7
+21:40:09 http /api/drug 200 12
+21:40:11 http /api/roles 200 7
+21:40:11 alertas pg-storage=firing 
+21:40:12 http /api/drug 200 11
+21:40:13 http /api/roles 200 9
+21:40:14 http /api/drug 200 8
+21:40:15 http /api/roles 200 8
+21:40:16 http /api/drug 200 11
+21:40:17 http /api/roles 200 9
+21:40:18 http /api/drug 200 12
+21:40:19 http /api/roles 200 9
+21:40:20 http /api/drug 200 8
+21:40:21 http /api/roles 200 7
+21:40:22 http /api/drug 200 8
+21:40:23 http /api/roles 200 7
+21:40:24 http /api/drug 200 8
+21:40:25 http /api/roles 200 10
+21:40:26 http /api/drug 200 9
+21:40:27 http /api/roles 200 8
+21:40:29 http /api/drug 200 9
+
+Resumen (210 s):
+  Respuestas por código HTTP:
+    200 x210
+  no-2xx: 0
+  Alertas (primera vez en cada estado):
+    pg-storage pending   21:37:35
+    pg-storage firing    21:38:07
+[fin] 2026-11-14T21:40:30Z
+
+##### 3. Steady state DESPUÉS (se repite hasta OK, máximo 8 veces)
+$ ./steady-state.sh   (intento 1, 66 s después del fin del caos)
+[inicio] 2026-11-14T21:40:30Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 111, Pending: 0)
+
+[fin] 2026-11-14T21:40:53Z
+RESULTADO: steady state OK
+exit=0
+Steady state recuperado 89 s después del fin del caos (al terminar el chequeo)

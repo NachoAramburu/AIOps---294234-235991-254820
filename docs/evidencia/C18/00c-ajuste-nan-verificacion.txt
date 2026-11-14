@@ -1,0 +1,33 @@
+Después de aplicar D56 y reiniciar Grafana: sin tráfico, estado de las reglas cada 30 s
+21:07:15 pg-5xx=Normal (NoData)(inactive) pg-latency=Normal (NoData)(inactive)
+21:07:45 pg-5xx=Normal (NoData)(inactive) pg-latency=Normal (NoData)(inactive)
+21:08:15 pg-5xx=Normal (NoData)(inactive) pg-latency=Normal (NoData)(inactive)
+21:08:45 pg-5xx=Normal (NoData)(inactive) pg-latency=Normal (NoData)(inactive)
+21:09:16 pg-5xx=Normal (NoData)(inactive) pg-latency=Normal (NoData)(inactive)
+Con tráfico: valor de las queries nuevas tras 20 s de steady-state.sh
+[inicio] 2026-11-14T21:09:24Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 112, Pending: 0)
+
+[fin] 2026-11-14T21:09:47Z
+RESULTADO: steady state OK
+exit=0
+pg-5xx (nueva):
+    success ['0']
+pg-latency (nueva, ms):
+    success ['18.41120583067613']

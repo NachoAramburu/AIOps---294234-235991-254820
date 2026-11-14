@@ -1,0 +1,25 @@
+Antes de E3 (21:20:22 UTC):
+POD                                          RESTARTS
+pharmago-pharmacy-service-7cd9b87485-nkmdb   0
+pharmago-pharmacy-service-7cd9b87485-s5qwz   0
+NAME                                         CPU(cores)   MEMORY(bytes)   
+pharmago-pharmacy-service-7cd9b87485-nkmdb   4m           85Mi            
+pharmago-pharmacy-service-7cd9b87485-s5qwz   4m           88Mi            
+Después de E3a (240 MB, versión anterior de ram-spike.sh): /sys/fs/cgroup/memory.events del contenedor nkmdb
+low 0
+high 0
+max 0
+oom 0
+oom_kill 1
+oom_group_kill 0
+Después de E3b (21:29:40 UTC):
+POD                                          RESTARTS
+pharmago-pharmacy-service-7cd9b87485-nkmdb   0
+pharmago-pharmacy-service-7cd9b87485-s5qwz   0
+NAME                                         CPU(cores)   MEMORY(bytes)   
+pharmago-pharmacy-service-7cd9b87485-nkmdb   5m           75Mi            
+pharmago-pharmacy-service-7cd9b87485-s5qwz   7m           94Mi            
+memory.events de nkmdb:
+oom 0
+oom_kill 1
+oom_group_kill 0

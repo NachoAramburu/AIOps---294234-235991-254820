@@ -38,7 +38,18 @@ trap 'exit 130' INT TERM
 marca_tiempo inicio
 echo "Memoria: $POD retiene $MB MB durante $SECS s"
 rc=0
-kubectl exec -n "$NS" "$POD" -- sh -c ": chaos_ram; a=\$(dd if=/dev/zero bs=1048576 count=$MB 2>/dev/null | tr '\\0' x); sleep $SECS" &
+# Reserva de a bloques de 16 MB, cada uno en su propia variable (C18, D57): armar una sola cadena de MB
+# necesita casi el doble de memoria mientras se construye, y el OOM killer la mataba antes de llegar.
+# El script va por stdin; "chaos_ram" queda en la línea de comando del sh para que kill_marked lo encuentre.
+kubectl exec -i -n "$NS" "$POD" -- sh -s chaos_ram "$MB" "$SECS" <<'EOF' &
+left=$2; i=0
+while [ "$left" -gt 0 ]; do
+    n=16; [ "$left" -lt 16 ] && n=$left
+    eval "v$i=\$(dd if=/dev/zero bs=1048576 count=$n 2>/dev/null | tr '\\0' x)"
+    i=$((i + 1)); left=$((left - n))
+done
+sleep "$3"
+EOF
 EXEC_PID=$!
 while kill -0 "$EXEC_PID" 2>/dev/null; do sleep 1; done
 wait "$EXEC_PID" || rc=$?

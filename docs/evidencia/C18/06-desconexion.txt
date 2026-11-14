@@ -1,0 +1,336 @@
+##### Experimento 06-desconexion
+##### 1. Steady state ANTES
+$ ./steady-state.sh
+[inicio] 2026-11-14T21:50:45Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 111, Pending: 0)
+
+[fin] 2026-11-14T21:51:08Z
+RESULTADO: steady state OK
+exit=0
+
+##### 2. Experimento: observar.sh en paralelo con el caos
+$ ./observar.sh 170 /api/drug /api/roles   (en otra terminal)
+$ bash docs/evidencia/C18/scripts/con_trafico.sh /api/drug bash docs/evidencia/C18/scripts/desc_con_ss.sh
+--- salida del caos
+$ for i in $(seq 107); do curl -s -o /dev/null -m 15 -w '%{http_code} %{time_total}' http://127.0.0.1/api/drug & sleep 0.7; done   (en segundo plano)
+[inicio] 2026-11-14T21:51:18Z
+Desconexión: pharmago-pharmacy-service pasa de 2 réplicas a 0 durante 60 s
+--- steady-state.sh DURANTE la desconexión (se espera salida distinta de 0)
+[inicio] 2026-11-14T21:51:43Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [FALLA] pharmago-pharmacy-service 0/2 Ready
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 10 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+    21:51:44 /api/drug -> 503
+    21:51:47 /api/drug -> 503
+    21:51:50 /api/drug -> 503
+    21:51:54 /api/drug -> 503
+  [FALLA] 4 no-2xx de 10 (200 x6  503 x4  )
+
+4. Alertas de Grafana
+  [FALLA] 1 instancia(s) de alerta en Firing (pg-breaker )
+
+[fin] 2026-11-14T21:51:55Z
+RESULTADO: steady state con 3 chequeo(s) fallido(s)
+exit=3
+--- fin del chequeo durante la falla
+21:52:20 Restaurando pharmago-pharmacy-service a 2 réplicas...
+Waiting for deployment "pharmago-pharmacy-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-pharmacy-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-pharmacy-service" rollout to finish: 0 of 2 updated replicas are available...
+deployment "pharmago-pharmacy-service" successfully rolled out
+pharmago-pharmacy-service de vuelta en 2/2 Ready en 14 s desde la restauración.
+[fin] 2026-11-14T21:52:34Z
+--- tráfico concurrente a /api/drug: códigos por ventana de 5 s (hora de respuesta) y latencia máxima
+  21:51:10  200x3  (máx 0.0 s)
+  21:51:15  200x6  (máx 0.0 s)
+  21:51:20  200x6  (máx 0.0 s)
+  21:51:25  502x3 503x4  (máx 2.5 s)
+  21:51:30  503x6  (máx 3.2 s)
+  21:51:35  503x8  (máx 3.2 s)
+  21:51:40  503x7  (máx 0.1 s)
+  21:51:45  503x6  (máx 0.3 s)
+  21:51:50  503x7  (máx 0.2 s)
+  21:51:55  503x7  (máx 0.2 s)
+  21:52:00  503x6  (máx 0.3 s)
+  21:52:05  503x7  (máx 0.2 s)
+  21:52:10  503x7  (máx 0.2 s)
+  21:52:15  503x6  (máx 0.2 s)
+  21:52:20  503x7  (máx 0.1 s)
+  21:52:25  503x6  (máx 0.1 s)
+  21:52:30  503x3 200x2  (máx 1.3 s)
+--- total
+  200 x17
+  502 x3
+  503 x87
+exit=0
+--- duración del caos: 81 s
+--- salida de observar.sh
+[inicio] 2026-11-14T21:51:08Z
+Observando 170 s: tráfico a 1 request/s por http://127.0.0.1 (/api/drug /api/roles) y alertas de Grafana cada 5 s
+21:51:08 http /api/drug 200 13
+21:51:08 alertas 
+21:51:09 http /api/roles 200 9
+21:51:10 http /api/drug 200 11
+21:51:11 http /api/roles 200 12
+21:51:12 http /api/drug 200 9
+21:51:13 http /api/roles 200 10
+21:51:13 alertas 
+21:51:14 http /api/drug 200 10
+21:51:15 http /api/roles 200 7
+21:51:17 http /api/drug 200 8
+21:51:18 http /api/roles 200 16
+21:51:19 http /api/drug 200 21
+21:51:19 alertas 
+21:51:20 http /api/roles 200 11
+21:51:21 http /api/drug 200 8
+21:51:22 http /api/roles 200 44
+21:51:23 http /api/drug 200 31
+21:51:24 http /api/roles 200 12
+21:51:24 alertas 
+21:51:29 http /api/drug 503 3831
+21:51:29 http /api/roles 200 85
+21:51:30 alertas 
+21:51:30 http /api/drug 503 38
+21:51:31 http /api/roles 200 8
+21:51:33 http /api/drug 503 163
+21:51:33 http /api/roles 200 49
+21:51:34 http /api/drug 503 41
+21:51:35 alertas 
+21:51:36 http /api/roles 200 43
+21:51:37 http /api/drug 503 5
+21:51:38 http /api/roles 200 9
+21:51:39 http /api/drug 503 8
+21:51:40 http /api/roles 200 9
+21:51:41 http /api/drug 503 6
+21:51:40 alertas 
+21:51:42 http /api/roles 200 10
+21:51:43 http /api/drug 503 46
+21:51:44 http /api/roles 200 9
+21:51:45 http /api/drug 503 6
+21:51:46 http /api/roles 200 11
+21:51:46 alertas pg-5xx=pending pg-latency=pending 
+21:51:47 http /api/drug 503 7
+21:51:48 http /api/roles 200 9
+21:51:49 http /api/drug 503 7
+21:51:51 http /api/roles 200 76
+21:51:52 http /api/drug 503 9
+21:51:51 alertas pg-5xx=pending pg-latency=pending pg-breaker=firing 
+21:51:53 http /api/roles 200 8
+21:51:54 http /api/drug 503 7
+21:51:55 http /api/roles 200 8
+21:51:56 http /api/drug 503 52
+21:51:57 http /api/roles 200 10
+21:51:57 alertas pg-5xx=pending pg-latency=pending pg-breaker=firing 
+21:51:58 http /api/drug 503 5
+21:51:59 http /api/roles 200 9
+21:52:00 http /api/drug 503 5
+21:52:01 http /api/roles 200 78
+21:52:02 http /api/drug 503 5
+21:52:02 alertas pg-5xx=pending pg-latency=pending pg-breaker=firing 
+21:52:03 http /api/roles 200 10
+21:52:04 http /api/drug 503 5
+21:52:05 http /api/roles 200 8
+21:52:07 http /api/drug 503 152
+21:52:07 http /api/roles 200 8
+21:52:08 alertas pg-5xx=pending pg-breaker=firing 
+21:52:09 http /api/drug 503 77
+21:52:10 http /api/roles 200 7
+21:52:11 http /api/drug 503 8
+21:52:12 http /api/roles 200 8
+21:52:13 http /api/drug 503 6
+21:52:14 http /api/roles 200 15
+21:52:13 alertas pg-5xx=firing pg-breaker=firing 
+21:52:15 http /api/drug 503 6
+21:52:16 http /api/roles 200 13
+21:52:17 http /api/drug 503 6
+21:52:18 http /api/roles 200 8
+21:52:19 http /api/drug 503 204
+21:52:19 alertas pg-5xx=firing pg-breaker=firing 
+21:52:20 http /api/roles 200 10
+21:52:21 http /api/drug 503 9
+21:52:22 http /api/roles 200 12
+21:52:24 http /api/drug 503 7
+21:52:25 http /api/roles 200 9
+21:52:25 alertas pg-5xx=firing pg-breaker=firing 
+21:52:26 http /api/drug 503 235
+21:52:27 http /api/roles 200 8
+21:52:28 http /api/drug 503 6
+21:52:29 http /api/roles 200 40
+21:52:30 http /api/drug 503 7
+21:52:30 alertas pg-5xx=firing pg-breaker=firing 
+21:52:31 http /api/roles 200 8
+21:52:32 http /api/drug 503 56
+21:52:33 http /api/roles 200 88
+21:52:34 http /api/drug 200 19
+21:52:35 http /api/roles 200 8
+21:52:35 alertas pg-5xx=firing pg-breaker=firing 
+21:52:36 http /api/drug 200 18
+21:52:37 http /api/roles 200 7
+21:52:38 http /api/drug 200 15
+21:52:39 http /api/roles 200 9
+21:52:40 http /api/drug 200 10
+21:52:41 alertas pg-5xx=firing pg-breaker=firing 
+21:52:42 http /api/roles 200 10
+21:52:43 http /api/drug 200 16
+21:52:44 http /api/roles 200 7
+21:52:45 http /api/drug 200 10
+21:52:46 http /api/roles 200 8
+21:52:46 alertas pg-5xx=firing pg-replicas=pending 
+21:52:47 http /api/drug 200 11
+21:52:48 http /api/roles 200 8
+21:52:49 http /api/drug 200 11
+21:52:50 http /api/roles 200 10
+21:52:51 http /api/drug 200 11
+21:52:51 alertas pg-5xx=firing pg-replicas=pending 
+21:52:52 http /api/roles 200 8
+21:52:53 http /api/drug 200 9
+21:52:54 http /api/roles 200 7
+21:52:55 http /api/drug 200 10
+21:52:56 http /api/roles 200 8
+21:52:57 alertas pg-5xx=firing 
+21:52:57 http /api/drug 200 9
+21:52:59 http /api/roles 200 8
+21:53:00 http /api/drug 200 11
+21:53:01 http /api/roles 200 9
+21:53:02 http /api/drug 200 10
+21:53:02 alertas pg-5xx=firing 
+21:53:03 http /api/roles 200 7
+21:53:04 http /api/drug 200 9
+21:53:05 http /api/roles 200 8
+21:53:06 http /api/drug 200 11
+21:53:07 http /api/roles 200 8
+21:53:07 alertas pg-5xx=firing 
+21:53:08 http /api/drug 200 10
+21:53:09 http /api/roles 200 9
+21:53:10 http /api/drug 200 11
+21:53:11 http /api/roles 200 9
+21:53:12 http /api/drug 200 9
+21:53:12 alertas pg-5xx=firing 
+21:53:13 http /api/roles 200 7
+21:53:14 http /api/drug 200 9
+21:53:15 http /api/roles 200 7
+21:53:16 http /api/drug 200 8
+21:53:18 http /api/roles 200 9
+21:53:18 alertas pg-5xx=firing 
+21:53:19 http /api/drug 200 10
+21:53:20 http /api/roles 200 9
+21:53:21 http /api/drug 200 10
+21:53:22 http /api/roles 200 12
+21:53:23 http /api/drug 200 8
+21:53:23 alertas pg-5xx=firing 
+21:53:24 http /api/roles 200 10
+21:53:25 http /api/drug 200 11
+21:53:26 http /api/roles 200 7
+21:53:27 http /api/drug 200 10
+21:53:28 http /api/roles 200 7
+21:53:29 alertas pg-5xx=firing 
+21:53:29 http /api/drug 200 13
+21:53:30 http /api/roles 200 7
+21:53:31 http /api/drug 200 8
+21:53:32 http /api/roles 200 8
+21:53:34 http /api/drug 200 11
+21:53:34 alertas pg-5xx=firing 
+21:53:35 http /api/roles 200 8
+21:53:36 http /api/drug 200 8
+21:53:37 http /api/roles 200 10
+21:53:38 http /api/drug 200 8
+21:53:39 http /api/roles 200 7
+21:53:39 alertas pg-5xx=firing 
+21:53:40 http /api/drug 200 10
+21:53:41 http /api/roles 200 7
+21:53:42 http /api/drug 200 10
+21:53:43 http /api/roles 200 29
+21:53:44 http /api/drug 200 10
+21:53:45 alertas pg-5xx=firing 
+21:53:45 http /api/roles 200 12
+21:53:46 http /api/drug 200 10
+21:53:47 http /api/roles 200 10
+21:53:48 http /api/drug 200 14
+21:53:49 http /api/roles 200 11
+21:53:51 http /api/drug 200 13
+21:53:50 alertas 
+21:53:52 http /api/roles 200 10
+21:53:53 http /api/drug 200 8
+21:53:54 http /api/roles 200 8
+21:53:55 http /api/drug 200 8
+21:53:56 http /api/roles 200 14
+21:53:56 alertas 
+21:53:57 http /api/drug 200 9
+21:53:58 http /api/roles 200 8
+21:53:59 http /api/drug 200 9
+21:54:00 http /api/roles 200 9
+21:54:01 http /api/drug 200 12
+21:54:02 http /api/roles 200 9
+21:54:03 http /api/drug 200 10
+21:54:04 http /api/roles 200 8
+21:54:05 http /api/drug 200 11
+21:54:07 http /api/roles 200 7
+21:54:08 http /api/drug 200 14
+21:54:09 http /api/roles 200 9
+21:54:10 http /api/drug 200 9
+21:54:11 http /api/roles 200 9
+
+Resumen (170 s):
+  Respuestas por código HTTP:
+    200 x139
+    503 x31
+  no-2xx: 31, primero 21:51:29, último 21:52:32
+  Alertas (primera vez en cada estado):
+    pg-5xx pending       21:51:46
+    pg-latency pending   21:51:46
+    pg-breaker firing    21:51:51
+    pg-5xx firing        21:52:13
+    pg-replicas pending  21:52:46
+[fin] 2026-11-14T21:54:12Z
+
+##### 3. Steady state DESPUÉS (se repite hasta OK, máximo 8 veces)
+$ ./steady-state.sh   (intento 1, 98 s después del fin del caos)
+[inicio] 2026-11-14T21:54:12Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 113, Pending: 0)
+
+[fin] 2026-11-14T21:54:35Z
+RESULTADO: steady state OK
+exit=0
+Steady state recuperado 121 s después del fin del caos (al terminar el chequeo)

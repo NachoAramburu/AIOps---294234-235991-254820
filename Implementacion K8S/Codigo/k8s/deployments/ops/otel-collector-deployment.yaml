@@ -33,12 +33,17 @@ spec:
           name: prometheus
         args:
           - "--config=/etc/otel-collector-config.yaml"
+        env:
+        # Límite blando para el runtime de Go, por debajo del límite del contenedor (D55).
+        - name: GOMEMLIMIT
+          value: "400MiB"
         resources:
           requests:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "100m"
           limits:
-            memory: "256Mi"
+            # Con 256Mi quedaba al 92 % en steady state y disparaba pg-memory sin falla (C18, D55).
+            memory: "512Mi"
             cpu: "500m"
         volumeMounts:
         - name: otel-config

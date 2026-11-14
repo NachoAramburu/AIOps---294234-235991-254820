@@ -1,0 +1,8 @@
+=== 22:07:25 Ops: la acción del playbook falló (kill no es un binario de la imagen). Se corrige: kill dentro de sh
+$ kubectl exec -n pharmago pharmago-pharmacy-service-7cd9b87485-l6plc -- sh -c 'kill 75'
+exit=0
+$ procesos que quedan con más de 1 MB
+1 VmRSS:	   99532 kB dotnet PharmaGo.PharmacyService.dll 
+172 VmRSS:	    1592 kB sh -c for p in /proc/[0-9]*; do printf "%s %s %s\n" "${p#/proc/}" "$(grep VmR
+129 VmRSS:	    1336 kB sleep 300 
+=== 22:07:28 fin de la acción corregida

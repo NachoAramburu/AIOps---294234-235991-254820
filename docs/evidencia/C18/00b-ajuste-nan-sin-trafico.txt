@@ -1,0 +1,12 @@
+Ajuste medido (C18): pg-5xx y pg-latency disparan sin tráfico. Queries contra Prometheus con 0 requests en el último minuto (21:04:33 UTC)
+Antes (C13):
+  pg-5xx   (sum(rate(..5xx..[1m])) or vector(0)) / sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway"}[1m]))
+    success ['NaN']
+  pg-latency  histogram_quantile(0.95, sum by (le) (rate(..._bucket{job="PharmaGo.ApiGateway"}[1m])))
+    success ['NaN']
+  -> 0/0 = NaN. Grafana evalúa NaN > umbral como verdadero: las dos pasan a Firing en reposo (ver 00-ajuste-collector-despues-y-sin-trafico.txt).
+Después (C18): el denominador o el filtro exigen tráfico > 0; sin tráfico la query queda vacía y noDataState: OK la deja en Normal
+  pg-5xx   ... / (sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway"}[1m])) > 0)
+    success vacío
+  pg-latency  histogram_quantile(...) and on() (sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway"}[1m])) > 0)
+    success vacío

@@ -1,0 +1,12 @@
+Ajuste medido (C18): memoria del otlp-collector en steady state, antes del cambio
+$ date -u
+2026-11-14T21:01:49Z
+$ kubectl top pod -n pharmago otlp-collector-...
+NAME                                         CPU(cores)   MEMORY(bytes)   
+otlp-collector-6576cb5c85-7vk68              16m          234Mi           
+$ Prometheus: max by (k8s_pod_name) (k8s_pod_memory_limit_utilization_ratio{k8s_namespace_name="pharmago"}) > 0.6
+   elasticsearch-757964844b-frtbk 0.666
+   otlp-collector-6576cb5c85-7vk68 0.923
+$ Grafana: estado de pg-memory
+   pg-memory Alerting otlp-collector-6576cb5c85-7vk68 valor 1e+00
+Límite actual: requests 128Mi, limits 256Mi, sin GOMEMLIMIT. 234Mi (92 % del límite): pg-memory (> 85 %) pasó a Firing (Alerting) sin ninguna falla inyectada, y el Collector está al borde del OOM.

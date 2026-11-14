@@ -1,0 +1,122 @@
+Primera corrida de check-playbooks.sh (antes de corregir el script y las annotations): detecta 2 títulos falsos y deja ver los runbook de pg-latency y pg-latency-anomaly apuntando al plan, no a un playbook
+$ bash check-playbooks.sh
+Playbooks: 8 en docs/playbooks/
+Alertas provisionadas: 10 | Títulos de dashboards y paneles: 28
+
+# docs/playbooks/cpu.md
+  secciones: 10
+  [OK]    alerta pg-5xx
+  [OK]    alerta pg-cpu
+  [OK]    alerta pg-latency
+  [OK]    alerta pg-latency-anomaly
+  [OK]    panel "CPU del contenedor contra su límite"
+  [OK]    panel "CPU por nodo (núcleos en uso)"
+  [OK]    panel "CPU por pod (núcleos)"
+  [OK]    panel "Latencia Promedio por Endpoint"
+  [OK]    panel "Peticiones por Segundo por Endpoint"
+  [OK]    panel "PharmaGo - Infra"
+  [OK]    panel "PharmaGo - Overview"
+
+# docs/playbooks/desconexion.md
+  secciones: 10
+  [OK]    alerta pg-5xx
+  [OK]    alerta pg-breaker
+  [OK]    alerta pg-replicas
+  [OK]    panel "Distribución de Status Codes (%)"
+  [OK]    panel "PharmaGo - Infra"
+  [OK]    panel "PharmaGo - Overview"
+  [OK]    panel "Réplicas deseadas y disponibles por Deployment"
+  [OK]    panel "Tasa de Error por Endpoint (%)"
+
+# docs/playbooks/memoria.md
+  secciones: 10
+  [OK]    alerta pg-memory
+  [OK]    alerta pg-restarts
+  [OK]    panel "Memoria del contenedor contra su límite"
+  [OK]    panel "Memoria del pod contra su límite"
+  [OK]    panel "Memoria por pod (working set)"
+  [OK]    panel "PharmaGo - Infra"
+  [OK]    panel "Reinicios por contenedor"
+
+# docs/playbooks/pod-caido.md
+  secciones: 10
+  [OK]    alerta pg-replicas
+  [OK]    alerta pg-restarts
+  [OK]    panel "PharmaGo - Infra"
+  [OK]    panel "Pods del namespace pharmago"
+  [OK]    panel "Reinicios por contenedor"
+  [OK]    panel "Réplicas deseadas y disponibles por Deployment"
+
+# docs/playbooks/red.md
+  secciones: 10
+  [OK]    alerta pg-5xx
+  [OK]    alerta pg-breaker
+  [OK]    alerta pg-latency
+  [OK]    panel "Distribución de Status Codes (%)"
+  [OK]    panel "Latencia Promedio por Endpoint"
+  [OK]    panel "Nodos Ready"
+  [OK]    panel "PharmaGo - Infra"
+  [OK]    panel "PharmaGo - Overview"
+  [OK]    panel "Red por nodo (rx y tx)"
+  [OK]    panel "Red por pod: no disponible en este cluster"
+  [OK]    panel "Tasa de Error por Endpoint (%)"
+
+# docs/playbooks/requests.md
+  secciones: 10
+  [OK]    alerta pg-429
+  [OK]    alerta pg-cpu
+  [OK]    panel "CPU del contenedor contra su límite"
+  [OK]    panel "Distribución de Status Codes (%)"
+  [OK]    panel "Peticiones por Segundo por Endpoint"
+  [OK]    panel "PharmaGo - Infra"
+  [OK]    panel "PharmaGo - Overview"
+  [OK]    panel "Rate Limit Errors (429) por Endpoint"
+  [OK]    panel "Throughput Total"
+
+# docs/playbooks/rollout-fallido.md
+  secciones: 10
+  [OK]    alerta pg-5xx
+  [OK]    alerta pg-latency
+  [OK]    alerta pg-replicas
+  [OK]    alerta pg-restarts
+  [FALTA] panel "Implementacion K8S/Codigo/chaos-engineering" no está en los dashboards
+  [FALTA] panel "Implementacion K8S/Codigo/k8s" no está en los dashboards
+  [OK]    panel "PharmaGo - Infra"
+  [OK]    panel "PharmaGo - Overview"
+  [OK]    panel "Reinicios por contenedor"
+  [OK]    panel "Réplicas deseadas y disponibles por Deployment"
+  [OK]    panel "Tasa de Error por Endpoint (%)"
+
+# docs/playbooks/storage.md
+  secciones: 10
+  [OK]    alerta pg-replicas
+  [OK]    alerta pg-storage
+  [OK]    panel "Filesystem por pod (ephemeral-storage usado)"
+  [OK]    panel "PharmaGo - Infra"
+  [OK]    panel "Presión de memoria o disco por nodo"
+  [OK]    panel "Réplicas deseadas y disponibles por Deployment"
+
+# Cada alerta tiene playbook y su runbook existe
+  [OK]    pg-429 nombrada en: Octavo AI requests.md 
+  [OK]    pg-429 runbook docs/playbooks/requests.md existe
+  [OK]    pg-5xx nombrada en: Octavo AI cpu.md Octavo AI desconexion.md Octavo AI red.md Octavo AI rollout-fallido.md 
+  [OK]    pg-5xx runbook docs/playbooks/red.md existe
+  [OK]    pg-breaker nombrada en: Octavo AI desconexion.md Octavo AI red.md 
+  [OK]    pg-breaker runbook docs/playbooks/red.md existe
+  [OK]    pg-cpu nombrada en: Octavo AI cpu.md Octavo AI requests.md 
+  [OK]    pg-cpu runbook docs/playbooks/cpu.md existe
+  [OK]    pg-latency nombrada en: Octavo AI cpu.md Octavo AI red.md Octavo AI rollout-fallido.md 
+  [OK]    pg-latency runbook docs/plan-incidentes.md existe
+  [OK]    pg-latency-anomaly nombrada en: Octavo AI cpu.md 
+  [OK]    pg-latency-anomaly runbook docs/plan-incidentes.md existe
+  [OK]    pg-memory nombrada en: Octavo AI memoria.md 
+  [OK]    pg-memory runbook docs/playbooks/memoria.md existe
+  [OK]    pg-replicas nombrada en: Octavo AI desconexion.md Octavo AI pod-caido.md Octavo AI rollout-fallido.md Octavo AI storage.md 
+  [OK]    pg-replicas runbook docs/playbooks/pod-caido.md existe
+  [OK]    pg-restarts nombrada en: Octavo AI memoria.md Octavo AI pod-caido.md Octavo AI rollout-fallido.md 
+  [OK]    pg-restarts runbook docs/playbooks/pod-caido.md existe
+  [OK]    pg-storage nombrada en: Octavo AI storage.md 
+  [OK]    pg-storage runbook docs/playbooks/storage.md existe
+
+RESULTADO: 2 referencia(s) faltante(s)
+exit=1

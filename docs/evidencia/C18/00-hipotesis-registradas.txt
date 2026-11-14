@@ -1,0 +1,22 @@
+Hipótesis registradas antes de correr cada experimento (C18). Hora de registro: 2026-11-14T21:20:09Z
+E1 y E2 se plantearon antes de correrlos (21:10 y 21:14 UTC) y se escriben acá después: E1 «pg-429 en Firing en ≤ 60 s y
+0 no-2xx en /api/drug»; E2 «pg-cpu en Firing en ≤ 60 s, 0 no-2xx y P95 < 1000 ms».
+Con lo medido en E2 (Pending recién a los 33 s: kubelet -> agente -> Collector -> Prometheus -> evaluación), las
+alertas de saturación se esperan en ≤ 75 s (≈ 35 s de cadena + 30 s de ventana + 10 s de evaluación).
+
+E3 memoria   ./ram-spike.sh pharmago-pharmacy-service 240 120
+  pg-memory en Firing en ≤ 75 s; 0 no-2xx en /api/drug y /api/roles; sin reinicios del contenedor;
+  memoria del pod de vuelta a su valor base y pg-memory resuelta en ≤ 60 s después del fin.
+E4 storage   ./volume-spike.sh pharmago-users-service 600 120   (límite ephemeral-storage 512Mi)
+  el kubelet desaloja el pod durante el experimento; 0 no-2xx en /api/roles (atiende la otra réplica);
+  el Deployment vuelve a 2/2 en ≤ 30 s desde el desalojo; pg-storage en Firing en ≤ 75 s si el desalojo tarda más que eso;
+  pg-replicas NO dispara (el reemplazo tarda menos que su ventana de 30 s).
+E5 red       ./network-chaos.sh pharmago-users-service 60
+  /api/roles con no-2xx durante el corte; /api/drug con 0 no-2xx (blast radius: solo users);
+  pg-breaker en Firing en ≤ 30 s y pg-5xx en ≤ 75 s; /api/roles vuelve a 2xx en ≤ 15 s después de borrar la policy.
+E6 desconexión ./disconnect.sh pharmago-pharmacy-service 60
+  /api/drug responde 503 durante la desconexión; /api/roles con 0 no-2xx; pg-breaker en Firing en ≤ 30 s;
+  pg-replicas NO dispara (las deseadas también bajan a 0); /api/drug vuelve a 2xx en ≤ 30 s desde que se restauran
+  las réplicas; steady-state.sh corrido durante la desconexión termina con salida distinta de 0.
+E7 pod borrado ../k8s/verify/measure-mttr.sh pharmago-users-service
+  0 no-2xx; MTTR < 15 s; ninguna alerta en Firing (pg-replicas tiene 30 s de ventana; borrar no es reiniciar).

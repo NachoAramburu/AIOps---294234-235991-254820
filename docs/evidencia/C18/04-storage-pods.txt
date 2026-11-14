@@ -1,0 +1,29 @@
+Antes de E4 (21:29:56 UTC):
+NAME                                      READY   STATUS    RESTARTS   AGE   IP              NODE           NOMINATED NODE   READINESS GATES
+pharmago-users-service-554477fd46-nr6fw   1/1     Running   0          49m   10.244.151.18   minikube-m03   <none>           <none>
+pharmago-users-service-554477fd46-w57rj   1/1     Running   0          50m   10.244.151.17   minikube-m03   <none>           <none>
+
+Después de E4 (21:34:34 UTC):
+NAME                                      READY   STATUS    RESTARTS   AGE     IP              NODE           NOMINATED NODE   READINESS GATES
+pharmago-users-service-554477fd46-jhwcz   1/1     Running   0          3m20s   10.244.151.19   minikube-m03   <none>           <none>
+pharmago-users-service-554477fd46-w57rj   1/1     Running   0          54m     10.244.151.17   minikube-m03   <none>           <none>
+
+$ kubectl get events (users-service, con hora)
+2026-11-14T20:40:09Z   Warning   Unhealthy           pharmago-users-service-66df8c5679-bj85m      Readiness probe failed: Get "http://10.244.151.14:80/health/ready": dial tcp 10.244.151.14:80: connect: connection refused
+2026-11-14T20:40:12Z   Warning   Unhealthy           pharmago-users-service-554477fd46-nr6fw      Startup probe failed: Get "http://10.244.151.18:80/health/live": dial tcp 10.244.151.18:80: connect: connection refused
+2026-11-14T20:40:19Z   Normal    SuccessfulDelete    pharmago-users-service-66df8c5679            Deleted pod: pharmago-users-service-66df8c5679-6l5wg
+2026-11-14T20:40:19Z   Normal    Killing             pharmago-users-service-66df8c5679-6l5wg      Stopping container pharmago-users-service
+2026-11-14T20:40:19Z   Normal    ScalingReplicaSet   pharmago-users-service                       Scaled down replica set pharmago-users-service-66df8c5679 from 1 to 0
+2026-11-14T20:40:25Z   Warning   Unhealthy           pharmago-users-service-66df8c5679-6l5wg      Readiness probe failed: Get "http://10.244.151.15:80/health/ready": dial tcp 10.244.151.15:80: connect: connection refused
+2026-11-14T21:31:12Z   Normal    Killing             pharmago-users-service-554477fd46-nr6fw      Stopping container pharmago-users-service
+2026-11-14T21:31:12Z   Warning   Evicted             pharmago-users-service-554477fd46-nr6fw      Pod ephemeral local storage usage exceeds the total limit of containers 512Mi. 
+2026-11-14T21:31:13Z   Warning   FailedPreStopHook   pharmago-users-service-554477fd46-nr6fw      PreStopHook failed
+2026-11-14T21:31:14Z   Normal    SuccessfulCreate    pharmago-users-service-554477fd46            Created pod: pharmago-users-service-554477fd46-jhwcz
+2026-11-14T21:31:15Z   Normal    Pulled              pharmago-users-service-554477fd46-jhwcz      Container image "pharmago-users-service:ff313b7" already present on machine
+2026-11-14T21:31:15Z   Normal    Created             pharmago-users-service-554477fd46-jhwcz      Created container: pharmago-users-service
+2026-11-14T21:31:15Z   Normal    Started             pharmago-users-service-554477fd46-jhwcz      Started container pharmago-users-service
+2026-11-14T21:31:19Z   Warning   Unhealthy           pharmago-users-service-554477fd46-jhwcz      Startup probe failed: Get "http://10.244.151.19:80/health/live": dial tcp 10.244.151.19:80: connect: connection refused
+
+$ kubectl get rs: el pod desalojado (Failed) lo borra volume-spike.sh
+2026-11-14T21:31:14Z ready=2026-11-14T21:31:21Z
+max MiB visto por Prometheus para nr6fw: [0]

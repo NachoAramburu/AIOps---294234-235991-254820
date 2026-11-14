@@ -23,7 +23,7 @@ data:
                   refId: A
                   instant: true
                   range: false
-                  expr: (sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway",status_code=~"5.."}[1m])) or vector(0)) / sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway"}[1m]))
+                  expr: (sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway",status_code=~"5.."}[1m])) or vector(0)) / (sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway"}[1m])) > 0)
               - refId: B
                 datasourceUid: __expr__
                 model: {refId: B, type: reduce, expression: A, reducer: last}
@@ -53,7 +53,7 @@ data:
                   refId: A
                   instant: true
                   range: false
-                  expr: histogram_quantile(0.95, sum by (le) (rate(pharmago_http_request_duration_milliseconds_bucket{job="PharmaGo.ApiGateway"}[1m])))
+                  expr: histogram_quantile(0.95, sum by (le) (rate(pharmago_http_request_duration_milliseconds_bucket{job="PharmaGo.ApiGateway"}[1m]))) and on() (sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway"}[1m])) > 0)
               - refId: B
                 datasourceUid: __expr__
                 model: {refId: B, type: reduce, expression: A, reducer: last}
@@ -71,7 +71,7 @@ data:
             labels: {severity: sev2, signal: latencia}
             annotations:
               summary: "El P95 de latencia del gateway supera 1000 ms (valor: {{ printf \"%.0f\" $values.B.Value }} ms)."
-              runbook: docs/plan-incidentes.md
+              runbook: docs/playbooks/red.md
           - uid: pg-latency-anomaly
             title: "pg-latency-anomaly: latencia fuera de 3 desvíos (k-sigma)"
             condition: C
@@ -101,7 +101,7 @@ data:
             labels: {severity: sev3, signal: latencia}
             annotations:
               summary: "La latencia media del gateway se alejó {{ printf \"%.1f\" $values.B.Value }} desvíos de su promedio de los últimos 30 min."
-              runbook: docs/plan-incidentes.md
+              runbook: docs/playbooks/cpu.md
           - uid: pg-429
             title: "pg-429: el rate limit está cortando requests"
             condition: C

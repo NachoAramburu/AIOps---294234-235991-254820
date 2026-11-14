@@ -1,0 +1,193 @@
+##### Experimento 07-pod-borrado
+##### 1. Steady state ANTES
+$ ./steady-state.sh
+[inicio] 2026-11-14T21:55:06Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 113, Pending: 0)
+
+[fin] 2026-11-14T21:55:29Z
+RESULTADO: steady state OK
+exit=0
+
+##### 2. Experimento: observar.sh en paralelo con el caos
+$ ./observar.sh 100 /api/drug /   (en otra terminal)
+$ ../k8s/verify/measure-mttr.sh pharmago-users-service
+--- salida del caos
+Deployment: pharmago-users-service | modo: delete | pod: pharmago-users-service-554477fd46-jhwcz | réplicas: 2 | URL: http://127.0.0.1/api/roles | 40 requests, 1 por segundo
+t=10s  kubectl delete pod pharmago-users-service-554477fd46-jhwcz
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 8.6 s (resolución de 1 s, la del loop)
+OK
+exit=0
+--- duración del caos: 46 s
+--- salida de observar.sh
+[inicio] 2026-11-14T21:55:29Z
+Observando 100 s: tráfico a 1 request/s por http://127.0.0.1 (/api/drug /) y alertas de Grafana cada 5 s
+21:55:29 http /api/drug 200 13
+21:55:29 alertas 
+21:55:30 http / 200 6
+21:55:32 http /api/drug 200 10
+21:55:33 http / 200 5
+21:55:34 http /api/drug 200 9
+21:55:35 http / 200 6
+21:55:35 alertas 
+21:55:36 http /api/drug 200 11
+21:55:37 http / 200 5
+21:55:38 http /api/drug 200 12
+21:55:39 http / 200 6
+21:55:40 http /api/drug 200 8
+21:55:40 alertas 
+21:55:41 http / 200 4
+21:55:42 http /api/drug 200 8
+21:55:43 http / 200 4
+21:55:44 http /api/drug 200 8
+21:55:45 http / 200 6
+21:55:46 alertas 
+21:55:46 http /api/drug 200 10
+21:55:48 http / 200 5
+21:55:49 http /api/drug 200 11
+21:55:50 http / 200 6
+21:55:51 http /api/drug 200 8
+21:55:51 alertas 
+21:55:52 http / 200 4
+21:55:53 http /api/drug 200 91
+21:55:54 http / 200 5
+21:55:55 http /api/drug 200 8
+21:55:56 http / 200 4
+21:55:57 alertas 
+21:55:57 http /api/drug 200 9
+21:55:58 http / 200 4
+21:55:59 http /api/drug 200 9
+21:56:00 http / 200 4
+21:56:01 http /api/drug 200 8
+21:56:02 alertas 
+21:56:02 http / 200 4
+21:56:04 http /api/drug 200 10
+21:56:05 http / 200 4
+21:56:06 http /api/drug 200 9
+21:56:07 http / 200 4
+21:56:07 alertas pg-replicas=pending 
+21:56:08 http /api/drug 200 15
+21:56:09 http / 200 5
+21:56:10 http /api/drug 200 13
+21:56:11 http / 200 4
+21:56:12 http /api/drug 200 8
+21:56:13 alertas pg-replicas=pending 
+21:56:13 http / 200 30
+21:56:14 http /api/drug 200 8
+21:56:15 http / 200 4
+21:56:16 http /api/drug 200 11
+21:56:17 http / 200 5
+21:56:19 http /api/drug 200 51
+21:56:18 alertas 
+21:56:20 http / 200 4
+21:56:21 http /api/drug 200 13
+21:56:22 http / 200 4
+21:56:23 http /api/drug 200 13
+21:56:24 http / 200 6
+21:56:24 alertas 
+21:56:25 http /api/drug 200 13
+21:56:26 http / 200 5
+21:56:27 http /api/drug 200 10
+21:56:28 http / 200 5
+21:56:29 http /api/drug 200 9
+21:56:30 http / 200 5
+21:56:30 alertas 
+21:56:31 http /api/drug 200 8
+21:56:32 http / 200 4
+21:56:34 http /api/drug 200 9
+21:56:35 http / 200 5
+21:56:36 http /api/drug 200 12
+21:56:36 alertas 
+21:56:37 http / 200 5
+21:56:38 http /api/drug 200 9
+21:56:39 http / 200 5
+21:56:40 http /api/drug 200 8
+21:56:41 http / 200 5
+21:56:41 alertas 
+21:56:42 http /api/drug 200 9
+21:56:43 http / 200 4
+21:56:44 http /api/drug 200 9
+21:56:45 http / 200 4
+21:56:46 http /api/drug 200 10
+21:56:46 alertas 
+21:56:47 http / 200 4
+21:56:49 http /api/drug 200 10
+21:56:50 http / 200 5
+21:56:51 http /api/drug 200 8
+21:56:52 http / 200 4
+21:56:52 alertas 
+21:56:53 http /api/drug 200 8
+21:56:54 http / 200 4
+21:56:55 http /api/drug 200 9
+21:56:56 http / 200 5
+21:56:57 http /api/drug 200 8
+21:56:57 alertas 
+21:56:58 http / 200 5
+21:56:59 http /api/drug 200 11
+21:57:00 http / 200 5
+21:57:01 http /api/drug 200 14
+21:57:02 http / 200 5
+21:57:02 alertas 
+21:57:03 http /api/drug 200 10
+21:57:04 http / 200 4
+21:57:05 http /api/drug 200 8
+21:57:07 http / 200 4
+21:57:08 http /api/drug 200 9
+21:57:08 alertas 
+21:57:09 http / 200 5
+21:57:10 http /api/drug 200 8
+21:57:11 http / 200 4
+21:57:12 http /api/drug 200 10
+21:57:13 http / 200 4
+21:57:14 http /api/drug 200 9
+21:57:15 http / 200 4
+
+Resumen (100 s):
+  Respuestas por código HTTP:
+    200 x100
+  no-2xx: 0
+  Alertas (primera vez en cada estado):
+    pg-replicas pending  21:56:07
+[fin] 2026-11-14T21:57:16Z
+
+##### 3. Steady state DESPUÉS (se repite hasta OK, máximo 8 veces)
+$ ./steady-state.sh   (intento 1, 56 s después del fin del caos)
+[inicio] 2026-11-14T21:57:17Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 115, Pending: 0)
+
+[fin] 2026-11-14T21:57:39Z
+RESULTADO: steady state OK
+exit=0
+Steady state recuperado 79 s después del fin del caos (al terminar el chequeo)

@@ -1,0 +1,15 @@
+Prueba: ¿el kubelet de este cluster informa el uso de la capa escribible del contenedor? (volume-spike de 200 MB, bajo el límite)
+[inicio] 2026-11-14T21:35:15Z
+Storage: pharmago-users-service-554477fd46-jhwcz escribe 200 MB en /tmp/chaos_fill y los mantiene 45 s
+-rw-r--r-- 1 root root 209715200 Nov 14 21:35 /tmp/chaos_fill
+pod con /tmp/chaos_fill: pharmago-users-service-554477fd46-jhwcz
+$ kubectl exec pharmago-users-service-554477fd46-jhwcz -- du -sm /tmp/chaos_fill
+200	/tmp/chaos_fill
+$ kubectl get --raw /api/v1/nodes/minikube-m03/proxy/stats/summary   (pod pharmago-users-service-554477fd46-jhwcz)
+  pod ephemeral-storage usedBytes: 105914368
+  container pharmago-users-service rootfs usedBytes: 105906176 | logs usedBytes: 4096
+$ Prometheus (35 s después de escribir): k8s_pod_filesystem_usage_bytes y container_filesystem_usage_bytes del pod, en MiB
+  pod: [101.01]
+  container: [101.0]
+Archivo /tmp/chaos_fill borrado en pharmago-users-service-554477fd46-jhwcz.
+[fin] 2026-11-14T21:36:03Z

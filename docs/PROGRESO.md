@@ -740,3 +740,76 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
 - **Cambio:** `deploy.sh` anota después del `set image`. `rollback.sh` anota a qué tag volvió (`rollback.sh, vuelve a <tag>`).
 - **Evidencia:** `docs/evidencia/C08/03-ajuste-change-cause.txt` (orden de las llamadas con kubectl simulado). Pendiente en el cluster: `docs/evidencia/C08/04-ajuste-cluster-pendiente.txt`.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+## C18 — Experimentos de caos con hipótesis y resultados — 2026-11-14 — Ignacio Aramburu (bloque B7)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 7 (Scripts de caos)
+- **Commit:** `C18+C20: experimentos de caos con resultados y playbooks por tipo de falla` (SHA en `git log --grep "^C18+C20:"`)
+- **Dónde se corrió:** PC de Ignacio, cluster de 5 nodos con B1 a B6 aplicados (imágenes `ff313b7`), `minikube tunnel` abierto, entre las 21:00 y las 22:10 UTC.
+- **Archivos creados / modificados:** `chaos-engineering/steady-state.sh`, `chaos-engineering/observar.sh` y `chaos-engineering/EXPERIMENTOS.md` (nuevos); `chaos-engineering/ram-spike.sh` (reserva por bloques, D57) y `README.md`; `k8s/deployments/ops/otel-collector-deployment.yaml` (D55); `k8s/configmaps/grafana-alerting.yaml` (queries de `pg-5xx` y `pg-latency`, D56); `k8s/configmaps/grafana-dashboards.yaml` y `grafana-dashboard-infra.yaml` (tres queries de paneles); `docs/alertas.md`; `docs/DECISIONES.md` (D55 a D57).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Antes de los experimentos, el steady state no podía dar OK (00, 00b, 00c):
+    otlp-collector al 92 % de 256Mi -> pg-memory en Firing sin falla        -> límite 512Mi (D55)
+    sin tráfico, pg-5xx y pg-latency = NaN -> Firing en reposo (4 min medidos) -> filtro "> 0" (D56)
+    después: Normal 112, Pending 0; con tráfico pg-5xx = 0 y P95 = 18 ms
+  $ ./steady-state.sh            antes y después de cada experimento: exit 0 (durante E6: exit 3)
+  $ docs/evidencia/C18/scripts/run_exp.sh <id> ...   (steady-state, observar.sh en paralelo con el caos, steady-state)
+    E1  load-requests 300 20             pg-429 Firing 50 s, 0/150 no-2xx en /api/drug          confirmada
+    E2  cpu-spike gateway 120 4          pg-cpu Firing 70 s, 0/200, P95 60 ms                    refutada (70 > 60 s)
+    E3a ram-spike pharmacy 240 (C16)     OOM a los 7 s, sin alerta, 0 reinicios                  refutada -> D57
+    E3b ram-spike pharmacy 250 (D57)     89 % sostenido, pg-memory Firing 59 s, 0/210            confirmada
+    E4  volume-spike users 600           desalojo 47 s, 2/2 en 9 s, 0/210, sin alerta            confirmada
+    E4c volume-spike users 400           pg-storage Firing 76 s, 0/210                           confirmada
+    E5a network-chaos users (poco tráfico) breaker no abre, solo pg-latency tarde                refutada
+    E5b network-chaos users (concurrente)  breaker abre 14 s, pg-breaker 33 s, 503 < 0,1 s, /api/drug 0/75   refutada por 3 s
+    E6  disconnect pharmacy (concurrente)  pg-breaker 33 s, pg-5xx 55 s, 2/2 en 14 s, /api/roles 0/85         refutada por 3 s
+    E7  measure-mttr users                 MTTR 8,6 s, 0/140, sin alerta                         confirmada
+    E8  imagen inexistente en pharmacy     0/150, ninguna alerta, rollback.sh en 1 s             confirmada
+  Capturas de Grafana tomadas durante cada experimento: docs/evidencia/C18/*-grafana-*.png
+  ```
+- **Criterio de "hecho" de §3 (ítem 7):** cumplido. Los 6 tipos de falla (más borrado de pod y rollout fallido) con steady state, hipótesis falsable con números, blast radius, comando, métrica y panel, alerta esperada, criterio de éxito y de aborto, y resultado medido; tabla resumen y aprendizajes de cada hipótesis refutada en `chaos-engineering/EXPERIMENTOS.md`. Las hipótesis de E3 a E7 se registraron con hora antes de correrlos (`00-hipotesis-registradas.txt`).
+- **Decisiones tomadas:** D55 (Collector a 512Mi), D56 (queries de `pg-5xx` y `pg-latency` sin NaN), D57 (`ram-spike.sh` por bloques). `observar.sh` con timeout de cliente de 10 s. No se cambió ningún umbral ni ventana de alerta: lo medido no dio motivo.
+- **NO VERIFICADO / riesgos:**
+  - Los experimentos se corrieron una vez cada uno (E3, E4 y E5 dos veces, por los hallazgos). Los tiempos pueden variar algunos segundos entre corridas y entre PCs.
+  - Para usar la API de Grafana se reseteó la contraseña de admin del Grafana **local** al valor del manifiesto (con permiso del integrante): la base persistente tenía otra. `steady-state.sh` no la necesita (usa `/metrics`); `observar.sh` sí. Sigue pendiente pasar esa contraseña a un Secret (regla 4; viene de antes).
+  - Las capturas de Grafana tienen la hora del eje en hora local (UTC-3); los `.txt` están en UTC.
+- **Hallazgos nuevos que cambian el plan:**
+  - La detección tiene un piso de unos 30 s (medición, Collector, scrape de 5 s, evaluación de 10 s): las alertas con ventana de 30 s disparan a los 50-76 s y `pg-breaker` a los 33 s. Las fallas más rápidas (OOM a los 7 s, desalojo a los 47 s) no disparan alertas: se ven en `memory.events` y en los eventos `Evicted`.
+  - El circuit breaker necesita al menos 8 requests en 10 s por réplica del gateway: con poco tráfico no abre y la falla se ve solo como latencia. Para la defensa, mirar con tráfico.
+  - Un rollout trabado no dispara ninguna alerta (las réplicas viejas siguen 2/2): la señal es `deploy.sh`.
+  - Se arreglaron tres paneles: "Distribución de Status Codes (%)" daba «No data» (faltaba `on() group_left`), "Tasa de Error por Tipo de Error (Todos los Endpoints)" iba a fallar con más de un tipo, y "Memoria del contenedor contra su límite" daba error de series duplicadas tras un reinicio.
+  - Con `minikube tunnel` todas las requests llegan al gateway con la IP del nodo (`192.168.49.2`): el rate limit «por IP» es compartido por todos los clientes. Anotado en el playbook de requests.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B7)
+
+## C20 — Playbooks por tipo de fallo — 2026-11-14 — Ignacio Aramburu (bloque B7)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 6 (Plan de incidentes)
+- **Commit:** `C18+C20: experimentos de caos con resultados y playbooks por tipo de falla` (SHA en `git log --grep "^C18+C20:"`)
+- **Archivos creados / modificados:** `docs/playbooks/` (8 nuevos: `requests.md`, `cpu.md`, `memoria.md`, `storage.md`, `red.md`, `desconexion.md`, `pod-caido.md`, `rollout-fallido.md`), `k8s/verify/check-playbooks.sh` (nuevo), `docs/incidentes/2026-11-14-memoria-ensayo.md` (nuevo), `k8s/configmaps/grafana-alerting.yaml` (runbook de `pg-latency` y `pg-latency-anomaly`), `docs/alertas.md` (columnas de playbook y de lo medido), `docs/plan-incidentes.md` (vínculos reales y tiempos medidos).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ bash k8s/verify/check-playbooks.sh                           (01a: primera corrida, exit 1)
+    detectó 2 títulos falsos (el script no ignoraba bloques de código con sangría) y los runbook
+    de pg-latency y pg-latency-anomaly apuntando al plan, no a un playbook -> corregido
+  $ bash k8s/verify/check-playbooks.sh                           (01)  exit 0
+    8 playbooks con las 10 secciones; todas las alertas y paneles que nombran existen;
+    las 10 alertas tienen playbook y su runbook existe
+  $ GET /api/v1/provisioning/alert-rules y /api/prometheus/grafana/api/v1/rules   (01)
+    10 reglas, provenance=file, cada una con su runbook; las 10 con salud ok
+  $ docs/evidencia/C20/ensayo_memoria.sh                         (02, 02b)
+    ram-spike 250 MB -> pg-memory Firing a los 59 s -> diagnóstico 1 a 5 del playbook -> PID 75 (273 MB)
+    mitigación paso 2: "kubectl exec <pod> -- kill 75" FALLÓ (exit 127: kill no es un binario de la imagen)
+    corregido a "sh -c 'kill 75'" -> memoria liberada, pg-memory Normal 28 s después, steady state OK
+    registro: docs/incidentes/2026-11-14-memoria-ensayo.md
+  $ python docs/evidencia/C20/check_plan_b7.py .                 (03)  94 OK, 0 PENDIENTE, 0 FALTA
+    el plan de B4 y sus plantillas nombran solo archivos, paneles, decisiones, alertas y playbooks que existen
+  ```
+- **Criterio de "hecho" de §3 (ítem 6):** cumplido. Un playbook por tipo de falla, cada uno con alerta y panel que existen (verificado por script), diagnóstico con comandos probados, mitigación automática con el tiempo medido en C18, mitigación manual, validación con `steady-state.sh`, qué hacer si no funciona y registro. El plan de C19 quedó vinculado a lo real.
+- **Decisiones tomadas:** convención de los playbooks: las comillas dobles se usan solo para títulos de Grafana y los uid van entre backticks, para que `check-playbooks.sh` los pueda verificar. El `runbook` de cada alerta es la ruta relativa desde la raíz del repo.
+- **NO VERIFICADO / riesgos:**
+  - El ensayo del playbook lo hizo la IA en el rol de Ops, sin IC ni Comms. Falta el ensayo con los 3 roles (lo pide la guía antes de «revisado» y es parte de C23).
+  - Los comandos de diagnóstico se probaron en los pods de pharmacy, users y el gateway; los de `minikube node start` y `--force` no se ejecutaron (romperían el cluster).
+- **Hallazgos nuevos que cambian el plan:**
+  - Seguir el playbook encontró un error real: `kubectl exec <pod> -- kill <pid>` no funciona en estas imágenes. Corregido en `memoria.md` y `cpu.md`.
+  - El checker de C19 da los playbooks como pendientes por diseño: para B7 se usa `docs/evidencia/C20/check_plan_b7.py`, que exige que todo exista.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B7)
