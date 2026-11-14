@@ -1,0 +1,38 @@
+# ANTES (límites del plan: memoria 128Mi, CPU 200m), 2026-11-14T16:03:29Z
+$ kubectl top pods -n pharmago | grep otel
+NAME                                         CPU(cores)   MEMORY(bytes)   
+otel-agent-2tcrw                             3m           110Mi           
+otel-agent-6cvp9                             200m         127Mi           
+otel-agent-954fc                             125m         127Mi           
+otel-agent-b2sjw                             201m         127Mi           
+otel-agent-w786d                             201m         127Mi           
+otlp-collector-6576cb5c85-7vk68              17m          182Mi           
+
+# DESPUÉS (D38: límites 256Mi / 250m, GOMEMLIMIT=200MiB, memory_limiter), 3 min después del rollout
+$ kubectl top pods -n pharmago | grep otel
+NAME                                         CPU(cores)   MEMORY(bytes)   
+otel-agent-78sgm                             4m           152Mi           
+otel-agent-hcdmj                             3m           175Mi           
+otel-agent-wlmzx                             3m           148Mi           
+otel-agent-zdxx5                             4m           150Mi           
+otel-agent-ztcc8                             4m           107Mi           
+otlp-collector-6576cb5c85-7vk68              16m          165Mi           
+
+$ kubectl top pods -n pharmago | grep otel   (2026-11-14T16:08:36Z)
+NAME                                         CPU(cores)   MEMORY(bytes)   
+otel-agent-78sgm                             4m           152Mi           
+otel-agent-hcdmj                             3m           175Mi           
+otel-agent-wlmzx                             3m           148Mi           
+otel-agent-zdxx5                             4m           150Mi           
+otel-agent-ztcc8                             4m           107Mi           
+otlp-collector-6576cb5c85-7vk68              16m          165Mi           
+
+$ kubectl get pods -n pharmago -l app=otel-agent
+NAME               READY   STATUS    RESTARTS   AGE
+otel-agent-78sgm   1/1     Running   0          4m2s
+otel-agent-hcdmj   1/1     Running   0          3m20s
+otel-agent-wlmzx   1/1     Running   0          4m35s
+otel-agent-zdxx5   1/1     Running   0          3m55s
+otel-agent-ztcc8   1/1     Running   0          3m53s
+
+# Conclusión: el uso real estable (107-175Mi) supera el límite de 128Mi del plan: con ese límite el agente terminaría en OOMKilled.

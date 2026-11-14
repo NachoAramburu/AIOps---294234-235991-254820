@@ -5,20 +5,51 @@ metadata:
   namespace: pharmago
 data:
   otel-collector-config.yaml: |
+    # Punto único de entrada de la telemetría (letra: métricas por OTLP hacia Prometheus).
     receivers:
       otlp:
         protocols:
           grpc:
             endpoint: "0.0.0.0:4317"
+      # Estado del cluster desde la API de Kubernetes (C12): reinicios, réplicas por Deployment
+      # y condiciones de los nodos. Va solo aquí (una réplica) para no duplicar series.
+      k8s_cluster:
+        auth_type: serviceAccount
+        collection_interval: 10s
+        node_conditions_to_report: [Ready, MemoryPressure, DiskPressure]
+
+    processors:
+      # Primero el límite de memoria: si el Collector se acerca a su límite, rechaza datos
+      # en vez de morir por OOM. Después batch, que agrupa envíos.
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      batch: {}
 
     exporters:
+      # Prometheus scrapea solo este endpoint (C10).
       prometheus:
         endpoint: "0.0.0.0:8889"
-      debug: {}
+        # Si un pod desaparece, sus series dejan de exponerse a los 2 min.
+        metric_expiration: 2m
+        # Los atributos del recurso (service.instance.id, k8s.pod.name, k8s.node.name...) pasan a labels.
+        resource_to_telemetry_conversion:
+          enabled: true
+      # Trazas a Jaeger, que recibe OTLP nativo (C11). Dentro del cluster, sin TLS.
+      otlp/jaeger:
+        endpoint: "jaeger:4317"
+        tls:
+          insecure: true
 
     service:
       pipelines:
         metrics:
+          # otlp trae las métricas de las apps y de los otel-agent de cada nodo.
+          receivers: [otlp, k8s_cluster]
+          processors: [memory_limiter, batch]
+          exporters: [prometheus]
+        traces:
           receivers: [otlp]
-          exporters: [prometheus, debug]
-
+          processors: [memory_limiter, batch]
+          exporters: [otlp/jaeger]

@@ -16,6 +16,7 @@ COPY ["PharmaGo.DataAccess/PharmaGo.DataAccess.csproj", "PharmaGo.DataAccess/"]
 COPY ["PharmaGo.IDataAccess/PharmaGo.IDataAccess.csproj", "PharmaGo.IDataAccess/"]
 COPY ["Instrumentation/Instrumentation.csproj", "Instrumentation/"]
 COPY ["InstrumentationInterface/InstrumentationInterface.csproj", "InstrumentationInterface/"]
+COPY ["PharmaGo.Telemetry/PharmaGo.Telemetry.csproj", "PharmaGo.Telemetry/"]
 COPY ["ExportationModel/ExportationModel.csproj", "ExportationModel/"]
 COPY ["JSONExporter/JSONExporter.csproj", "JSONExporter/"]
 

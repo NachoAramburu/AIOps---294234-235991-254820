@@ -1,0 +1,2 @@
+$ curl -s http://127.0.0.1:9090/api/v1/targets  (activos)
+   otlp-collector http://otlp-collector:8889/metrics up

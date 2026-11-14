@@ -1,0 +1,27 @@
+# Primera consulta, ~2 min después del reinicio de Prometheus y con tráfico solo a una réplica (port-forward a svc).
+# Las series con job="otlp-collector" son datos de ANTES del cambio guardados en el volumen de Prometheus
+# (users y pharmacy ya exportaban OTLP sin resource_to_telemetry_conversion): incluyen /health y /metrics.
+# Desaparecen al pasar la ventana de 5 min (ver 06b-series-final.txt).
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=count by (job) (pharmago_http_requests_total)'
+   {'job': 'otlp-collector'} => 12
+   {'job': 'PharmaGo.UsersService'} => 1
+   {'job': 'PharmaGo.ApiGateway'} => 2
+   {'job': 'PharmaGo.PharmacyService'} => 1
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=count by (job, instance) (pharmago_http_requests_total)'
+   {'instance': 'otlp-collector:8889', 'job': 'otlp-collector'} => 12
+   {'instance': 'pharmago-users-service-66df8c5679-bj85m', 'job': 'PharmaGo.UsersService'} => 1
+   {'instance': 'pharmago-api-gateway-5649876d9c-h9fx4', 'job': 'PharmaGo.ApiGateway'} => 2
+   {'instance': 'pharmago-pharmacy-service-67b5d87484-q4z7f', 'job': 'PharmaGo.PharmacyService'} => 1
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=count by (job, k8s_pod_name, k8s_node_name) (pharmago_http_requests_total)'
+   {'job': 'otlp-collector'} => 12
+   {'job': 'PharmaGo.UsersService', 'k8s_node_name': 'minikube-m03', 'k8s_pod_name': 'pharmago-users-service-66df8c5679-bj85m'} => 1
+   {'job': 'PharmaGo.ApiGateway', 'k8s_node_name': 'minikube-m02', 'k8s_pod_name': 'pharmago-api-gateway-5649876d9c-h9fx4'} => 2
+   {'job': 'PharmaGo.PharmacyService', 'k8s_node_name': 'minikube-m04', 'k8s_pod_name': 'pharmago-pharmacy-service-67b5d87484-q4z7f'} => 1
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=sum by (job, instance) (rate(pharmago_http_requests_total[1m]))'
+   {'instance': 'pharmago-users-service-66df8c5679-bj85m', 'job': 'PharmaGo.UsersService'} => 0.040240000000000005
+   {'instance': 'pharmago-api-gateway-5649876d9c-h9fx4', 'job': 'PharmaGo.ApiGateway'} => 0.3452968888888889
+   {'instance': 'pharmago-pharmacy-service-67b5d87484-q4z7f', 'job': 'PharmaGo.PharmacyService'} => 0.28288
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=count by (endpoint) (pharmago_http_requests_total{endpoint=~"/health.*|/metrics"})'
+   {'endpoint': '/health/live'} => 4
+   {'endpoint': '/health/ready'} => 6
+   {'endpoint': '/metrics'} => 2

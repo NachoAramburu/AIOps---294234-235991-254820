@@ -1,0 +1,30 @@
+# Grafana por API (basic auth del admin; la contraseña no se imprime).
+# Cada query de cada panel se ejecuta por /api/ds/query, el mismo camino que usa el panel.
+
+$ GET /api/dashboards/uid/pharmago-infra
+  title: PharmaGo - Infra | provisioned: True | paneles: 18
+  [CPU por nodo (núcleos en uso)] series: 5
+  [Memoria por nodo (working set)] series: 5
+  [Filesystem por nodo: usado y capacidad] series: 10
+  [Red por nodo (rx y tx)] series: 10
+  [Nodos Ready] series: 5
+  [Presión de memoria o disco por nodo] series: 10
+  [CPU por pod (núcleos)] series: 25
+  [Memoria por pod (working set)] series: 25
+  [Filesystem por pod (ephemeral-storage usado)] series: 25
+  [Memoria del pod contra su límite] series: 25
+  [CPU del contenedor contra su límite] series: 20
+  [Memoria del contenedor contra su límite] series: 25
+  [Reinicios por contenedor] series: 25
+  [Réplicas deseadas y disponibles por Deployment] series: 22
+
+$ GET /api/dashboards/uid/pharmago-overview
+  title: PharmaGo - Overview | provisioned: True | paneles: 8
+  [Peticiones por Segundo por Endpoint] series: 2
+  [Latencia Promedio por Endpoint] series: 2
+  [Tasa de Error por Endpoint (%)] series: 1
+  [Throughput Total] series: 1
+  [Rate Limit Errors (429) por Endpoint] series: 1
+  [Distribución de Status Codes (%)] series: 1
+  [Tasa de Error por Tipo de Error (Todos los Endpoints)] series: 1
+  [Tasa de Error - /api/drug (429 y Total)] series: 2

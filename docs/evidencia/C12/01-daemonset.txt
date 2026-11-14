@@ -1,0 +1,17 @@
+$ kubectl get ds -n pharmago
+NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+fluent-bit   5         5         5       5            5           <none>          2d1h
+otel-agent   5         5         5       5            5           <none>          9m18s
+
+$ kubectl get pods -n pharmago -l app=otel-agent -o wide
+NAME              READY  STATUS   RESTARTS  NODE
+otel-agent-2tcrw  1/1    Running  0         minikube-m05
+otel-agent-6cvp9  1/1    Running  0         minikube-m02
+otel-agent-954fc  1/1    Running  0         minikube-m03
+otel-agent-b2sjw  1/1    Running  0         minikube-m04
+otel-agent-w786d  1/1    Running  0         minikube
+
+$ kubectl get pods -n pharmago -l app=pharmago-node-exporter,app=node-exporter  (ya no existe)
+Error from server (NotFound): daemonsets.apps "node-exporter" not found
+Error from server (NotFound): services "node-exporter" not found
+Error from server (NotFound): clusterroles.rbac.authorization.k8s.io "prometheus-cadvisor" not found

@@ -1,6 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
 using AspNetCoreRateLimit;
 using PharmaGo.ApiGateway.Middleware;
 using Instrumentation;
@@ -10,6 +8,7 @@ using Yarp.ReverseProxy.Forwarder;
 using PharmaGo.ApiGateway.Resilience;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using PharmaGo.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,16 +50,8 @@ builder.Services.AddHealthChecks()
 
 builder.Services.AddSingleton<ICustomMetrics, CustomMetrics>();
 
-builder.Services.AddOpenTelemetry()
-    .WithMetrics(metricsBuilder => 
-    {
-        metricsBuilder
-            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("PharmaGo.ApiGateway"))
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddMeter("PharmaGo.CustomMetrics")
-            .AddPrometheusExporter();
-    });
+// Métricas por OTLP al Collector (C10). Prometheus ya no scrapea al gateway.
+builder.Services.AddPharmaGoTelemetry("PharmaGo.ApiGateway");
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -105,7 +96,6 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check 
 app.MapHealthChecks("/health");
 
 app.MapReverseProxy();
-app.MapPrometheusScrapingEndpoint();
 
 app.Run();
 

@@ -68,6 +68,20 @@ spec:
           value: "http://pharmago-pharmacy-service:80"
         - name: ASPNETCORE_ENVIRONMENT
           value: "Production"
+        # Telemetría por OTLP (C10): el SDK lee el endpoint y los atributos de estas variables.
+        # POD_NAME y NODE_NAME van antes porque Kubernetes solo expande $(VAR) ya definidas.
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otlp-collector:4317"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "k8s.namespace.name=pharmago,k8s.pod.name=$(POD_NAME),k8s.node.name=$(NODE_NAME)"
         - name: Logging__LogLevel__Microsoft.EntityFrameworkCore
           value: "None"
         - name: Logging__LogLevel__Microsoft.Data.SqlClient

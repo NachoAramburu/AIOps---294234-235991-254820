@@ -9,6 +9,7 @@ WORKDIR /src
 COPY ["PharmaGo.ApiGateway/PharmaGo.ApiGateway.csproj", "PharmaGo.ApiGateway/"]
 COPY ["Instrumentation/Instrumentation.csproj", "Instrumentation/"]
 COPY ["InstrumentationInterface/InstrumentationInterface.csproj", "InstrumentationInterface/"]
+COPY ["PharmaGo.Telemetry/PharmaGo.Telemetry.csproj", "PharmaGo.Telemetry/"]
 
 # Restore dependencies
 RUN dotnet restore "PharmaGo.ApiGateway/PharmaGo.ApiGateway.csproj"

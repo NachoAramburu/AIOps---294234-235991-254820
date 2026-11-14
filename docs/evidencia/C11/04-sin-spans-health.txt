@@ -1,0 +1,20 @@
+$ curl -s http://127.0.0.1:16686/api/services/PharmaGo.ApiGateway/operations
+   ['GET', 'GET /api/drug/{**catch-all}', 'POST', 'POST /api/login/{**catch-all}']
+$ curl -s http://127.0.0.1:16686/api/services/PharmaGo.UsersService/operations
+   ['POST api/Login', 'PharmaDb']
+$ curl -s http://127.0.0.1:16686/api/services/PharmaGo.PharmacyService/operations
+   ['GET api/Drug', 'PharmaDb']
+
+# Ultimas 500 trazas de cada servicio (1 h): spans cuya operacion, http.route, url.path o url.full contenga /health o /metrics
+   PharmaGo.ApiGateway: trazas 112 | spans revisados 460 | spans de /health o /metrics: 0
+   PharmaGo.UsersService: trazas 14 | spans revisados 65 | spans de /health o /metrics: 0
+   PharmaGo.PharmacyService: trazas 117 | spans revisados 436 | spans de /health o /metrics: 0
+
+# Mientras tanto los probes siguen pegando a /health/live y /health/ready cada 2-3 s por pod (READY 1/1):
+NAME                                         READY   STATUS    RESTARTS   AGE
+pharmago-api-gateway-5649876d9c-h9fx4        1/1     Running   0          4m48s
+pharmago-api-gateway-5649876d9c-tqnr9        1/1     Running   0          4m31s
+pharmago-pharmacy-service-67b5d87484-fskkt   1/1     Running   0          4m22s
+pharmago-pharmacy-service-67b5d87484-q4z7f   1/1     Running   0          4m47s
+pharmago-users-service-66df8c5679-6l5wg      1/1     Running   0          4m22s
+pharmago-users-service-66df8c5679-bj85m      1/1     Running   0          4m47s

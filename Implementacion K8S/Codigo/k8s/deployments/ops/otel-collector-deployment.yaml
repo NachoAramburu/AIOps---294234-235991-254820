@@ -13,6 +13,8 @@ spec:
       labels:
         app: otlp-collector
     spec:
+      # Cuenta con permisos de lectura sobre la API para el receiver k8s_cluster (C12).
+      serviceAccountName: otel-collector
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

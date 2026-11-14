@@ -1,0 +1,107 @@
+# Nombres reales de las métricas en Prometheus (exporter prometheus del otlp-collector, :8889)
+# Generado con: curl -s http://otlp-collector:8889/metrics  (port-forward a 127.0.0.1:8889), 2026-11-14
+# Formato: <nombre> <tipo>  labels: <labels útiles para PromQL>  (se omiten uids y telemetry_sdk_*)
+# Todas las series llevan además job e instance:
+#   - métricas de app: job = service.name (PharmaGo.ApiGateway | PharmaGo.UsersService | PharmaGo.PharmacyService), instance = nombre del pod
+#   - métricas de kubeletstats y k8s_cluster: job="otlp-collector", instance="otlp-collector:8889"
+
+## Aplicación: métricas propias (Meter PharmaGo.CustomMetrics)
+pharmago_circuit_breaker_state gauge  labels: cluster, instance, job, k8s_namespace_name, k8s_node_name, k8s_pod_name, service_instance_id, service_name
+pharmago_http_request_duration_milliseconds histogram  labels: endpoint, instance, job, k8s_namespace_name, k8s_node_name, k8s_pod_name, le, method, service_instance_id, service_name
+pharmago_http_requests_total counter  labels: endpoint, instance, job, k8s_namespace_name, k8s_node_name, k8s_pod_name, method, service_instance_id, service_name, status_code
+
+## Aplicación: instrumentación OTel de ASP.NET Core y HttpClient
+http_client_request_duration_seconds histogram  labels: http_request_method, http_response_status_code, instance, job, k8s_namespace_name, k8s_node_name, k8s_pod_name, le, network_protocol_version, server_address, server_port, service_instance_id, service_name, url_scheme
+http_server_request_duration_seconds histogram  labels: http_request_method, http_response_status_code, http_route, instance, job, k8s_namespace_name, k8s_node_name, k8s_pod_name, le, network_protocol_version, service_instance_id, service_name, url_scheme
+
+## Nodo (kubeletstats, otel-agent)
+k8s_node_cpu_time_seconds_total counter  labels: k8s_node_name
+k8s_node_cpu_utilization_ratio gauge  labels: k8s_node_name
+k8s_node_filesystem_available_bytes gauge  labels: k8s_node_name
+k8s_node_filesystem_capacity_bytes gauge  labels: k8s_node_name
+k8s_node_filesystem_usage_bytes gauge  labels: k8s_node_name
+k8s_node_memory_available_bytes gauge  labels: k8s_node_name
+k8s_node_memory_major_page_faults_ratio gauge  labels: k8s_node_name
+k8s_node_memory_page_faults_ratio gauge  labels: k8s_node_name
+k8s_node_memory_rss_bytes gauge  labels: k8s_node_name
+k8s_node_memory_usage_bytes gauge  labels: k8s_node_name
+k8s_node_memory_working_set_bytes gauge  labels: k8s_node_name
+k8s_node_network_errors_total counter  labels: direction, interface, k8s_node_name
+k8s_node_network_io_bytes_total counter  labels: direction, interface, k8s_node_name
+
+## Nodo: condiciones (k8s_cluster)
+k8s_node_condition_disk_pressure gauge  labels: k8s_node_name
+k8s_node_condition_memory_pressure gauge  labels: k8s_node_name
+k8s_node_condition_ready gauge  labels: k8s_node_name
+
+## Pod (kubeletstats, otel-agent)
+k8s_pod_cpu_limit_utilization_ratio gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_cpu_time_seconds_total counter  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_cpu_utilization_ratio gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_filesystem_available_bytes gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_filesystem_capacity_bytes gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_filesystem_usage_bytes gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_memory_available_bytes gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_memory_limit_utilization_ratio gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_memory_major_page_faults_ratio gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_memory_page_faults_ratio gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_memory_rss_bytes gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_memory_usage_bytes gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_pod_memory_working_set_bytes gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+
+## Pod: fase (k8s_cluster)
+k8s_pod_phase gauge  labels: k8s_namespace_name, k8s_node_name, k8s_pod_name
+
+## Contenedor (kubeletstats, otel-agent)
+container_cpu_time_seconds_total counter  labels: k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+container_cpu_utilization_ratio gauge  labels: k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+container_filesystem_available_bytes gauge  labels: k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+container_filesystem_capacity_bytes gauge  labels: k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+container_filesystem_usage_bytes gauge  labels: k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+container_memory_working_set_bytes gauge  labels: k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_container_cpu_limit_utilization_ratio gauge  labels: k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+
+## Contenedor: spec y estado (k8s_cluster)
+k8s_container_cpu_limit gauge  labels: container_image_name, container_image_tag, k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_container_cpu_request gauge  labels: container_image_name, container_image_tag, k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_container_ephemeralstorage_limit_bytes gauge  labels: container_image_name, container_image_tag, k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_container_ephemeralstorage_request_bytes gauge  labels: container_image_name, container_image_tag, k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_container_memory_limit_bytes gauge  labels: container_image_name, container_image_tag, k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_container_memory_request_bytes gauge  labels: container_image_name, container_image_tag, k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_container_ready gauge  labels: container_image_name, container_image_tag, k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+k8s_container_restarts gauge  labels: container_image_name, container_image_tag, k8s_container_name, k8s_namespace_name, k8s_node_name, k8s_pod_name
+
+## Workloads (k8s_cluster)
+k8s_daemonset_current_scheduled_nodes gauge  labels: k8s_daemonset_name, k8s_namespace_name
+k8s_daemonset_desired_scheduled_nodes gauge  labels: k8s_daemonset_name, k8s_namespace_name
+k8s_daemonset_misscheduled_nodes gauge  labels: k8s_daemonset_name, k8s_namespace_name
+k8s_daemonset_ready_nodes gauge  labels: k8s_daemonset_name, k8s_namespace_name
+k8s_deployment_available gauge  labels: k8s_deployment_name, k8s_namespace_name
+k8s_deployment_desired gauge  labels: k8s_deployment_name, k8s_namespace_name
+k8s_job_active_pods gauge  labels: k8s_job_name, k8s_namespace_name
+k8s_job_desired_successful_pods gauge  labels: k8s_job_name, k8s_namespace_name
+k8s_job_failed_pods gauge  labels: k8s_job_name, k8s_namespace_name
+k8s_job_max_parallel_pods gauge  labels: k8s_job_name, k8s_namespace_name
+k8s_job_successful_pods gauge  labels: k8s_job_name, k8s_namespace_name
+k8s_namespace_phase gauge  labels: k8s_namespace_name
+k8s_replicaset_available gauge  labels: k8s_namespace_name, k8s_replicaset_name
+k8s_replicaset_desired gauge  labels: k8s_namespace_name, k8s_replicaset_name
+
+## Otras
+active_user_count_ratio gauge  labels: instance, job, k8s_namespace_name, k8s_node_name, k8s_pod_name, service_instance_id, service_name
+login_invocations_total counter  labels: instance, job, k8s_namespace_name, k8s_node_name, k8s_pod_name, service_instance_id, service_name
+target_info gauge  labels: instance, job, k8s_namespace_name, k8s_node_name, k8s_pod_name
+
+## No existen en este cluster (no usarlas en alertas ni paneles)
+# El kubelet de Minikube con cri-dockerd no informa estos datos en /stats/summary (ver 05-kubelet-summary.txt):
+#   k8s_pod_network_io_bytes_total, k8s_pod_network_errors_total     -> usar k8s_node_network_* (cada microservicio vive en su nodo)
+#   container_memory_usage_bytes / _rss_ / _available_ / page faults -> usar container_memory_working_set_bytes
+#   k8s_container_memory_limit_utilization_ratio                     -> usar container_memory_working_set_bytes / on(k8s_pod_name, k8s_container_name) k8s_container_memory_limit_bytes
+# Los nombres viejos de cAdvisor y node-exporter (container_cpu_usage_seconds_total con label pod, node_cpu_seconds_total,
+# node_memory_MemAvailable_bytes, node_filesystem_avail_bytes) ya no existen: Prometheus no scrapea nada más que el Collector.
+
+## Notas para PromQL
+# - k8s_*_cpu_utilization_ratio está en NÚCLEOS usados, no en porcentaje (README de kubeletstats v0.111.0).
+# - k8s_*_limit_utilization_ratio sí es una fracción del límite (1 = 100 %).
+# - k8s_container_restarts es un gauge acumulado: para "reinicios en los últimos 5 min" usar increase() o delta() sobre él.
+# - k8s_node_filesystem_* ve el disco del host compartido por los 5 nodos (driver docker): no sirve para distinguir nodos.

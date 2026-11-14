@@ -1,0 +1,78 @@
+# C12: series de nodo por k8s_node_name (5 nodos esperados)
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=count by (k8s_node_name) (k8s_node_cpu_utilization_ratio)'
+   {'k8s_node_name': 'minikube'} => 1
+   {'k8s_node_name': 'minikube-m02'} => 1
+   {'k8s_node_name': 'minikube-m03'} => 1
+   {'k8s_node_name': 'minikube-m04'} => 1
+   {'k8s_node_name': 'minikube-m05'} => 1
+   (series: 5 )
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=count by (k8s_node_name) (k8s_node_memory_working_set_bytes)'
+   {'k8s_node_name': 'minikube'} => 1
+   {'k8s_node_name': 'minikube-m02'} => 1
+   {'k8s_node_name': 'minikube-m03'} => 1
+   {'k8s_node_name': 'minikube-m04'} => 1
+   {'k8s_node_name': 'minikube-m05'} => 1
+   (series: 5 )
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=count by (k8s_node_name) (k8s_node_filesystem_usage_bytes)'
+   {'k8s_node_name': 'minikube'} => 1
+   {'k8s_node_name': 'minikube-m02'} => 1
+   {'k8s_node_name': 'minikube-m03'} => 1
+   {'k8s_node_name': 'minikube-m04'} => 1
+   {'k8s_node_name': 'minikube-m05'} => 1
+   (series: 5 )
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=count by (k8s_node_name) (k8s_node_network_io_bytes_total)'
+   {'k8s_node_name': 'minikube'} => 2
+   {'k8s_node_name': 'minikube-m02'} => 2
+   {'k8s_node_name': 'minikube-m03'} => 2
+   {'k8s_node_name': 'minikube-m04'} => 2
+   {'k8s_node_name': 'minikube-m05'} => 2
+   (series: 5 )
+
+# Valores por nodo, para ver si distinguen entre nodos
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=k8s_node_cpu_utilization_ratio'
+   {'k8s_node_name': 'minikube'} => 0.594336
+   {'k8s_node_name': 'minikube-m02'} => 0.406823
+   {'k8s_node_name': 'minikube-m03'} => 0.31557
+   {'k8s_node_name': 'minikube-m04'} => 0.349262
+   {'k8s_node_name': 'minikube-m05'} => 0.832763
+   (series: 5 )
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=k8s_node_memory_working_set_bytes'
+   {'k8s_node_name': 'minikube'} => 1.8626e+09
+   {'k8s_node_name': 'minikube-m02'} => 8.55298e+08
+   {'k8s_node_name': 'minikube-m03'} => 8.61876e+08
+   {'k8s_node_name': 'minikube-m04'} => 8.8245e+08
+   {'k8s_node_name': 'minikube-m05'} => 3.8995e+09
+   (series: 5 )
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=k8s_node_filesystem_usage_bytes'
+   {'k8s_node_name': 'minikube'} => 3.79438e+10
+   {'k8s_node_name': 'minikube-m02'} => 3.79444e+10
+   {'k8s_node_name': 'minikube-m03'} => 3.79447e+10
+   {'k8s_node_name': 'minikube-m04'} => 3.79441e+10
+   {'k8s_node_name': 'minikube-m05'} => 3.79448e+10
+   (series: 5 )
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=k8s_node_filesystem_capacity_bytes'
+   {'k8s_node_name': 'minikube'} => 1.0811e+12
+   {'k8s_node_name': 'minikube-m02'} => 1.0811e+12
+   {'k8s_node_name': 'minikube-m03'} => 1.0811e+12
+   {'k8s_node_name': 'minikube-m04'} => 1.0811e+12
+   {'k8s_node_name': 'minikube-m05'} => 1.0811e+12
+   (series: 5 )
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=sum by (k8s_node_name, direction) (rate(k8s_node_network_io_bytes_total[2m]))'
+   {'direction': 'receive', 'k8s_node_name': 'minikube'} => 6978.08
+   {'direction': 'receive', 'k8s_node_name': 'minikube-m02'} => 5064.72
+   {'direction': 'receive', 'k8s_node_name': 'minikube-m03'} => 1563.43
+   {'direction': 'receive', 'k8s_node_name': 'minikube-m04'} => 3101.62
+   {'direction': 'receive', 'k8s_node_name': 'minikube-m05'} => 29079.3
+   {'direction': 'transmit', 'k8s_node_name': 'minikube'} => 12767.3
+   {'direction': 'transmit', 'k8s_node_name': 'minikube-m02'} => 9834.99
+   {'direction': 'transmit', 'k8s_node_name': 'minikube-m03'} => 3834.92
+   {'direction': 'transmit', 'k8s_node_name': 'minikube-m04'} => 5060.03
+   {'direction': 'transmit', 'k8s_node_name': 'minikube-m05'} => 32913
+   (series: 10 )
+$ curl -s http://127.0.0.1:9090/api/v1/query --data-urlencode 'query=k8s_node_condition_ready'
+   {'k8s_node_name': 'minikube', 'k8s_node_uid': '5c624022-fca9-4976-89dc-894cb29417bd'} => 1
+   {'k8s_node_name': 'minikube-m02', 'k8s_node_uid': 'e6d83f27-3cc8-4f3b-9791-075878c2d13d'} => 1
+   {'k8s_node_name': 'minikube-m03', 'k8s_node_uid': '414d2ecc-b8f7-4046-9c29-f2c06a1829ab'} => 1
+   {'k8s_node_name': 'minikube-m04', 'k8s_node_uid': 'efc1db0a-3e58-43ae-8591-96ae609021ab'} => 1
+   {'k8s_node_name': 'minikube-m05', 'k8s_node_uid': 'dc882b2d-2fac-4b4f-a592-2bc9b2e67398'} => 1
+   (series: 5 )

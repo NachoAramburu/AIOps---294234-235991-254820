@@ -1,0 +1,4 @@
+$ dotnet test PharmaGo.sln --no-build
+  Con error Test_GetOneByExpression [76 ms]
+     at PharmaGo.Test.DataAccess.Test.PurchasesDetailRepositoryTest.Test_GetOneByExpression() in $CODE\Backend\PharnaGo.Test\DataAccess.Test\PurchasesDetailRepositoryTest.cs:line 92
+Con error! - Con error:     1, Superado:   290, Omitido:     0, Total:   291, Duración: 3 s - PharmaGo.Test.dll (net6.0)

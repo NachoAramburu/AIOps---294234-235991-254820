@@ -1,0 +1,14 @@
+$ docker build de los 3 servicios (tag 6deb22a-dirty, con el cluster apagado; build-images.sh despues solo los carga desde el cache)
+=== pharmago-users-service:6deb22a-dirty
+sha256:f314f16522cc46f8d7f31db087e55d2941741270de016223314899abb2897c6e
+=== pharmago-pharmacy-service:6deb22a-dirty
+sha256:9cc481afd7a6bdecadaa5a44c1d7e11e6970a8f53abbf7bad97f9e706afd03a3
+=== pharmago-api-gateway:6deb22a-dirty
+sha256:4892f310a12a79ce4e84f8326402f4e105580c7763e6d7213c4c75d3eb58a930
+=== pharmago-ui:6deb22a-dirty
+sha256:2228558245f93f4446ed2de2724bdd393b23b4aa5700075b29136647ac3e827e
+$ docker images | grep 6deb22a-dirty
+pharmago-ui:6deb22a-dirty 74.1MB
+pharmago-api-gateway:6deb22a-dirty 216MB
+pharmago-pharmacy-service:6deb22a-dirty 229MB
+pharmago-users-service:6deb22a-dirty 229MB

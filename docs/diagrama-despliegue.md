@@ -2,7 +2,7 @@
 
 Cumple el pedido de la letra: *"Cada microservicio debe ejecutar en un pod independiente. Los microservicios no pueden ejecutar en mismos nodos físicos. Se debe implementar un diagrama de despliegue."*
 
-Cluster Minikube de 5 nodos (decisión D01), namespace `pharmago`. Las cajas con borde punteado y la etiqueta *por agregar* todavía no existen en los manifiestos y se suman en el commit indicado. El diagrama refleja el estado del repo al cerrar C03 y se actualiza en C23.
+Cluster Minikube de 5 nodos (decisión D01), namespace `pharmago`. El diagrama refleja el estado del repo al cerrar B3 (C10 a C12) y se completa en C23.
 
 ```mermaid
 graph TB
@@ -10,35 +10,34 @@ graph TB
 
     subgraph N1["Nodo minikube · node-type=frontend · control-plane"]
         ingress["ingress-nginx<br/>Ingress pharmago-ingress"]
-        ui["pharmago-ui<br/>Angular + nginx<br/>1 réplica, 2 desde C06"]
+        ui["pharmago-ui<br/>Angular + nginx<br/>2 réplicas"]
     end
 
     subgraph N2["Nodo minikube-m02 · node-type=gateway"]
-        gw["pharmago-api-gateway<br/>YARP + rate limit<br/>1 réplica, 2 desde C06"]
+        gw["pharmago-api-gateway<br/>YARP + rate limit + circuit breaker<br/>2 réplicas"]
     end
 
     subgraph N3["Nodo minikube-m03 · node-type=users"]
-        users["pharmago-users-service<br/>1 réplica, 2 desde C06"]
+        users["pharmago-users-service<br/>2 réplicas"]
     end
 
     subgraph N4["Nodo minikube-m04 · node-type=pharmacy"]
-        pharmacy["pharmago-pharmacy-service<br/>1 réplica, 2 desde C06"]
+        pharmacy["pharmago-pharmacy-service<br/>2 réplicas"]
     end
 
     subgraph N5["Nodo minikube-m05 · node-type=ops"]
         db[("pharmago-db<br/>SQL Server 2019")]
-        collector["otlp-collector<br/>OTLP :4317 · exporter prometheus :8889"]
+        collector["otlp-collector<br/>OTLP :4317 · k8s_cluster · exporter prometheus :8889"]
         prometheus["Prometheus"]
         grafana["Grafana"]
-        jaeger["Jaeger<br/>por agregar · C11"]
+        jaeger["Jaeger<br/>OTLP :4317 · UI :16686"]
         es[("Elasticsearch")]
         kibana["Kibana"]
     end
 
     subgraph DS["DaemonSets: un pod en cada uno de los 5 nodos"]
         fluentbit["Fluent Bit<br/>lee los logs de los contenedores"]
-        nodeexp["node-exporter<br/>hoy · se quita en C12"]
-        otelagent["otel-agent kubeletstats<br/>por agregar · C12"]
+        otelagent["otel-agent<br/>kubeletstats del nodo"]
     end
 
     user --> ingress
@@ -49,24 +48,19 @@ graph TB
     users -- "EF Core" --> db
     pharmacy -- "EF Core" --> db
 
-    gw -. "métricas OTLP · C10" .-> collector
-    users -. "métricas OTLP · C10" .-> collector
-    pharmacy -. "métricas OTLP · C10" .-> collector
-    otelagent -. "métricas de pod y nodo OTLP · C12" .-> collector
+    gw -- "métricas y trazas OTLP" --> collector
+    users -- "métricas y trazas OTLP" --> collector
+    pharmacy -- "métricas y trazas OTLP" --> collector
+    otelagent -- "métricas de nodo, pod y contenedor OTLP" --> collector
     collector -- "scrape :8889" --> prometheus
     prometheus --> grafana
-    collector -. "trazas OTLP · C11" .-> jaeger
+    collector -- "trazas OTLP" --> jaeger
 
     fluentbit -- "logs" --> es
     es --> kibana
-
-    classDef pendiente stroke-dasharray: 5 5,stroke:#888,color:#555
-    classDef hoy stroke:#c0392b,color:#c0392b
-    class jaeger,otelagent pendiente
-    class nodeexp hoy
 ```
 
-**Cómo leerlo.** Las flechas llenas existen hoy. Las punteadas se agregan en el commit que indican. Los cuatro microservicios (UI, gateway, users y pharmacy) están cada uno en un nodo propio. Todo lo de operación comparte el nodo `ops`.
+**Cómo leerlo.** Las flechas son el camino real de requests, métricas, trazas y logs. Los cuatro microservicios (UI, gateway, users y pharmacy) están cada uno en un nodo propio. Todo lo de operación comparte el nodo `ops`.
 
 ## Qué corre en cada nodo y por qué
 
@@ -76,8 +70,8 @@ graph TB
 | `minikube-m02` | `gateway` | `pharmago-api-gateway` | El gateway es el borde de la API: rate limit y, desde C07, circuit breaker. Si satura su nodo (por ejemplo, con el caos de requests), no le saca CPU a los servicios de atrás. |
 | `minikube-m03` | `users` | `pharmago-users-service` | Un nodo por microservicio, como pide la letra. Un fallo o una sobrecarga de users no afecta a pharmacy. |
 | `minikube-m04` | `pharmacy` | `pharmago-pharmacy-service` | Igual que users. |
-| `minikube-m05` | `ops` | BD, Collector, Prometheus, Grafana, Elasticsearch, Kibana y, desde C11, Jaeger | No son microservicios de la app, así que la letra no les exige nodo propio. Juntarlos deja libres los otros 4 nodos y permite tener los volúmenes persistentes (BD, Prometheus, Grafana y Elasticsearch) en un único nodo fijo. La BD es una sola réplica: punto único de falla aceptado (D04). |
-| Los 5 | — | Fluent Bit (y otel-agent desde C12) | Son DaemonSets: cada pod lee los logs (y desde C12 las métricas del kubelet) **del nodo donde corre**, así que tiene que haber uno en cada nodo. No son microservicios. |
+| `minikube-m05` | `ops` | BD, Collector, Prometheus, Grafana, Jaeger, Elasticsearch y Kibana | No son microservicios de la app, así que la letra no les exige nodo propio. Juntarlos deja libres los otros 4 nodos y permite tener los volúmenes persistentes (BD, Prometheus, Grafana y Elasticsearch) en un único nodo fijo. La BD es una sola réplica: punto único de falla aceptado (D04). |
+| Los 5 | — | Fluent Bit y otel-agent | Son DaemonSets: cada pod lee los logs y las métricas del kubelet **del nodo donde corre**, así que tiene que haber uno en cada nodo. No son microservicios. |
 
 ## Cómo se garantiza la separación
 
@@ -90,8 +84,8 @@ Riesgo aceptado (D03): si se cae un nodo entero, se cae el microservicio que viv
 
 La comprobación automática es `Implementacion K8S/Codigo/k8s/verify/check-separacion.sh`. La evidencia está en `docs/evidencia/C03/`.
 
-## Hoy, y lo que cambia más adelante
+## Flujo de telemetría (desde B3)
 
-- **Métricas:** hoy Prometheus todavía scrapea directo las apps, node-exporter y cAdvisor, como venía en el repo de la cátedra. La letra pide que las métricas viajen por OTLP: desde C10 (métricas de la app) y C12 (pod, contenedor y nodo, con `otel-agent`), Prometheus solo scrapea al Collector (D30, D31). Ese scrape directo no se dibuja porque se elimina.
-- **Trazas:** Jaeger y el pipeline de trazas del Collector se agregan en C11.
-- **Réplicas:** los 4 microservicios pasan de 1 a 2 réplicas en C06. Las dos réplicas de cada uno quedan en el mismo nodo.
+- **Métricas:** las apps (cada 5 s) y los `otel-agent` de cada nodo (cada 10 s) mandan por OTLP al `otlp-collector`, que además lee la API de Kubernetes con `k8s_cluster`. Prometheus scrapea **solo** el exporter del Collector (`:8889`): no scrapea apps ni nodos (D30, D31, D32). Detalle en `docs/metricas.md`.
+- **Trazas:** apps por OTLP al Collector y de ahí a Jaeger. Detalle en `docs/trazas.md`.
+- **Logs:** consola JSON, Fluent Bit, Elasticsearch y Kibana. El `trace_id` en los logs llega en C14.

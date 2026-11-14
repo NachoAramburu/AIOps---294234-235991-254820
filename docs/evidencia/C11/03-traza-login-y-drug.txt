@@ -1,0 +1,39 @@
+$ curl -s http://127.0.0.1:16686/api/services
+{"data":["jaeger-all-in-one","PharmaGo.UsersService","PharmaGo.ApiGateway","PharmaGo.PharmacyService"],"total":4,"limit":0,"offset":0,"errors":null}
+
+$ curl -s http://127.0.0.1:16686/api/traces/c69bd6bcc607ba7f0623f187d8f65d53   (login por el gateway: POST /api/login)
+traceID: c69bd6bcc607ba7f0623f187d8f65d53 | spans: 5
+- [PharmaGo.ApiGateway] POST /api/login/{**catch-all}  traceID=c69bd6bc.. spanID=eba07420cefc35ea dur=17.5ms
+    http.response.status_code=200
+    server.address=127.0.0.1
+  - [PharmaGo.ApiGateway] POST  traceID=c69bd6bc.. spanID=6a47653a8acd309b dur=16.8ms
+      http.response.status_code=200
+      url.full=http://pharmago-users-service/api/login
+      server.address=pharmago-users-service
+    - [PharmaGo.UsersService] POST api/Login  traceID=c69bd6bc.. spanID=d1c31379b0924a9b dur=8.9ms
+        http.response.status_code=200
+        server.address=pharmago-users-service
+      - [PharmaGo.UsersService] PharmaDb  traceID=c69bd6bc.. spanID=d14fe50fb03b4837 dur=1.7ms
+          db.statement=SELECT TOP(1) [u].[Id], [u].[Address], [u].[Email], [u].[Password], [u].[PharmacyId], [u].[RegistrationDate], ...
+          db.system=mssql
+      - [PharmaGo.UsersService] PharmaDb  traceID=c69bd6bc.. spanID=db9829f49bb2a6af dur=1.4ms
+          db.statement=SELECT TOP(1) [s].[Id], [s].[Token], [s].[UserId]
+FROM [Sessions] AS [s]
+WHERE [s].[UserId] = @___userId_0
+          db.system=mssql
+
+$ curl -s http://127.0.0.1:16686/api/traces/7d817e5954e218386fc079bcc052331e   (GET /api/drug por el gateway)
+traceID: 7d817e5954e218386fc079bcc052331e | spans: 4
+- [PharmaGo.ApiGateway] GET /api/drug/{**catch-all}  traceID=7d817e59.. spanID=2eaf98770980b00e dur=5.1ms
+    http.response.status_code=200
+    server.address=127.0.0.1
+  - [PharmaGo.ApiGateway] GET  traceID=7d817e59.. spanID=1208f9f862560a18 dur=4.3ms
+      http.response.status_code=200
+      url.full=http://pharmago-pharmacy-service/api/drug
+      server.address=pharmago-pharmacy-service
+    - [PharmaGo.PharmacyService] GET api/Drug  traceID=7d817e59.. spanID=c2857a38ae05e6ac dur=3.1ms
+        http.response.status_code=200
+        server.address=pharmago-pharmacy-service
+      - [PharmaGo.PharmacyService] PharmaDb  traceID=7d817e59.. spanID=cac0cf19e96cf7e3 dur=1.3ms
+          db.statement=SELECT [d].[Id], [d].[Code], [d].[Deleted], [d].[Name], [d].[PharmacyId], [d].[Prescription], [d].[Presentatio...
+          db.system=mssql

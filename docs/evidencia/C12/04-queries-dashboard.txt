@@ -1,0 +1,121 @@
+# Cada query del dashboard "PharmaGo - Infra" ejecutada contra la API de Prometheus (instantánea).
+# series = cantidad de series devueltas; nodos = valores distintos de k8s_node_name en el resultado.
+
+[CPU por nodo (núcleos en uso)]
+  query: k8s_node_cpu_utilization_ratio
+  series: 5 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube'} => 0.554
+    ej: {'k8s_node_name': 'minikube-m02'} => 0.3358
+    ej: {'k8s_node_name': 'minikube-m03'} => 0.2452
+
+[Memoria por nodo (working set)]
+  query: k8s_node_memory_working_set_bytes
+  series: 5 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube'} => 1.8e+09
+    ej: {'k8s_node_name': 'minikube-m02'} => 8.297e+08
+    ej: {'k8s_node_name': 'minikube-m03'} => 8.695e+08
+
+[Filesystem por nodo: usado y capacidad]
+  query: k8s_node_filesystem_usage_bytes
+  series: 5 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube'} => 3.794e+10
+    ej: {'k8s_node_name': 'minikube-m02'} => 3.795e+10
+    ej: {'k8s_node_name': 'minikube-m03'} => 3.795e+10
+
+[Filesystem por nodo: usado y capacidad]
+  query: k8s_node_filesystem_capacity_bytes
+  series: 5 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube'} => 1.081e+12
+    ej: {'k8s_node_name': 'minikube-m02'} => 1.081e+12
+    ej: {'k8s_node_name': 'minikube-m03'} => 1.081e+12
+
+[Red por nodo (rx y tx)]
+  query: sum by (k8s_node_name, direction) (rate(k8s_node_network_io_bytes_total[1m]))
+  series: 10 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'direction': 'receive', 'k8s_node_name': 'minikube'} => 3923
+    ej: {'direction': 'receive', 'k8s_node_name': 'minikube-m02'} => 1261
+    ej: {'direction': 'receive', 'k8s_node_name': 'minikube-m03'} => 1229
+
+[Nodos Ready]
+  query: k8s_node_condition_ready
+  series: 5 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube'} => 1
+    ej: {'k8s_node_name': 'minikube-m02'} => 1
+    ej: {'k8s_node_name': 'minikube-m03'} => 1
+
+[Presión de memoria o disco por nodo]
+  query: k8s_node_condition_memory_pressure
+  series: 5 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube'} => 0
+    ej: {'k8s_node_name': 'minikube-m02'} => 0
+    ej: {'k8s_node_name': 'minikube-m03'} => 0
+
+[Presión de memoria o disco por nodo]
+  query: k8s_node_condition_disk_pressure
+  series: 5 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube'} => 0
+    ej: {'k8s_node_name': 'minikube-m02'} => 0
+    ej: {'k8s_node_name': 'minikube-m03'} => 0
+
+[CPU por pod (núcleos)]
+  query: k8s_pod_cpu_utilization_ratio{k8s_namespace_name="pharmago"}
+  series: 26 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'fluent-bit-htnsn'} => 0.003379
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'otel-agent-w786d'} => 0.2016
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'pharmago-ui-7d758f57b4-9zmxj'} => 0.0004826
+
+[Memoria por pod (working set)]
+  query: k8s_pod_memory_working_set_bytes{k8s_namespace_name="pharmago"}
+  series: 26 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'fluent-bit-htnsn'} => 2.084e+07
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'otel-agent-w786d'} => 8.093e+07
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'pharmago-ui-7d758f57b4-9zmxj'} => 1.244e+07
+
+[Filesystem por pod (ephemeral-storage usado)]
+  query: k8s_pod_filesystem_usage_bytes{k8s_namespace_name="pharmago"}
+  series: 26 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'fluent-bit-htnsn'} => 4.096e+04
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'otel-agent-w786d'} => 2.048e+04
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'pharmago-ui-7d758f57b4-9zmxj'} => 8381
+
+[Memoria del pod contra su límite]
+  query: k8s_pod_memory_limit_utilization_ratio{k8s_namespace_name="pharmago"}
+  series: 26 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'fluent-bit-htnsn'} => 0.1349
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'otel-agent-w786d'} => 0.9987
+    ej: {'k8s_node_name': 'minikube', 'k8s_pod_name': 'pharmago-ui-7d758f57b4-9zmxj'} => 0.04791
+
+[CPU del contenedor contra su límite]
+  query: k8s_container_cpu_limit_utilization_ratio{k8s_namespace_name="pharmago"}
+  series: 21 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_container_name': 'elasticsearch', 'k8s_node_name': 'minikube-m05', 'k8s_pod_name': 'elasticsearch-757964844b-frtbk'} => 0.1801
+    ej: {'k8s_container_name': 'grafana', 'k8s_node_name': 'minikube-m05', 'k8s_pod_name': 'grafana-854bbd78d7-hndx9'} => 0.01811
+    ej: {'k8s_container_name': 'grafana', 'k8s_node_name': 'minikube-m05', 'k8s_pod_name': 'grafana-8bcf7ffd6-75fln'} => 0.007844
+
+[Memoria del contenedor contra su límite]
+  query: container_memory_working_set_bytes{k8s_namespace_name="pharmago"} / on(k8s_pod_name, k8s_container_name) k8s_container_memory_limit_bytes{k8s_namespace_name="pharmago"}
+  series: 26 | nodos: 0 []
+    ej: {'k8s_container_name': 'elasticsearch', 'k8s_pod_name': 'elasticsearch-757964844b-frtbk'} => 0.6509
+    ej: {'k8s_container_name': 'fluent-bit', 'k8s_pod_name': 'fluent-bit-6m2pg'} => 0.09861
+    ej: {'k8s_container_name': 'fluent-bit', 'k8s_pod_name': 'fluent-bit-dxpmj'} => 0.1303
+
+[Reinicios por contenedor]
+  query: k8s_container_restarts{k8s_namespace_name="pharmago"}
+  series: 26 | nodos: 5 ['minikube', 'minikube-m02', 'minikube-m03', 'minikube-m04', 'minikube-m05']
+    ej: {'k8s_container_name': 'otel-agent', 'k8s_node_name': 'minikube-m04', 'k8s_pod_name': 'otel-agent-b2sjw'} => 0
+    ej: {'k8s_container_name': 'elasticsearch', 'k8s_node_name': 'minikube-m05', 'k8s_pod_name': 'elasticsearch-757964844b-frtbk'} => 1
+    ej: {'k8s_container_name': 'pharmago-api-gateway', 'k8s_node_name': 'minikube-m02', 'k8s_pod_name': 'pharmago-api-gateway-5649876d9c-tqnr9'} => 0
+
+[Réplicas deseadas y disponibles por Deployment]
+  query: k8s_deployment_desired{k8s_namespace_name="pharmago"}
+  series: 11 | nodos: 0 []
+    ej: {'k8s_deployment_name': 'elasticsearch'} => 1
+    ej: {'k8s_deployment_name': 'grafana'} => 1
+    ej: {'k8s_deployment_name': 'jaeger'} => 1
+
+[Réplicas deseadas y disponibles por Deployment]
+  query: k8s_deployment_available{k8s_namespace_name="pharmago"}
+  series: 11 | nodos: 0 []
+    ej: {'k8s_deployment_name': 'elasticsearch'} => 1
+    ej: {'k8s_deployment_name': 'grafana'} => 1
+    ej: {'k8s_deployment_name': 'jaeger'} => 1

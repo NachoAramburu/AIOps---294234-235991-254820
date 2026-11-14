@@ -66,6 +66,7 @@ echo ""
 echo "4. Creando configmaps..."
 kubectl apply -f configmaps/prometheus-config.yaml
 kubectl apply -f configmaps/otel-collector-config.yaml
+kubectl apply -f configmaps/otel-agent-config.yaml
 kubectl apply -f configmaps/grafana-provisioning.yaml
 kubectl apply -f configmaps/grafana-dashboards.yaml
 kubectl apply -f configmaps/grafana-dashboard-infra.yaml
@@ -139,16 +140,30 @@ if [ $timeout -ge $max_timeout ]; then
 fi
 
 # Resto de servicios ops
+# Jaeger antes que el Collector, que le reenvía las trazas (C11).
+kubectl apply -f services/ops/jaeger-service.yaml
+kubectl apply -f deployments/ops/jaeger-deployment.yaml
+
+# Collector central: recibe OTLP de apps y agentes, y lee la API con k8s_cluster (C10-C12).
+kubectl apply -f deployments/ops/otel-collector-rbac.yaml
 kubectl apply -f services/ops/otel-collector-service.yaml
 kubectl apply -f deployments/ops/otel-collector-deployment.yaml
 
+# Agente por nodo: métricas de nodo, pod y contenedor del kubelet, por OTLP (C12).
+kubectl apply -f deployments/ops/otel-agent-rbac.yaml
+kubectl apply -f deployments/ops/otel-agent-daemonset.yaml
+
+# Prometheus solo scrapea al Collector: ya no necesita permisos sobre la API (C12).
 kubectl apply -f deployments/ops/prometheus-serviceaccount.yaml
-kubectl apply -f deployments/ops/prometheus-clusterrole.yaml
-kubectl apply -f deployments/ops/prometheus-clusterrolebinding.yaml
 kubectl apply -f services/ops/prometheus-service.yaml
 kubectl apply -f deployments/ops/prometheus-deployment.yaml
-kubectl apply -f services/ops/node-exporter-service.yaml
-kubectl apply -f deployments/ops/node-exporter-daemonset.yaml
+
+# Restos de versiones anteriores en un cluster ya creado: node-exporter y el RBAC de cAdvisor
+# se reemplazaron por otel-agent (C12).
+kubectl delete daemonset node-exporter -n pharmago --ignore-not-found
+kubectl delete service node-exporter -n pharmago --ignore-not-found
+kubectl delete clusterrolebinding prometheus-cadvisor --ignore-not-found
+kubectl delete clusterrole prometheus-cadvisor --ignore-not-found
 
 kubectl apply -f services/ops/grafana-service.yaml
 kubectl apply -f deployments/ops/grafana-deployment.yaml
@@ -204,6 +219,6 @@ echo "Para entrar a la app (sin port-forward):"
 echo "  1. En PowerShell como administrador: minikube tunnel   (dejalo abierto)"
 echo "  2. Abrí http://127.0.0.1/   (la API queda en http://127.0.0.1/api/...)"
 echo ""
-echo "Herramientas de operación (Prometheus, Grafana, Kibana, Elasticsearch):"
+echo "Herramientas de operación (Prometheus, Grafana, Kibana, Jaeger, Elasticsearch):"
 echo "  ./port-forward.sh"
 

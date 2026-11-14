@@ -500,3 +500,96 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - Con la NetworkPolicy, los pods de users siguieron Ready: Calico deja pasar el tráfico desde el nodo (probes) y las conexiones ya establecidas (la readiness consulta la BD por una conexión abierta del pool). El corte lo ve el usuario, no Kubernetes. Conviene tenerlo en cuenta en el playbook de red (B7).
   - La caída de la BD deja la app sin servicio unos 96 s: lo que dura la caída más 45 s de arranque de SQL Server. Es el punto único de falla aceptado (D04).
 - **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B2)
+
+## C10 — Métricas de aplicación solo por OTLP — 2026-11-14 — Ignacio Aramburu (bloque B3)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 4 (Telemetría)
+- **Commit:** `C10-C12: métricas por OTLP, trazas con Jaeger y métricas de pod y nodo` (SHA en `git log --grep "^C10-C12:"`)
+- **Dónde se corrió:** PC de Ignacio Aramburu, cluster de 5 nodos de C03 (encendido con `minikube start`). Imágenes `6deb22a-dirty`, construidas con `docker build` con el cluster apagado y cargadas con `build-images.sh`. Después `apply-k8s.sh` y `rollout restart` de los 4 Deployments de la app, del Collector y de Prometheus. Sin `minikube tunnel`: el tráfico entró por `port-forward` al gateway.
+- **Archivos creados / modificados:** `Backend/PharmaGo.Telemetry/` (nuevo: `.csproj` con OpenTelemetry 1.8.1 y `TelemetryExtensions.AddPharmaGoTelemetry`), `PharmaGo.sln`; gateway, users y pharmacy: `Program.cs`, `.csproj` y `Dockerfile` (línea `COPY` de Telemetry). Se borró `TelemetryExtensions.cs` de las dos Factory y se sacaron todos los `PackageReference OpenTelemetry*` de los servicios y sus Factory. `Instrumentation/MetricsMiddleware.cs` (no mide `/health*` ni `/metrics`). En k8s: los 3 Deployments del backend (`POD_NAME`, `NODE_NAME`, `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_RESOURCE_ATTRIBUTES`), `configmaps/otel-collector-config.yaml` (`memory_limiter`, `batch`, `metric_expiration: 2m`, `resource_to_telemetry_conversion`, sin `debug`) y `configmaps/prometheus-config.yaml` (un único job al Collector con `honor_labels`).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: gateway con AddPrometheusExporter y sin OTLP; users y pharmacy con los dos;
+  Prometheus scrapeaba otlp-collector, users, pharmacy, gateway, node-exporter y cAdvisor.
+
+  $ dotnet build PharmaGo.sln                        (01)  0 errores, sin NU1605
+  $ dotnet test PharmaGo.sln                         (02)  290/291, falla solo Test_GetOneByExpression (igual al baseline)
+  $ docker build de gateway, users y pharmacy        (03)  las 3 imágenes 6deb22a-dirty construidas
+  $ kubectl exec <pod> -- GET /metrics (3 servicios) (04)  HTTP/1.1 404 Not Found en los 3; /health/live sigue en 200
+  $ GET /api/v1/targets                              (05)  un solo target: otlp-collector:8889 up
+  $ count by (job, instance) (pharmago_http_requests_total), con tráfico a <=1 rps a las 6 réplicas   (06b)
+    PharmaGo.ApiGateway: h9fx4 y tqnr9 | PharmaGo.PharmacyService: fskkt y q4z7f | PharmaGo.UsersService: 6l5wg y bj85m
+    una serie por réplica, un job por servicio, con k8s_pod_name y k8s_node_name
+  $ count by (endpoint) (pharmago_http_requests_total{endpoint=~"/health.*|/metrics"})   (06b)  vacío
+  $ series de los jobs viejos (api-gateway, users-service, node-exporter, kubernetes-cadvisor)   (06b)  vacío
+  $ Grafana /api/dashboards/uid/pharmago-overview y /api/ds/query por panel   (07)  provisionado, los 8 paneles con datos
+  ```
+- **Criterio de "hecho" de §3 (ítem 4, métricas de app):** cumplido. Las métricas de los 3 servicios viajan por OTLP al Collector y Prometheus solo scrapea al Collector.
+- **Decisiones tomadas:** ninguna nueva. Se aplicaron D30 y D33. El endpoint OTLP no está en el código: el SDK lo lee de `OTEL_EXPORTER_OTLP_ENDPOINT`.
+- **NO VERIFICADO / riesgos:**
+  - Captura del dashboard "PharmaGo - Overview": no la pude sacar porque Grafana pide login y el navegador headless no lo puede completar. Se verificó por API que los 8 paneles devuelven datos (07). La captura queda para la revisión del integrante.
+  - No se probó por el Ingress, porque no había `minikube tunnel` abierto. El tráfico entró por `port-forward` al Service del gateway.
+- **Hallazgos nuevos que cambian el plan:**
+  - En la primera consulta (06a) aparecieron series con `job="otlp-collector"`, incluso de `/health`. Eran datos anteriores al cambio, guardados en el volumen de Prometheus, y se fueron a los 5 minutos (06b).
+  - `kubectl port-forward svc/...` se ata a un solo pod. Para ver las dos réplicas hubo que mandar tráfico directo a cada pod.
+  - **Para B6 (alertas):** en el Overview, `sum by (endpoint)` suma la misma request dos veces, una en el gateway y otra en el servicio, porque los dos registran `/api/drug`. Para las señales de cara al usuario conviene filtrar `job="PharmaGo.ApiGateway"`.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B3)
+
+## C11 — Trazas distribuidas con OTLP y Jaeger — 2026-11-14 — Ignacio Aramburu (bloque B3)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 4 (Telemetría)
+- **Commit:** `C10-C12: métricas por OTLP, trazas con Jaeger y métricas de pod y nodo`
+- **Archivos creados / modificados:** `PharmaGo.Telemetry` (paquete `OpenTelemetry.Instrumentation.SqlClient` 1.8.0-beta.1 y `WithTracing`: ASP.NET Core con filtro de `/health` y `/metrics`, HttpClient, SqlClient con `SetDbStatementForText` y `RecordException`, y exportador OTLP); `k8s/deployments/ops/jaeger-deployment.yaml` y `k8s/services/ops/jaeger-service.yaml` (nuevos); `configmaps/otel-collector-config.yaml` (exporter `otlp/jaeger` y pipeline `traces`); `apply-k8s.sh`, `port-forward.sh` (puerto 16686), `README-k8s.md`; `docs/trazas.md` (nuevo).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ dotnet build PharmaGo.sln                         (01)  0 errores
+  $ docker build de los 3 servicios                   (02)  OK
+  $ login (POST /api/login) y GET /api/drug por el gateway, a <=1 rps durante 3 min: 162 x drug 200, 18 x login 200
+  $ GET /api/traces/<id> (Jaeger)                     (03)
+    login c69bd6bc...: [ApiGateway] POST /api/login/{**catch-all}
+                       -> [ApiGateway] POST (HttpClient, url.full=http://pharmago-users-service/api/login)
+                       -> [UsersService] POST api/Login
+                       -> 2 x [UsersService] PharmaDb (db.statement=SELECT TOP(1) ... / ... FROM [Sessions] ...)
+    drug  7d817e59...: [ApiGateway] GET /api/drug -> [ApiGateway] GET -> [PharmacyService] GET api/Drug -> [PharmacyService] PharmaDb
+    todos los spans con el mismo traceID
+  $ operaciones y últimas 500 trazas de cada servicio  (04)  0 spans de /health o /metrics (probes activos, pods 1/1)
+  capturas de la UI de Jaeger                         (05, 06)  traza de login con 5 spans en 2 servicios; búsqueda con 20 trazas
+  ```
+- **Criterio de "hecho" de §3 (ítem 4, trazas):** cumplido. Las trazas van del gateway al servicio y a SQL, por OTLP, y se ven en Jaeger. La propagación de contexto es W3C `traceparent` a través de YARP.
+- **Decisiones tomadas:** ninguna nueva. Se aplicó D34. `ResilientForwarderHttpClientFactory` (C07) llama a `base.WrapHandler`, así que conserva el `ActivityPropagationHandler` de YARP que inyecta `traceparent`. No hizo falta tocar el gateway.
+- **NO VERIFICADO / riesgos:** Jaeger guarda en memoria hasta 5000 trazas; si el pod se reinicia, se pierden. Alcanza para la defensa (D34).
+- **Hallazgos nuevos que cambian el plan:** la instrumentación HttpClient sí genera el span de cliente en el gateway, aunque YARP usa `SocketsHttpHandler` directo. Por eso cada request tiene 4 spans, no 3.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B3)
+
+## C12 — Métricas de pod, contenedor y nodo por OTLP — 2026-11-14 — Ignacio Aramburu (bloque B3)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 4 (Telemetría)
+- **Commit:** `C10-C12: métricas por OTLP, trazas con Jaeger y métricas de pod y nodo`
+- **Archivos creados / modificados:** `k8s/deployments/ops/otel-agent-daemonset.yaml`, `otel-agent-rbac.yaml`, `otel-collector-rbac.yaml` y `k8s/configmaps/otel-agent-config.yaml` (nuevos); `otel-collector-deployment.yaml` (`serviceAccountName`); `configmaps/otel-collector-config.yaml` (receiver `k8s_cluster`). Se borraron el DaemonSet y el Service de node-exporter, y el ClusterRole y el Binding de Prometheus. `apply-k8s.sh` (aplica lo nuevo y borra los restos de node-exporter y `prometheus-cadvisor` en un cluster ya creado), `cleanup.sh` (borra el RBAC de alcance cluster), `configmaps/grafana-dashboard-infra.yaml` (reescrito), `README-k8s.md`, `docs/metricas.md` (nuevo), `docs/diagrama-despliegue.md` y `docs/DECISIONES.md` (D37, D38, D39).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ kubectl get ds -n pharmago                         (01)  otel-agent 5/5 Ready, un pod por nodo; node-exporter y prometheus-cadvisor: NotFound
+  $ count by (k8s_node_name) de CPU, memoria, filesystem y red de nodo   (02)  5 nodos en las 4
+  $ valores por nodo                                   (02)
+    CPU (núcleos): minikube 0,59 | m02 0,41 | m03 0,32 | m04 0,35 | m05 0,83          -> distinguen
+    memoria working set (GB): 1,86 | 0,86 | 0,86 | 0,88 | 3,90                        -> distinguen
+    red rx (B/s): 6978 | 5065 | 1563 | 3102 | 29079                                   -> distinguen
+    filesystem: capacidad 1,08 TB en los 5, uso 37,94 GB en los 5                     -> NO distinguen (disco del host)
+  $ GET /api/v1/targets                                (03)  sigue habiendo un solo target: otlp-collector:8889
+  $ las 18 queries del dashboard Infra contra Prometheus   (04)  todas devuelven series
+  $ kubectl get --raw /api/v1/nodes/minikube-m04/proxy/stats/summary   (05)  los pods no traen network; contenedores solo workingSetBytes
+  $ kubectl top pods (otel-agent)                      (06)  con 128Mi/200m: 127Mi y 200m (al límite); con 256Mi/250m: 107-175Mi y 3-4m, 0 reinicios
+  $ Grafana /api/dashboards/uid/pharmago-infra y /api/ds/query   (07)  provisionado, los 14 paneles de datos con series
+  captura de Grafana, sacada por el integrante          (08)  CPU y memoria por nodo: 5 series; m05 ~3,6 GiB, minikube ~1,7 GiB, m02 a m04 ~0,8 GiB;
+                                                              a las 13:04 la CPU de m02 a m04 baja de ~0,3 a ~0,13 núcleos al aplicar D38
+  docs/evidencia/C12/nombres-metricas.txt: nombres reales y labels de cada métrica, para B6
+  ```
+- **Criterio de "hecho" de §3 (ítem 4, métricas de pod, contenedor y nodo):** cumplido. CPU, memoria, storage y red de nodo y de pod/contenedor llegan por OTLP al Collector y de ahí a Prometheus, con una serie por nodo en Grafana. Las excepciones por limitación del cluster están en D39 y `docs/metricas.md`.
+- **Decisiones tomadas:** D37 (endpoint del kubelet por IP del nodo y RBAC), D38 (límites de `otel-agent` mayores que los del plan, con evidencia) y D39 (cómo se cubren las métricas que el kubelet no da).
+- **NO VERIFICADO / riesgos:**
+  - El Collector central usa 165 a 182 Mi de sus 256 Mi. `memory_limiter` no rechazó datos (no hay "Refusing data" en los logs), pero conviene mirarlo durante los experimentos de caos (B7).
+- **Hallazgos nuevos que cambian el plan:**
+  - Con cri-dockerd no hay red por pod ni memoria detallada por contenedor. La red se mira por nodo, y como cada microservicio tiene su nodo, equivale a la red del microservicio (D39).
+  - `k8s_*_cpu_utilization_ratio` mide núcleos, no porcentaje. Las alertas de B6 tienen que usar `k8s_*_cpu_limit_utilization_ratio` si quieren un porcentaje.
+  - `k8s_container_restarts` es un gauge acumulado: para alertar, usar `increase()` o `delta()`.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B3)

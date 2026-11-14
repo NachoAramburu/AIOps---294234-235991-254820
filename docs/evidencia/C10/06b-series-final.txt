@@ -1,0 +1,24 @@
+# 2026-11-14T16:01:27Z - más de 5 min después del reinicio de Prometheus, con tráfico a <=1 rps a las 6 réplicas
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=count by (job) (pharmago_http_requests_total)'
+   {'job': 'PharmaGo.ApiGateway'} => 3
+   {'job': 'PharmaGo.PharmacyService'} => 2
+   {'job': 'PharmaGo.UsersService'} => 2
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=count by (job, instance) (pharmago_http_requests_total)'
+   {'instance': 'pharmago-api-gateway-5649876d9c-h9fx4', 'job': 'PharmaGo.ApiGateway'} => 2
+   {'instance': 'pharmago-api-gateway-5649876d9c-tqnr9', 'job': 'PharmaGo.ApiGateway'} => 1
+   {'instance': 'pharmago-pharmacy-service-67b5d87484-fskkt', 'job': 'PharmaGo.PharmacyService'} => 1
+   {'instance': 'pharmago-pharmacy-service-67b5d87484-q4z7f', 'job': 'PharmaGo.PharmacyService'} => 1
+   {'instance': 'pharmago-users-service-66df8c5679-6l5wg', 'job': 'PharmaGo.UsersService'} => 1
+   {'instance': 'pharmago-users-service-66df8c5679-bj85m', 'job': 'PharmaGo.UsersService'} => 1
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=sum by (job, instance) (increase(pharmago_http_requests_total[10m]))'
+   {'instance': 'otlp-collector:8889', 'job': 'otlp-collector'} => 119.99999999999997
+   {'instance': 'pharmago-api-gateway-5649876d9c-h9fx4', 'job': 'PharmaGo.ApiGateway'} => 182.59552063492063
+   {'instance': 'pharmago-api-gateway-5649876d9c-tqnr9', 'job': 'PharmaGo.ApiGateway'} => 14.435306666666667
+   {'instance': 'pharmago-pharmacy-service-67b5d87484-fskkt', 'job': 'PharmaGo.PharmacyService'} => 102.99822222222224
+   {'instance': 'pharmago-pharmacy-service-67b5d87484-q4z7f', 'job': 'PharmaGo.PharmacyService'} => 90.28017777777777
+   {'instance': 'pharmago-users-service-66df8c5679-6l5wg', 'job': 'PharmaGo.UsersService'} => 7.217653333333334
+   {'instance': 'pharmago-users-service-66df8c5679-bj85m', 'job': 'PharmaGo.UsersService'} => 13.319115789473685
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=count by (endpoint) (pharmago_http_requests_total{endpoint=~"/health.*|/metrics"})'
+   (vacío)
+$ curl -s 'http://127.0.0.1:9090/api/v1/query' --data-urlencode 'query=count(count by (__name__) ({job=~"api-gateway|users-service|pharmacy-service|node-exporter|kubernetes-cadvisor"}))'
+   (vacío)

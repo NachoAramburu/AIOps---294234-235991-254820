@@ -1,6 +1,6 @@
 #!/bin/bash
 # Port-forwards en background SOLO para las herramientas de operación:
-# Prometheus, Grafana, Kibana y Elasticsearch.
+# Prometheus, Grafana, Kibana, Jaeger y Elasticsearch.
 # La app (UI y API) se accede por el Ingress: minikube tunnel + http://127.0.0.1/
 # Uso: ./port-forward.sh
 # Para detener: ./port-forward.sh --stop
@@ -46,6 +46,11 @@ echo "  Grafana:      http://127.0.0.1:3000 (admin/admin)"
 kubectl port-forward svc/kibana 5601:5601 -n pharmago &
 echo $! >> "$PID_FILE"
 echo "  Kibana:       http://127.0.0.1:5601"
+
+# Jaeger (trazas, C11)
+kubectl port-forward svc/jaeger 16686:16686 -n pharmago &
+echo $! >> "$PID_FILE"
+echo "  Jaeger:       http://127.0.0.1:16686"
 
 # Elasticsearch (puerto local configurable; en el cluster sigue siendo 9200)
 ES_LOCAL_PORT="${ES_LOCAL_PORT:-9200}"

@@ -42,6 +42,15 @@ for i in $(seq 1 24); do
     echo "  Esperando... ($((i*5))s)"
 done
 
+# Los ClusterRole y ClusterRoleBinding no son del namespace: hay que borrarlos aparte.
+# prometheus-cadvisor es de versiones anteriores a C12; se borra si quedó.
+echo ""
+echo "Eliminando permisos de alcance cluster (otel-agent, otel-collector, fluent-bit)..."
+for name in otel-agent otel-collector-k8s-cluster fluent-bit-read prometheus-cadvisor; do
+    kubectl delete clusterrolebinding "$name" --ignore-not-found=true 2>/dev/null || true
+    kubectl delete clusterrole "$name" --ignore-not-found=true 2>/dev/null || true
+done
+
 # Eliminar PersistentVolumes (están fuera del namespace, deben estar Released)
 if [ "$KEEP_VOLUMES" = false ]; then
     echo ""

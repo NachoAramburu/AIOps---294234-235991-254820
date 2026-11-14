@@ -1,0 +1,4 @@
+$ dotnet build PharmaGo.sln   (con WithTracing y SqlClient 1.8.0-beta.1)
+    630 Advertencia(s)
+    0 Errores
+Tiempo transcurrido 00:00:06.63

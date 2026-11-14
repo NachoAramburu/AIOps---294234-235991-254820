@@ -28,9 +28,9 @@ Cada nodo tiene una etiqueta `node-type` y cada Deployment usa `nodeAffinity` so
 | `minikube-m02` | `gateway` | `pharmago-api-gateway` |
 | `minikube-m03` | `users` | `pharmago-users-service` |
 | `minikube-m04` | `pharmacy` | `pharmago-pharmacy-service` |
-| `minikube-m05` | `ops` | `pharmago-db` (SQL Server Express), otlp-collector, prometheus, grafana, elasticsearch, kibana |
+| `minikube-m05` | `ops` | `pharmago-db` (SQL Server Express), otlp-collector, jaeger, prometheus, grafana, elasticsearch, kibana |
 
-Los DaemonSets (fluent-bit, node-exporter) corren en todos los nodos.
+Los DaemonSets (fluent-bit, otel-agent) corren en todos los nodos.
 
 **Requisito de memoria**: cada nodo tiene 4 GB (`--memory 4096`), es decir hasta 20 GB en total; en la práctica el cluster usa bastante menos (ver `docs/evidencia/C02/`). En Windows, Docker Desktop (WSL2) tiene que tener la memoria necesaria en `%UserProfile%\.wslconfig`.
 
@@ -220,6 +220,7 @@ cd k8s
 - **Prometheus**: http://127.0.0.1:9090
 - **Grafana**: http://127.0.0.1:3000 (admin/admin)
 - **Kibana**: http://127.0.0.1:5601
+- **Jaeger** (trazas): http://127.0.0.1:16686
 - **Elasticsearch**: http://127.0.0.1:9200 (o el puerto de `ES_LOCAL_PORT`)
 
 Para detener: `./port-forward.sh --stop`
@@ -425,6 +426,7 @@ k8s/
 ├── configmaps/
 │   ├── prometheus-config.yaml
 │   ├── otel-collector-config.yaml
+│   ├── otel-agent-config.yaml
 │   ├── grafana-provisioning.yaml
 │   └── fluent-bit-config.yaml
 ├── secrets/
@@ -444,6 +446,10 @@ k8s/
 │   └── ops/
 │       ├── db-deployment.yaml
 │       ├── otel-collector-deployment.yaml
+│       ├── otel-collector-rbac.yaml
+│       ├── otel-agent-daemonset.yaml
+│       ├── otel-agent-rbac.yaml
+│       ├── jaeger-deployment.yaml
 │       ├── prometheus-deployment.yaml
 │       ├── grafana-deployment.yaml
 │       ├── elasticsearch-deployment.yaml
@@ -459,6 +465,7 @@ k8s/
 │   └── ops/
 │       ├── db-service.yaml
 │       ├── otel-collector-service.yaml
+│       ├── jaeger-service.yaml
 │       ├── prometheus-service.yaml
 │       ├── grafana-service.yaml
 │       ├── elasticsearch-service.yaml

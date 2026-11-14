@@ -1,0 +1,8 @@
+$ dotnet build PharmaGo.sln
+  PharmaGo.Telemetry -> $CODE\Backend\PharmaGo.Telemetry\bin\Debug\net6.0\PharmaGo.Telemetry.dll
+  PharmaGo.ApiGateway -> $CODE\Backend\PharmaGo.ApiGateway\bin\Debug\net6.0\PharmaGo.ApiGateway.dll
+  PharmaGo.UsersService -> $CODE\Backend\PharmaGo.UsersService\bin\Debug\net6.0\PharmaGo.UsersService.dll
+  PharmaGo.PharmacyService -> $CODE\Backend\PharmaGo.PharmacyService\bin\Debug\net6.0\PharmaGo.PharmacyService.dll
+    630 Advertencia(s)
+    0 Errores
+Tiempo transcurrido 00:00:07.58

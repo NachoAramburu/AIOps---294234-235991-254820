@@ -5,6 +5,7 @@ using Instrumentation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using PharmaGo.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,8 @@ builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "live" })
     .AddDbContextCheck<DbContext>("db", tags: new[] { "ready" });
 
-builder.Services.AddPharmaGoOpenTelemetryMetrics("PharmaGo.UsersService");
+// Métricas por OTLP al Collector (C10). Prometheus ya no scrapea al servicio.
+builder.Services.AddPharmaGoTelemetry("PharmaGo.UsersService");
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -57,7 +59,6 @@ app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = check => che
 app.UseMetricsMiddleware();
 
 app.MapControllers();
-app.MapPrometheusScrapingEndpoint();
 
 app.Run();
 

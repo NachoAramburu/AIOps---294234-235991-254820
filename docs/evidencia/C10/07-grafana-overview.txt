@@ -1,0 +1,12 @@
+# Grafana por API (basic auth del admin; la contraseña no se imprime).
+# Cada query de cada panel se ejecuta por /api/ds/query, el mismo camino que usa el panel.
+$ GET /api/dashboards/uid/pharmago-overview
+  title: PharmaGo - Overview | provisioned: True | paneles: 8
+  [Peticiones por Segundo por Endpoint] series: 2
+  [Latencia Promedio por Endpoint] series: 2
+  [Tasa de Error por Endpoint (%)] series: 1
+  [Throughput Total] series: 1
+  [Rate Limit Errors (429) por Endpoint] series: 1
+  [Distribución de Status Codes (%)] series: 1
+  [Tasa de Error por Tipo de Error (Todos los Endpoints)] series: 1
+  [Tasa de Error - /api/drug (429 y Total)] series: 2

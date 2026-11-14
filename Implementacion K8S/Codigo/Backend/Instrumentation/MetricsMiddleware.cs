@@ -24,6 +24,14 @@ namespace Instrumentation
 
         public async Task InvokeAsync(HttpContext context)
         {
+            // Los probes (/health/*) y /metrics no son tráfico de usuario: medirlos inflaría
+            // las tasas de requests y bajaría artificialmente la latencia y el % de errores (C10).
+            if (context.Request.Path.StartsWithSegments("/health") || context.Request.Path.StartsWithSegments("/metrics"))
+            {
+                await _next(context);
+                return;
+            }
+
             var stopwatch = Stopwatch.StartNew();
             var endpoint = context.Request.Path.Value ?? "/";
             var method = context.Request.Method;

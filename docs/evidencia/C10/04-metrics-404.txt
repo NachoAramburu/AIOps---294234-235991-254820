@@ -1,0 +1,10 @@
+# La imagen aspnet:6.0 no trae curl ni wget: el request HTTP se hace con bash y /dev/tcp dentro del pod.
+$ kubectl -n pharmago exec pharmago-api-gateway-5649876d9c-h9fx4 -- bash -c 'GET /metrics a 127.0.0.1:80'
+HTTP/1.1 404 Not Found
+$ kubectl -n pharmago exec pharmago-users-service-66df8c5679-6l5wg -- bash -c 'GET /metrics a 127.0.0.1:80'
+HTTP/1.1 404 Not Found
+$ kubectl -n pharmago exec pharmago-pharmacy-service-67b5d87484-fskkt -- bash -c 'GET /metrics a 127.0.0.1:80'
+HTTP/1.1 404 Not Found
+
+# Control: /health/live en el gateway sigue respondiendo
+HTTP/1.1 200 OK

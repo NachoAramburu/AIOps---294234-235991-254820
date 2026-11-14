@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: otel-agent
+  namespace: pharmago
+  labels:
+    app: otel-agent
+spec:
+  selector:
+    matchLabels:
+      app: otel-agent
+  template:
+    metadata:
+      labels:
+        app: otel-agent
+    spec:
+      # Un pod por nodo: cada uno le pregunta a SU kubelet por CPU, memoria, disco y red
+      # del nodo, sus pods y sus contenedores, y lo manda por OTLP al Collector central (C12).
+      serviceAccountName: otel-agent
+      # Corre en todos los nodos, incluido el control-plane, aunque tengan taints.
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: otel-agent
+          image: otel/opentelemetry-collector-contrib:0.111.0
+          args:
+            - "--config=/etc/otel-agent-config.yaml"
+          env:
+            # IP del nodo donde corre el pod: ahí escucha el kubelet (puerto 10250).
+            - name: K8S_NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            # Límite blando para el GC de Go, por debajo del límite del contenedor: el Collector
+            # libera memoria antes de que el kernel lo mate por OOM (D38).
+            - name: GOMEMLIMIT
+              value: "200MiB"
+          # Con 128Mi y 200m (valores del plan) los 5 agentes quedaban pegados al límite: 127Mi y 200m
+          # medidos con kubectl top (D38). 256Mi / 250m les deja margen; el request sigue bajo.
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          volumeMounts:
+            - name: otel-agent-config
+              mountPath: /etc/otel-agent-config.yaml
+              subPath: otel-agent-config.yaml
+      volumes:
+        - name: otel-agent-config
+          configMap:
+            name: otel-agent-config

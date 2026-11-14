@@ -1,0 +1,13 @@
+# kubelet /stats/summary del nodo minikube-m04 (lo que lee kubeletstats). Muestra por qué faltan red por pod y memoria detallada por contenedor.
+$ kubectl get --raw /api/v1/nodes/minikube-m04/proxy/stats/summary | (resumen)
+node: claves ['nodeName', 'systemContainers', 'startTime', 'cpu', 'memory', 'network', 'fs', 'runtime', 'rlimit', 'swap']
+node.network.eth0: rxBytes 445968795 txBytes 9180648
+node.fs: capacityBytes 1081101176832 (disco del host compartido)
+pod fluent-bit-nj7tm : claves ['podRef', 'startTime', 'containers', 'cpu', 'memory', 'volume', 'ephemeral-storage', 'swap'] | network: None
+   contenedor fluent-bit : memory ['time', 'workingSetBytes']
+pod pharmago-pharmacy-service-67b5d87484-q4z7f : claves ['podRef', 'startTime', 'containers', 'cpu', 'memory', 'volume', 'ephemeral-storage', 'swap'] | network: None
+   contenedor pharmago-pharmacy-service : memory ['time', 'workingSetBytes']
+pod otel-agent-b2sjw : claves ['podRef', 'startTime', 'containers', 'cpu', 'memory', 'volume', 'ephemeral-storage', 'swap'] | network: None
+   contenedor otel-agent : memory ['time', 'workingSetBytes']
+pod pharmago-pharmacy-service-67b5d87484-fskkt : claves ['podRef', 'startTime', 'containers', 'cpu', 'memory', 'volume', 'ephemeral-storage', 'swap'] | network: None
+   contenedor pharmago-pharmacy-service : memory ['time', 'workingSetBytes']

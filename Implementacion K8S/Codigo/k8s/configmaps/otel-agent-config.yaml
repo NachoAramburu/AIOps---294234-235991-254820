@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-agent-config
+  namespace: pharmago
+data:
+  otel-agent-config.yaml: |
+    # Agente por nodo (DaemonSet otel-agent, C12): métricas de nodo, pod y contenedor por OTLP.
+    receivers:
+      kubeletstats:
+        auth_type: serviceAccount
+        endpoint: "https://${env:K8S_NODE_IP}:10250"
+        # El certificado del kubelet de Minikube no incluye la IP del nodo.
+        insecure_skip_verify: true
+        collection_interval: 10s
+        metric_groups: [node, pod, container]
+        # Opcionales: uso de CPU y memoria contra el límite del pod y del contenedor.
+        metrics:
+          k8s.pod.cpu_limit_utilization:
+            enabled: true
+          k8s.pod.memory_limit_utilization:
+            enabled: true
+          k8s.container.cpu_limit_utilization:
+            enabled: true
+          k8s.container.memory_limit_utilization:
+            enabled: true
+
+    processors:
+      # Si el agente se acerca a su límite de memoria, descarta datos en vez de morir por OOM.
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      # Las métricas de pod y contenedor no traen el nodo: se lo agrega acá para filtrar por nodo.
+      resource:
+        attributes:
+          - key: k8s.node.name
+            value: "${env:K8S_NODE_NAME}"
+            action: upsert
+      batch: {}
+
+    exporters:
+      otlp:
+        endpoint: "otlp-collector:4317"
+        tls:
+          insecure: true
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [kubeletstats]
+          processors: [memory_limiter, resource, batch]
+          exporters: [otlp]
