@@ -1,0 +1,19 @@
+bash -n network-chaos.sh -> exit=0
+bash -n disconnect.sh -> exit=0
+bash -n run-all.sh -> exit=0
+
+Validación de argumentos:
+$ ./network-chaos.sh -> exit=1 | Uso: ./network-chaos.sh <deployment> <segundos>
+$ ./network-chaos.sh pharmago-users-service x -> exit=1 | Error: segundos tiene que ser un entero positivo (recibido: 'x')
+$ ./disconnect.sh pharmago-ui 10 -> exit=1 | Error: 'pharmago-ui' no se puede desconectar. Permitidos: pharmago-db pharmago-users-service pharmago-pharmacy-service pharmago-api-gateway
+$ ./disconnect.sh -> exit=1 | Uso: ./disconnect.sh <deployment> <segundos>
+$ ./run-all.sh --segundos 0 -> exit=1 | Error: segundos tiene que ser un entero positivo (recibido: '0')
+$ ./run-all.sh --otra -> exit=1 | Uso: ./run-all.sh [--segundos N]   (N por defecto: 30)
+
+$ kubectl get pods -n kube-system -l k8s-app=calico-node -o wide
+NAME                READY   STATUS    RESTARTS       AGE   IP             NODE           NOMINATED NODE   READINESS GATES
+calico-node-b9p4j   1/1     Running   6 (110m ago)   4d    192.168.49.2   minikube       <none>           <none>
+calico-node-bcmkf   1/1     Running   6 (107m ago)   4d    192.168.49.6   minikube-m05   <none>           <none>
+calico-node-hlkqh   1/1     Running   6 (109m ago)   4d    192.168.49.4   minikube-m03   <none>           <none>
+calico-node-pn9gl   1/1     Running   6 (108m ago)   4d    192.168.49.5   minikube-m04   <none>           <none>
+calico-node-sws4j   1/1     Running   6 (109m ago)   4d    192.168.49.3   minikube-m02   <none>           <none>

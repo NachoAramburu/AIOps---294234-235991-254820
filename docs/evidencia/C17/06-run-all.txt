@@ -1,0 +1,79 @@
+$ ./run-all.sh --segundos 20
+Esperando que todos los Deployments estén Ready antes de empezar...
+
+=== requests: ./load-requests.sh 200 10
+[inicio] 2026-11-14T04:54:08Z
+Requests: 200 a http://127.0.0.1/api/login con concurrencia 10
+Duración: 8 s
+Respuestas por código HTTP:
+  429 x180
+  404 x20
+[fin] 2026-11-14T04:54:17Z
+Esperando que todos los Deployments vuelvan a Ready...
+
+=== cpu: ./cpu-spike.sh pharmago-api-gateway 20 4
+[inicio] 2026-11-14T04:54:19Z
+CPU: pharmago-api-gateway-6d6656b845-vp8fz, 4 hilos durante 20 s
+Loops que quedan en pharmago-api-gateway-6d6656b845-vp8fz: 0
+[fin] 2026-11-14T04:54:40Z
+Esperando que todos los Deployments vuelvan a Ready...
+
+=== memoria: ./ram-spike.sh pharmago-pharmacy-service 150 20
+[inicio] 2026-11-14T04:54:41Z
+Memoria: pharmago-pharmacy-service-7467475886-hx45v retiene 150 MB durante 20 s
+Reinicios de pharmago-pharmacy-service-7467475886-hx45v: 1 -> 1 (último motivo: Completed)
+[fin] 2026-11-14T04:55:08Z
+Esperando que todos los Deployments vuelvan a Ready...
+
+=== storage: ./volume-spike.sh pharmago-users-service 200 20
+[inicio] 2026-11-14T04:55:10Z
+Storage: pharmago-users-service-569c47c8f5-kcsgv escribe 200 MB en /tmp/chaos_fill y los mantiene 20 s
+-rw-r--r-- 1 root root 209715200 Nov 14 04:55 /tmp/chaos_fill
+Archivo /tmp/chaos_fill borrado en pharmago-users-service-569c47c8f5-kcsgv.
+[fin] 2026-11-14T04:55:31Z
+Esperando que todos los Deployments vuelvan a Ready...
+
+=== red: ./network-chaos.sh pharmago-users-service 20
+[inicio] 2026-11-14T04:55:32Z
+Red: se corta todo el tráfico de app=pharmago-users-service durante 20 s
+networkpolicy.networking.k8s.io/chaos-deny-pharmago-users-service created
+NetworkPolicy chaos-deny-pharmago-users-service borrada.
+NetworkPolicies de caos que quedan: 0
+[fin] 2026-11-14T04:55:54Z
+Esperando que todos los Deployments vuelvan a Ready...
+
+=== desconexion: ./disconnect.sh pharmago-pharmacy-service 20
+[inicio] 2026-11-14T04:55:55Z
+Desconexión: pharmago-pharmacy-service pasa de 2 réplicas a 0 durante 20 s
+04:56:16 Restaurando pharmago-pharmacy-service a 2 réplicas...
+Waiting for deployment "pharmago-pharmacy-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-pharmacy-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-pharmacy-service" rollout to finish: 0 of 2 updated replicas are available...
+deployment "pharmago-pharmacy-service" successfully rolled out
+pharmago-pharmacy-service de vuelta en 2/2 Ready en 13 s desde la restauración.
+[fin] 2026-11-14T04:56:29Z
+Esperando que todos los Deployments vuelvan a Ready...
+
+TIPO         INICIO               FIN                  ESTADO FINAL
+requests     2026-11-14T04:54:08Z 2026-11-14T04:54:18Z OK (exit 0, todo Ready)
+cpu          2026-11-14T04:54:18Z 2026-11-14T04:54:40Z OK (exit 0, todo Ready)
+memoria      2026-11-14T04:54:40Z 2026-11-14T04:55:09Z OK (exit 0, todo Ready)
+storage      2026-11-14T04:55:09Z 2026-11-14T04:55:32Z OK (exit 0, todo Ready)
+red          2026-11-14T04:55:32Z 2026-11-14T04:55:54Z OK (exit 0, todo Ready)
+desconexion  2026-11-14T04:55:54Z 2026-11-14T04:56:30Z OK (exit 0, todo Ready)
+exit=0
+
+$ kubectl get deploy,netpol -n pharmago
+NAME                                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/elasticsearch               1/1     1            1           4d
+deployment.apps/grafana                     1/1     1            1           4d
+deployment.apps/kibana                      1/1     1            1           4d
+deployment.apps/otlp-collector              1/1     1            1           4d
+deployment.apps/pharmago-api-gateway        2/2     2            2           4d
+deployment.apps/pharmago-db                 1/1     1            1           4d
+deployment.apps/pharmago-pharmacy-service   2/2     2            2           4d
+deployment.apps/pharmago-ui                 2/2     2            2           4d
+deployment.apps/pharmago-users-service      2/2     2            2           4d
+deployment.apps/prometheus                  1/1     1            1           4d
+$ kubectl get pods -n pharmago (no Running)
+No resources found in pharmago namespace.

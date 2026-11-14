@@ -1,0 +1,207 @@
+$ ./disconnect.sh pharmago-db 45   (a los 10 s del loop)
+[inicio] 2026-11-14T04:48:39Z
+Desconexión: pharmago-db pasa de 1 réplicas a 0 durante 45 s
+04:49:26 Restaurando pharmago-db a 1 réplicas...
+Waiting for deployment "pharmago-db" rollout to finish: 0 of 1 updated replicas are available...
+deployment "pharmago-db" successfully rolled out
+pharmago-db de vuelta en 1/1 Ready en 45 s desde la restauración.
+[fin] 2026-11-14T04:50:11Z
+exit=0 | el script corrió de t=11s a t=103s
+
+--- Loop: 1 GET/s a http://127.0.0.1/api/drug (código HTTP) y Ready de los pods de pharmago-pharmacy-service
+t=000s 04:48:29 http=200 ready[pharmago-pharmacy-service]=true true 
+t=002s 04:48:31 http=200 ready[pharmago-pharmacy-service]=true true 
+t=004s 04:48:32 http=200 ready[pharmago-pharmacy-service]=true true 
+t=005s 04:48:34 http=200 ready[pharmago-pharmacy-service]=true true 
+t=007s 04:48:35 http=200 ready[pharmago-pharmacy-service]=true true 
+t=008s 04:48:36 http=200 ready[pharmago-pharmacy-service]=true true 
+t=009s 04:48:38 http=200 ready[pharmago-pharmacy-service]=true true 
+t=011s 04:48:39 http=200 ready[pharmago-pharmacy-service]=true true 
+t=012s 04:48:40 http=200 ready[pharmago-pharmacy-service]=true true 
+t=014s 04:48:42 http=200 ready[pharmago-pharmacy-service]=true true 
+t=015s 04:48:44 http=500 ready[pharmago-pharmacy-service]=true true 
+t=017s 04:48:46 http=500 ready[pharmago-pharmacy-service]=false false 
+t=019s 04:48:48 http=502 ready[pharmago-pharmacy-service]=false false 
+t=021s 04:48:49 http=500 ready[pharmago-pharmacy-service]=false false 
+t=022s 04:48:51 http=502 ready[pharmago-pharmacy-service]=false false 
+t=024s 04:48:54 http=500 ready[pharmago-pharmacy-service]=false false 
+t=027s 04:48:56 http=503 ready[pharmago-pharmacy-service]=false false 
+t=029s 04:48:57 http=500 ready[pharmago-pharmacy-service]=false false 
+t=030s 04:48:58 http=500 ready[pharmago-pharmacy-service]=false false 
+t=031s 04:49:00 http=503 ready[pharmago-pharmacy-service]=false false 
+t=033s 04:49:01 http=502 ready[pharmago-pharmacy-service]=false false 
+t=034s 04:49:03 http=503 ready[pharmago-pharmacy-service]=false false 
+t=036s 04:49:05 http=502 ready[pharmago-pharmacy-service]=false false 
+t=038s 04:49:06 http=503 ready[pharmago-pharmacy-service]=false false 
+t=039s 04:49:07 http=503 ready[pharmago-pharmacy-service]=false false 
+t=040s 04:49:09 http=503 ready[pharmago-pharmacy-service]=false false 
+t=042s 04:49:10 http=503 ready[pharmago-pharmacy-service]=false false 
+t=043s 04:49:12 http=503 ready[pharmago-pharmacy-service]=false false 
+t=045s 04:49:13 http=503 ready[pharmago-pharmacy-service]=false false 
+t=046s 04:49:14 http=503 ready[pharmago-pharmacy-service]=false false 
+t=048s 04:49:16 http=503 ready[pharmago-pharmacy-service]=false false 
+t=049s 04:49:17 http=503 ready[pharmago-pharmacy-service]=false false 
+t=050s 04:49:19 http=503 ready[pharmago-pharmacy-service]=false false 
+t=052s 04:49:20 http=503 ready[pharmago-pharmacy-service]=false false 
+t=053s 04:49:21 http=503 ready[pharmago-pharmacy-service]=false false 
+t=055s 04:49:23 http=503 ready[pharmago-pharmacy-service]=false false 
+t=056s 04:49:24 http=503 ready[pharmago-pharmacy-service]=false false 
+t=057s 04:49:26 http=503 ready[pharmago-pharmacy-service]=false false 
+t=059s 04:49:27 http=503 ready[pharmago-pharmacy-service]=false false 
+t=060s 04:49:29 http=503 ready[pharmago-pharmacy-service]=false false 
+t=062s 04:49:30 http=503 ready[pharmago-pharmacy-service]=false false 
+t=063s 04:49:31 http=503 ready[pharmago-pharmacy-service]=false false 
+t=064s 04:49:33 http=503 ready[pharmago-pharmacy-service]=false false 
+t=066s 04:49:34 http=503 ready[pharmago-pharmacy-service]=false false 
+t=067s 04:49:36 http=503 ready[pharmago-pharmacy-service]=false false 
+t=069s 04:49:37 http=503 ready[pharmago-pharmacy-service]=false false 
+t=070s 04:49:39 http=503 ready[pharmago-pharmacy-service]=false false 
+t=072s 04:49:40 http=503 ready[pharmago-pharmacy-service]=false false 
+t=073s 04:49:41 http=503 ready[pharmago-pharmacy-service]=false false 
+t=075s 04:49:43 http=503 ready[pharmago-pharmacy-service]=false false 
+t=076s 04:49:44 http=503 ready[pharmago-pharmacy-service]=false false 
+t=077s 04:49:46 http=503 ready[pharmago-pharmacy-service]=false false 
+t=079s 04:49:47 http=503 ready[pharmago-pharmacy-service]=false false 
+t=080s 04:49:49 http=503 ready[pharmago-pharmacy-service]=false false 
+t=082s 04:49:50 http=503 ready[pharmago-pharmacy-service]=false false 
+t=083s 04:49:52 http=503 ready[pharmago-pharmacy-service]=false false 
+t=085s 04:49:53 http=503 ready[pharmago-pharmacy-service]=false false 
+t=086s 04:49:55 http=503 ready[pharmago-pharmacy-service]=false false 
+t=088s 04:49:56 http=503 ready[pharmago-pharmacy-service]=false false 
+t=089s 04:49:58 http=503 ready[pharmago-pharmacy-service]=false false 
+t=091s 04:49:59 http=503 ready[pharmago-pharmacy-service]=false false 
+t=092s 04:50:01 http=503 ready[pharmago-pharmacy-service]=false false 
+t=094s 04:50:02 http=503 ready[pharmago-pharmacy-service]=false false 
+t=095s 04:50:03 http=503 ready[pharmago-pharmacy-service]=false false 
+t=096s 04:50:05 http=503 ready[pharmago-pharmacy-service]=false false 
+t=098s 04:50:06 http=503 ready[pharmago-pharmacy-service]=false false 
+t=099s 04:50:08 http=503 ready[pharmago-pharmacy-service]=false false 
+t=101s 04:50:09 http=503 ready[pharmago-pharmacy-service]=false false 
+t=102s 04:50:11 http=503 ready[pharmago-pharmacy-service]=false false 
+t=104s 04:50:12 http=503 ready[pharmago-pharmacy-service]=false false 
+t=105s 04:50:14 http=503 ready[pharmago-pharmacy-service]=false false 
+t=107s 04:50:15 http=503 ready[pharmago-pharmacy-service]=false false 
+t=108s 04:50:17 http=503 ready[pharmago-pharmacy-service]=false false 
+t=110s 04:50:18 http=503 ready[pharmago-pharmacy-service]=true false 
+t=111s 04:50:19 http=200 ready[pharmago-pharmacy-service]=true false 
+t=112s 04:50:21 http=200 ready[pharmago-pharmacy-service]=true false 
+t=114s 04:50:22 http=200 ready[pharmago-pharmacy-service]=true false 
+t=115s 04:50:23 http=200 ready[pharmago-pharmacy-service]=true false 
+t=116s 04:50:25 http=200 ready[pharmago-pharmacy-service]=true false 
+t=118s 04:50:26 http=200 ready[pharmago-pharmacy-service]=true false 
+t=119s 04:50:27 http=200 ready[pharmago-pharmacy-service]=true false 
+t=120s 04:50:29 http=200 ready[pharmago-pharmacy-service]=true false 
+t=122s 04:50:30 http=200 ready[pharmago-pharmacy-service]=true false 
+t=123s 04:50:31 http=200 ready[pharmago-pharmacy-service]=true true 
+t=124s 04:50:33 http=200 ready[pharmago-pharmacy-service]=true true 
+t=126s 04:50:34 http=200 ready[pharmago-pharmacy-service]=true true 
+t=127s 04:50:35 http=200 ready[pharmago-pharmacy-service]=true true 
+t=128s 04:50:37 http=200 ready[pharmago-pharmacy-service]=true true 
+t=130s 04:50:38 http=200 ready[pharmago-pharmacy-service]=true true 
+t=131s 04:50:39 http=200 ready[pharmago-pharmacy-service]=true true 
+t=132s 04:50:41 http=200 ready[pharmago-pharmacy-service]=true true 
+t=134s 04:50:42 http=200 ready[pharmago-pharmacy-service]=true true 
+t=135s 04:50:43 http=200 ready[pharmago-pharmacy-service]=true true 
+t=136s 04:50:45 http=200 ready[pharmago-pharmacy-service]=true true 
+t=138s 04:50:46 http=200 ready[pharmago-pharmacy-service]=true true 
+t=139s 04:50:47 http=200 ready[pharmago-pharmacy-service]=true true 
+t=140s 04:50:49 http=200 ready[pharmago-pharmacy-service]=true true 
+t=142s 04:50:50 http=200 ready[pharmago-pharmacy-service]=true true 
+t=143s 04:50:51 http=200 ready[pharmago-pharmacy-service]=true true 
+t=144s 04:50:53 http=200 ready[pharmago-pharmacy-service]=true true 
+t=146s 04:50:54 http=200 ready[pharmago-pharmacy-service]=true true 
+t=147s 04:50:55 http=200 ready[pharmago-pharmacy-service]=true true 
+t=149s 04:50:57 http=200 ready[pharmago-pharmacy-service]=true true 
+t=150s 04:50:58 http=200 ready[pharmago-pharmacy-service]=true true 
+t=151s 04:51:00 http=200 ready[pharmago-pharmacy-service]=true true 
+t=153s 04:51:01 http=200 ready[pharmago-pharmacy-service]=true true 
+t=154s 04:51:02 http=200 ready[pharmago-pharmacy-service]=true true 
+t=155s 04:51:04 http=200 ready[pharmago-pharmacy-service]=true true 
+t=157s 04:51:05 http=200 ready[pharmago-pharmacy-service]=true true 
+t=158s 04:51:06 http=200 ready[pharmago-pharmacy-service]=true true 
+t=159s 04:51:08 http=200 ready[pharmago-pharmacy-service]=true true 
+t=161s 04:51:09 http=200 ready[pharmago-pharmacy-service]=true true 
+t=162s 04:51:10 http=200 ready[pharmago-pharmacy-service]=true true 
+
+Resumen por fase (antes / durante / después del script):
+  antes 200: 7
+  despues 200: 39
+  despues 503: 5
+  durante 200: 3
+  durante 500: 6
+  durante 502: 4
+  durante 503: 49
+Primer error a los 4 s de empezar el script; último error en t=110s (el script terminó en t=103s).
+
+$ kubectl logs -l app=pharmago-api-gateway --since=4m | grep circuit_breaker
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=closed
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=open for 5s
+  circuit_breaker cluster=pharmacy-cluster state=half-open
+  circuit_breaker cluster=pharmacy-cluster state=closed
+
+$ kubectl get pods -n pharmago (app y BD)
+NAME                                         READY   STATUS    RESTARTS       AGE
+pharmago-api-gateway-6d6656b845-vp8fz        1/1     Running   1 (95m ago)    98m
+pharmago-api-gateway-6d6656b845-vtgt5        1/1     Running   0              99m
+pharmago-db-79bd8977ff-mbx6j                 1/1     Running   0              107s
+pharmago-pharmacy-service-7467475886-hx45v   1/1     Running   1 (93m ago)    99m
+pharmago-pharmacy-service-7467475886-jq4gr   1/1     Running   0              96m
+pharmago-ui-7976789c56-85d5v                 1/1     Running   1 (92m ago)    95m
+pharmago-ui-7976789c56-ld4g9                 1/1     Running   0              100m
+pharmago-users-service-569c47c8f5-8xplr      1/1     Running   0              6m30s
+pharmago-users-service-569c47c8f5-n4qrs      1/1     Running   0              97m
+
+Línea de tiempo (del loop de arriba; t = segundos desde que empezó el loop):
+  t=11 s   (04:48:39)  disconnect.sh escala pharmago-db a 0
+  t=15 s   (+4 s)      primer error: 500 (pharmacy no llega a la BD)
+  t=17 s   (+6 s)      los 2 pods de pharmacy salen de Ready: /health/ready consulta la BD (C05)
+  t=27 s   (+16 s)     primeros 503: el gateway no tiene pods Ready o el circuito está abierto
+  t=34-108 s           todo 503; en los logs del gateway el circuito de pharmacy-cluster pasa por open -> half-open en ciclos de 5 s
+  t=58 s   (04:49:26)  disconnect.sh restaura pharmago-db a 1 réplica
+  04:50:11             pharmago-db vuelve a 1/1 Ready (SQL Server tarda 45 s en arrancar)
+  t=111 s  (04:50:19)  primer 200: 8 s después de que la BD está Ready; el circuito vuelve a closed
+  t=123 s  (04:50:31)  pharmacy 2/2 Ready
+Lectura: sin BD, la readiness saca a pharmacy del balanceo en ~6 s y el breaker devuelve 503 rápido en vez de colgar al
+usuario. La recuperación es automática: no hubo que tocar nada después de restaurar la BD, y el servicio vuelve 8 s después
+de que la BD está lista. El tiempo total sin servicio (~96 s) lo domina la propia BD: 45 s del experimento más 45 s de
+arranque de SQL Server. Es el punto único de falla aceptado en D04.

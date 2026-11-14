@@ -1,0 +1,39 @@
+Ctrl+C simulado: timeout -s INT <seg> manda SIGINT al script a mitad de un experimento de 120 s.
+Se mide cuánto tarda en terminar y se verifica la limpieza con funciones de lib.sh.
+
+$ timeout -s INT 10 ./cpu-spike.sh pharmago-api-gateway 120 4
+[inicio] 2026-11-14T04:40:42Z
+CPU: pharmago-api-gateway-6d6656b845-vp8fz, 4 hilos durante 120 s
+command terminated with exit code 143
+Loops que quedan en pharmago-api-gateway-6d6656b845-vp8fz: 0
+[fin] 2026-11-14T04:40:52Z
+exit=124 (130 = terminó por la señal) | duración total: 11 s
+Verificación: procesos con la marca chaos_cpu en los pods del gateway:
+  pharmago-api-gateway-6d6656b845-vp8fz: 0
+  pharmago-api-gateway-6d6656b845-vtgt5: 0
+
+$ timeout -s INT 12 ./ram-spike.sh pharmago-pharmacy-service 150 120
+[inicio] 2026-11-14T04:40:53Z
+Memoria: pharmago-pharmacy-service-7467475886-hx45v retiene 150 MB durante 120 s
+Reinicios de pharmago-pharmacy-service-7467475886-hx45v: 1 -> 1 (último motivo: Completed)
+[fin] 2026-11-14T04:41:05Z
+exit=124 (130 = terminó por la señal) | duración total: 12 s
+Verificación en los pods de pharmacy:
+command terminated with exit code 143
+  pharmago-pharmacy-service-7467475886-hx45v: procesos chaos_ram=0 | memory.current=68 MiB
+  pharmago-pharmacy-service-7467475886-jq4gr: procesos chaos_ram=0 | memory.current=73 MiB
+
+$ timeout -s INT 12 ./volume-spike.sh pharmago-users-service 100 120
+[inicio] 2026-11-14T04:41:08Z
+Storage: pharmago-users-service-569c47c8f5-8wmzl escribe 100 MB en /tmp/chaos_fill y los mantiene 120 s
+-rw-r--r-- 1 root root 104857600 Nov 14 04:41 /tmp/chaos_fill
+command terminated with exit code 143
+Archivo /tmp/chaos_fill borrado en pharmago-users-service-569c47c8f5-8wmzl.
+[fin] 2026-11-14T04:41:22Z
+exit=124 (130 = terminó por la señal) | duración total: 14 s
+Verificación en los pods de users:
+  pharmago-users-service-569c47c8f5-8wmzl: procesos chaos_vol=0 | /tmp/chaos_fill: no-existe
+  pharmago-users-service-569c47c8f5-n4qrs: procesos chaos_vol=0 | /tmp/chaos_fill: no-existe
+
+Lectura: los tres scripts cortan entre 11 y 14 s después de la señal y el trap deja todo limpio (0 procesos con la marca, memoria de vuelta a ~68 MiB, archivo borrado). 'exit=124' es el código que devuelve el propio timeout cuando tuvo que mandar la señal; 'command terminated with exit code 143' es el kubectl exec que corta el trap (143 = SIGTERM).
+Hallazgo durante la prueba: en Git Bash, si el script espera con 'wait' a kubectl.exe (proceso nativo de Windows), la señal no se atiende hasta que kubectl termina y el trap no llega a correr; por eso los scripts esperan con un loop de 'sleep 1' (proceso de Git Bash), que sí deja actuar al trap.

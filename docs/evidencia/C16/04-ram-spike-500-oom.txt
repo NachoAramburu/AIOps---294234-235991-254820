@@ -1,0 +1,39 @@
+$ ./ram-spike.sh pharmago-pharmacy-service 500 30   (límite de memoria del contenedor: 384Mi)
+[inicio] 2026-11-14T04:22:41Z
+Memoria: pharmago-pharmacy-service-7467475886-hx45v retiene 500 MB durante 30 s
+command terminated with exit code 137
+El proceso del experimento terminó con código 137 (137 = el contenedor fue matado, por ejemplo OOMKilled).
+Reinicios de pharmago-pharmacy-service-7467475886-hx45v: 1 -> 1 (último motivo: Completed)
+[fin] 2026-11-14T04:22:49Z
+exit=0
+
+El pod nunca dejó de estar Ready (el chequeo de Ready respondió true de inmediato).
+
+$ kubectl describe pod pharmago-pharmacy-service-7467475886-hx45v (estado del contenedor)
+State:          Running
+Started:      Sat, 14 Nov 2026 00:17:57 -0300
+Last State:     Terminated
+Reason:       Completed
+Exit Code:    0
+Started:      Sat, 14 Nov 2026 00:11:34 -0300
+Finished:     Sat, 14 Nov 2026 00:17:56 -0300
+Ready:          True
+Restart Count:  1
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+
+$ kubectl get events (OOM / Killing / BackOff de ese pod)
+No resources found in pharmago namespace.
+
+--- Diagnóstico: qué mató el kernel
+$ kubectl exec <pod> -- cat /sys/fs/cgroup/memory.events ; cat /sys/fs/cgroup/memory.oom.group
+oom_kill 1
+oom_group_kill 0
+oom.group=0
+
+Lectura: al superar memory.max (402653184 = 384Mi) el OOM killer del kernel actuó dentro del cgroup del contenedor
+(oom_kill 1), pero con memory.oom.group=0 mata solo al proceso más grande: el sh del experimento que retenía los 500 MB
+(por eso kubectl exec terminó con 137). El proceso principal (dotnet, PID 1) siguió vivo, el contenedor no se reinició
+(Restart Count sigue en 1) y el pod nunca dejó de estar Ready: el usuario no ve el fallo.
+El plan esperaba "OOMKilled y reinicio del contenedor"; eso pasa solo si el que crece es el proceso principal o si el
+runtime activa memory.oom.group (cri-dockerd, el runtime de este cluster, no lo activa). La muerte y el reinicio del
+proceso principal están medidos aparte con measure-mttr.sh --crash (docs/evidencia/C09/03-cluster-mttr.txt).

@@ -1,0 +1,9 @@
+$ ./load-requests.sh 300 20   (POST /api/login con credenciales inválidas, por el Ingress; límite de login: 10 por minuto)
+[inicio] 2026-11-14T04:26:03Z
+Requests: 300 a http://127.0.0.1/api/login con concurrencia 20
+Duración: 14 s
+Respuestas por código HTTP:
+  429 x280
+  404 x20
+[fin] 2026-11-14T04:26:17Z
+exit=0

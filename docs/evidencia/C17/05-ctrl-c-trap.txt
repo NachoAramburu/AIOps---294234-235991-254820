@@ -1,0 +1,27 @@
+Ctrl+C simulado: timeout -s INT <seg> manda SIGINT al script a mitad de un experimento de 120 s.
+
+$ timeout -s INT 10 ./network-chaos.sh pharmago-users-service 120
+[inicio] 2026-11-14T04:53:26Z
+Red: se corta todo el tráfico de app=pharmago-users-service durante 120 s
+networkpolicy.networking.k8s.io/chaos-deny-pharmago-users-service created
+NetworkPolicy chaos-deny-pharmago-users-service borrada.
+NetworkPolicies de caos que quedan: 0
+[fin] 2026-11-14T04:53:36Z
+exit=124 | duración total: 10 s
+Verificación: $ kubectl get networkpolicy -n pharmago
+No resources found in pharmago namespace.
+
+$ timeout -s INT 10 ./disconnect.sh pharmago-users-service 120
+[inicio] 2026-11-14T04:53:37Z
+Desconexión: pharmago-users-service pasa de 2 réplicas a 0 durante 120 s
+04:53:46 Restaurando pharmago-users-service a 2 réplicas...
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+deployment "pharmago-users-service" successfully rolled out
+pharmago-users-service de vuelta en 2/2 Ready en 12 s desde la restauración.
+[fin] 2026-11-14T04:53:58Z
+exit=124 | duración total: 22 s
+Verificación: $ kubectl get deploy pharmago-users-service -n pharmago
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+pharmago-users-service   2/2     2            2           4d

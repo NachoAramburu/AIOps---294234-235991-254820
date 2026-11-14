@@ -430,3 +430,73 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - **`rollout history` etiqueta mal la revisión.** Después del rollback, la revisión que corre la v1 (`be11702`) muestra CHANGE-CAUSE "deploy.sh be11702-v2". `deploy.sh` anota `kubernetes.io/change-cause` en el Deployment antes del `set image` (la anotación también queda en la revisión vigente) y `rollback.sh` no la actualiza, así que la anotación vieja pasa a la revisión nueva. Las imágenes y el rollback son correctos; solo la etiqueta confunde. Arreglo sugerido: anotar después del `set image` y anotar "rollback.sh" en `rollback.sh`. No se tocó en esta verificación.
   - En esta PC el puerto 5000 está reservado por Windows, así que el port-forward de la métrica se hizo por el 15000.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+
+## C16 — Scripts de caos 1/2: requests, CPU, memoria y storage — 2026-11-14 — Martin Roux (bloque B2)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 7 (Scripts de caos)
+- **Commit:** `C16-C17: scripts de caos de los seis tipos de falla` (SHA en `git log --grep "^C16-C17:"`)
+- **Dónde se corrió:** PC de Martin, cluster de 5 nodos con B1 aplicado (imágenes `be11702`), `minikube tunnel` abierto.
+- **Archivos creados / modificados** (en `Implementacion K8S/Codigo/chaos-engineering/`): `lib.sh` (nuevo); `cpu-spike.sh`, `ram-spike.sh`, `volume-spike.sh` y `load-requests.sh` reescritos; `README.md`. El paso 6 (límites de `ephemeral-storage`) no se hizo acá: ya venía del bloque B1.
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: cpu-spike dejaba loops vivos, ram-spike escribía en /dev/shm, volume-spike no limpiaba,
+  ninguno validaba argumentos ni el contexto de kubectl.
+
+  $ bash -n (5 scripts) y argumentos inválidos            (01)  OK; uso o error claro en cada caso
+  $ ./cpu-spike.sh pharmago-api-gateway 20 4              (02)
+    cgroup cpu.stat: 10,1 s de CPU en 21,7 s (~0,47 núcleos, el limits.cpu de 500m), nr_throttled +201
+    "Loops que quedan: 0"; /proc/*/cmdline después: solo dotnet
+  $ ./ram-spike.sh pharmago-pharmacy-service 150 40       (03)
+    Prometheus (container_memory_working_set_bytes, nivel pod): 68,3 -> 219,1 -> 68,4 MiB
+  $ ./ram-spike.sh pharmago-pharmacy-service 500 30       (04)
+    exit 137 del experimento; memory.events: oom_kill 1, oom_group_kill 0; la app no se reinicia (ver hallazgos)
+  $ ./volume-spike.sh pharmago-users-service 200 30       (05)
+    du /tmp: 1 -> 201 -> 1 MB; "Archivo /tmp/chaos_fill borrado"
+  $ ./volume-spike.sh pharmago-users-service 600 75       (06)
+    Evicted: "Pod ephemeral local storage usage exceeds the total limit of containers 512Mi"
+    reemplazo Ready; el trap borra el pod terminado; quedan 2/2 sanos
+  $ ./load-requests.sh 300 20                             (07)
+    429 x280 | 404 x20 (login con usuario inexistente) en 14 s
+  $ timeout -s INT 10..12 sobre cpu, ram y volume (120 s) (08)
+    cortan en 11 a 14 s; 0 procesos con la marca, memoria de vuelta a ~68 MiB, archivo borrado
+  ```
+- **Criterio de "hecho" de §3 (ítem 7):** cumplido en lo que corresponde a C16: requests, CPU, memoria y storage parametrizables, con validación, guardia de contexto y limpieza probada, también ante Ctrl+C. `EXPERIMENTOS.md` es de C18 (bloque B7).
+- **Decisiones tomadas:** D43 y D44 actualizadas con lo medido. D53 nueva: cómo se espera a `kubectl exec` para que el trap funcione en Git Bash. Los procesos del experimento llevan una marca (`chaos_cpu`, `chaos_ram`, `chaos_vol`) en su línea de comando, y el trap los busca por `/proc/*/cmdline` (las imágenes no traen `ps`).
+- **NO VERIFICADO / riesgos:** `cpu-spike` no se vio en Grafana. Se midió con el cgroup, porque `kubectl top` actualiza con retraso y las métricas de pod por OTLP llegan en B3.
+- **Hallazgos nuevos que cambian el plan:**
+  - **Memoria por encima del límite:** el plan esperaba "OOMKilled y reinicio". En este cluster (cri-dockerd, `memory.oom.group=0`), el OOM killer mata solo el proceso más grande, que es el del experimento: la app sigue viva y el pod no pierde Ready. Para mostrar el reinicio del contenedor está `measure-mttr.sh --crash` (B1).
+  - **Rate limit por réplica:** con 2 réplicas del gateway pasaron 20 logins por minuto, no 10. El contador está en memoria de cada réplica.
+  - **Desalojo:** el estado final del pod desalojado varía (`Failed/Evicted` o `Succeeded`), y Kubernetes no lo borra. El script ahora lo borra.
+  - **Trap en Git Bash:** con `wait` sobre `kubectl.exe` la señal no se atendía y el trap no corría (se vio en la primera corrida de 08). Corregido con D53.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B2)
+
+## C17 — Scripts de caos 2/2: red y desconexión — 2026-11-14 — Martin Roux (bloque B2)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 7 (Scripts de caos)
+- **Commit:** `C16-C17: scripts de caos de los seis tipos de falla`
+- **Archivos creados / modificados** (en `Implementacion K8S/Codigo/chaos-engineering/`): `network-chaos.sh`, `disconnect.sh` y `run-all.sh` (nuevos); `README.md`. `docs/DECISIONES.md` (D43, D44, D53).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ bash -n, argumentos inválidos y calico-node            (01)  OK; calico-node 5/5 Running, uno por nodo
+  $ ./network-chaos.sh pharmago-users-service 45  + loop 1 rps a /api/roles   (02)
+    policy aplicada en t≈12 s, primer error en t=16 s (000 y 504); al borrarla, 200 (un 504 suelto)
+    antes 200 x7 | durante 000 x6, 504 x1, 200 x5 | después 200 x28, 504 x1; kubectl get netpol vacío
+  $ ./disconnect.sh pharmago-db 45  + loop 1 rps a /api/drug   (03)
+    +4 s primer 500; +6 s pharmacy fuera de Ready; después 503 (circuito pharmacy-cluster open/half-open)
+    BD restaurada -> Ready en 45 s (arranque de SQL Server) -> primer 200 8 s después; pharmacy 2/2
+  $ ./disconnect.sh pharmago-users-service 30  + loop 1 rps a /api/roles   (04)
+    502, 504 y 503 (circuito users-cluster open -> half-open -> closed); users 2/2 Ready 14 s después de restaurar
+  $ timeout -s INT 10 sobre network-chaos y disconnect (120 s)   (05)
+    netpol borrada (vacío); users restaurado a 2/2 en 12 s
+  $ ./run-all.sh --segundos 20                               (06)
+    requests, cpu, memoria, storage, red, desconexion: los 6 "OK (exit 0, todo Ready)"
+  ```
+- **Criterio de "hecho" de §3 (ítem 7):** cumplido junto con C16: los 6 tipos (requests, CPU, memoria, storage, red y desconexión) son parametrizables y tienen limpieza. Falta `chaos-engineering/EXPERIMENTOS.md`, que es de C18 (bloque B7).
+- **Decisiones tomadas:** D41 y D42 aplicadas tal cual. `run-all.sh` usa por defecto requests contra login, CPU en el gateway, memoria en pharmacy, storage en users, red en users y desconexión de pharmacy. Entre cada uno espera a que todos los Deployments (incluida la BD) vuelvan a Ready.
+- **NO VERIFICADO / riesgos:**
+  - En la prueba de red, el circuit breaker no llegó a abrir: a 1 request por segundo, con esperas de 5 a 10 s, nunca se juntan las 8 requests en 10 s que necesita (D13). Con más tráfico sí abriría, como se ve con la desconexión.
+  - El prompt pedía el loop a `/api/users`; se usó `/api/roles`, que atiende users y responde sin login (pedido del bloque B2).
+- **Hallazgos nuevos que cambian el plan:**
+  - Con la NetworkPolicy, los pods de users siguieron Ready: Calico deja pasar el tráfico desde el nodo (probes) y las conexiones ya establecidas (la readiness consulta la BD por una conexión abierta del pool). El corte lo ve el usuario, no Kubernetes. Conviene tenerlo en cuenta en el playbook de red (B7).
+  - La caída de la BD deja la app sin servicio unos 96 s: lo que dura la caída más 45 s de arranque de SQL Server. Es el punto único de falla aceptado (D04).
+- **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B2)

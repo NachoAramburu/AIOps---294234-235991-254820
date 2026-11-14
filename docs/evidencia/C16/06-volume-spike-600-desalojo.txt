@@ -1,0 +1,98 @@
+Pods de users antes:
+NAME                                      READY   STATUS    RESTARTS      AGE   IP              NODE           NOMINATED NODE   READINESS GATES
+pharmago-users-service-569c47c8f5-jx4ds   1/1     Running   1 (67m ago)   72m   10.244.151.36   minikube-m03   <none>           <none>
+pharmago-users-service-569c47c8f5-n4qrs   1/1     Running   0             70m   10.244.151.38   minikube-m03   <none>           <none>
+
+$ ./volume-spike.sh pharmago-users-service 600 60   (límite ephemeral-storage: 512Mi)
+[inicio] 2026-11-14T04:24:18Z
+Storage: pharmago-users-service-569c47c8f5-jx4ds escribe 600 MB en /tmp/chaos_fill y los mantiene 60 s
+-rw-r--r-- 1 root root 629145600 Nov 14 04:24 /tmp/chaos_fill
+Archivo /tmp/chaos_fill borrado en pharmago-users-service-569c47c8f5-jx4ds.
+[fin] 2026-11-14T04:25:20Z
+exit=0
+Duración del script: 62.4 s
+
+$ kubectl get pod pharmago-users-service-569c47c8f5-jx4ds -o jsonpath status.phase/reason/message
+Running |  | 
+
+$ kubectl get events (de pharmago-users-service-569c47c8f5-jx4ds)
+LAST SEEN   TYPE      REASON    OBJECT                                        MESSAGE
+2s          Warning   Evicted   pod/pharmago-users-service-569c47c8f5-jx4ds   Pod ephemeral local storage usage exceeds the total limit of containers 512Mi.
+2s          Normal    Killing   pod/pharmago-users-service-569c47c8f5-jx4ds   Stopping container pharmago-users-service
+
+Deployment de vuelta a 2/2 disponibles: 62.9 s desde el inicio del experimento
+Pods de users después:
+NAME                                      READY   STATUS    RESTARTS      AGE   IP              NODE           NOMINATED NODE   READINESS GATES
+pharmago-users-service-569c47c8f5-jx4ds   1/1     Running   1 (68m ago)   73m   10.244.151.36   minikube-m03   <none>           <none>
+pharmago-users-service-569c47c8f5-n4qrs   1/1     Running   0             71m   10.244.151.38   minikube-m03   <none>           <none>
+
+--- 15 s después de que terminó el script
+$ kubectl get pod pharmago-users-service-569c47c8f5-jx4ds -o jsonpath status
+Failed | Evicted | Pod ephemeral local storage usage exceeds the total limit of containers 512Mi. 
+$ kubectl get events (users-service)
+34s         Warning   Evicted             pod/pharmago-users-service-569c47c8f5-jx4ds    Pod ephemeral local storage usage exceeds the total limit of containers 512Mi.
+34s         Normal    Killing             pod/pharmago-users-service-569c47c8f5-jx4ds    Stopping container pharmago-users-service
+32s         Warning   FailedPreStopHook   pod/pharmago-users-service-569c47c8f5-jx4ds    PreStopHook failed
+31s         Normal    SuccessfulCreate    replicaset/pharmago-users-service-569c47c8f5   Created pod: pharmago-users-service-569c47c8f5-8wmzl
+30s         Normal    Started             pod/pharmago-users-service-569c47c8f5-8wmzl    Started container pharmago-users-service
+$ kubectl get pods -l app=pharmago-users-service
+NAME                                      READY   STATUS                   RESTARTS      AGE
+pharmago-users-service-569c47c8f5-8wmzl   1/1     Running                  0             32s
+pharmago-users-service-569c47c8f5-jx4ds   0/1     ContainerStatusUnknown   1 (68m ago)   74m
+pharmago-users-service-569c47c8f5-n4qrs   1/1     Running                  0             72m
+
+Lectura: el kubelet desalojó el pod al detectar 600 MB en /tmp contra el límite de 512Mi y el Deployment creó un reemplazo (8wmzl), que llegó a Ready; la otra réplica siguió atendiendo. La detección tardó casi los 60 s del experimento: el kubelet mide el almacenamiento efímero con intervalos de decenas de segundos. FailedPreStopHook es esperable: el contenedor se está matando por el desalojo. El pod Evicted queda como objeto Failed; se borró a mano y volume-spike.sh ahora lo borra solo en el trap.
+$ kubectl delete pod pharmago-users-service-569c47c8f5-jx4ds   (limpieza del pod Evicted)
+
+--- Repetición con la versión final de volume-spike.sh (borra el pod Evicted en el trap)
+$ ./volume-spike.sh pharmago-users-service 600 75
+[inicio] 2026-11-14T04:41:39Z
+Storage: pharmago-users-service-569c47c8f5-8wmzl escribe 600 MB en /tmp/chaos_fill y los mantiene 75 s
+-rw-r--r-- 1 root root 629145600 Nov 14 04:41 /tmp/chaos_fill
+command terminated with exit code 137
+El proceso del experimento terminó con código 137 (el pod pudo haber sido desalojado).
+pharmago-users-service-569c47c8f5-8wmzl ya no está disponible: el archivo se fue con el pod.
+[fin] 2026-11-14T04:42:37Z
+exit=0
+$ kubectl get pods -l app=pharmago-users-service
+NAME                                      READY   STATUS      RESTARTS   AGE
+pharmago-users-service-569c47c8f5-8wmzl   0/1     Completed   0          17m
+pharmago-users-service-569c47c8f5-dn55v   0/1     Running     0          5s
+pharmago-users-service-569c47c8f5-n4qrs   1/1     Running     0          89m
+Después de rollout status:
+NAME                                      READY   STATUS      RESTARTS   AGE
+pharmago-users-service-569c47c8f5-8wmzl   0/1     Completed   0          17m
+pharmago-users-service-569c47c8f5-dn55v   1/1     Running     0          11s
+pharmago-users-service-569c47c8f5-n4qrs   1/1     Running     0          89m
+
+--- Segunda repetición (el trap espera hasta 20 s a que el pod figure como Evicted y lo borra). Antes se borró a mano el pod Completed que dejó la repetición anterior.
+$ ./volume-spike.sh pharmago-users-service 600 75
+[inicio] 2026-11-14T04:43:17Z
+Storage: pharmago-users-service-569c47c8f5-dn55v escribe 600 MB en /tmp/chaos_fill y los mantiene 75 s
+-rw-r--r-- 1 root root 629145600 Nov 14 04:43 /tmp/chaos_fill
+command terminated with exit code 137
+El proceso del experimento terminó con código 137 (el pod pudo haber sido desalojado).
+pharmago-users-service-569c47c8f5-dn55v ya no está disponible: el archivo se fue con el pod.
+[fin] 2026-11-14T04:44:05Z
+exit=0
+$ kubectl get pods -l app=pharmago-users-service
+NAME                                      READY   STATUS      RESTARTS   AGE
+pharmago-users-service-569c47c8f5-ckdfn   1/1     Running     0          28s
+pharmago-users-service-569c47c8f5-dn55v   0/1     Completed   0          91s
+pharmago-users-service-569c47c8f5-n4qrs   1/1     Running     0          90m
+
+--- Tercera repetición (el trap borra el pod si quedó terminado: Succeeded o Failed). Antes se borró a mano el pod Completed de la repetición anterior.
+$ ./volume-spike.sh pharmago-users-service 600 75
+[inicio] 2026-11-14T04:44:33Z
+Storage: pharmago-users-service-569c47c8f5-ckdfn escribe 600 MB en /tmp/chaos_fill y los mantiene 75 s
+-rw-r--r-- 1 root root 629145600 Nov 14 04:44 /tmp/chaos_fill
+command terminated with exit code 137
+El proceso del experimento terminó con código 137 (el pod pudo haber sido desalojado).
+pharmago-users-service-569c47c8f5-ckdfn ya no está disponible: el archivo se fue con el pod.
+pharmago-users-service-569c47c8f5-ckdfn terminó (Succeeded, desalojado: Pod ephemeral local storage usage exceeds the total limit of containers 512Mi. ). Se borra el pod terminado; el Deployment ya creó otro.
+[fin] 2026-11-14T04:44:44Z
+exit=0
+$ kubectl get pods -l app=pharmago-users-service
+NAME                                      READY   STATUS    RESTARTS   AGE
+pharmago-users-service-569c47c8f5-8xplr   1/1     Running   0          17s
+pharmago-users-service-569c47c8f5-n4qrs   1/1     Running   0          91m

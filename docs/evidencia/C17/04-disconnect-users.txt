@@ -1,0 +1,78 @@
+$ ./disconnect.sh pharmago-users-service 30   (a los 10 s del loop)
+[inicio] 2026-11-14T04:51:58Z
+Desconexión: pharmago-users-service pasa de 2 réplicas a 0 durante 30 s
+04:52:29 Restaurando pharmago-users-service a 2 réplicas...
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+deployment "pharmago-users-service" successfully rolled out
+pharmago-users-service de vuelta en 2/2 Ready en 14 s desde la restauración.
+[fin] 2026-11-14T04:52:43Z
+exit=0 | el script corrió de t=10s a t=56s
+
+--- Loop: 1 GET/s a http://127.0.0.1/api/roles (código HTTP) y Ready de los pods de pharmago-users-service
+t=000s 04:51:48 http=200 ready[pharmago-users-service]=true true 
+t=002s 04:51:49 http=200 ready[pharmago-users-service]=true true 
+t=003s 04:51:50 http=200 ready[pharmago-users-service]=true true 
+t=005s 04:51:52 http=200 ready[pharmago-users-service]=true true 
+t=006s 04:51:53 http=200 ready[pharmago-users-service]=true true 
+t=007s 04:51:55 http=200 ready[pharmago-users-service]=true true 
+t=009s 04:51:56 http=200 ready[pharmago-users-service]=true true 
+t=010s 04:51:57 http=200 ready[pharmago-users-service]=true true 
+t=011s 04:51:59 http=200 ready[pharmago-users-service]=true true 
+t=013s 04:52:00 http=200 ready[pharmago-users-service]=true true 
+t=014s 04:52:01 http=200 ready[pharmago-users-service]=true true 
+t=015s 04:52:03 http=200 ready[pharmago-users-service]=true true 
+t=017s 04:52:08 http=504 ready[pharmago-users-service]=
+t=022s 04:52:09 http=502 ready[pharmago-users-service]=
+t=023s 04:52:11 http=502 ready[pharmago-users-service]=
+t=025s 04:52:17 http=000 ready[pharmago-users-service]=
+t=031s 04:52:19 http=502 ready[pharmago-users-service]=
+t=033s 04:52:21 http=502 ready[pharmago-users-service]=
+t=035s 04:52:23 http=502 ready[pharmago-users-service]=
+t=037s 04:52:24 http=502 ready[pharmago-users-service]=
+t=039s 04:52:26 http=503 ready[pharmago-users-service]=
+t=040s 04:52:28 http=503 ready[pharmago-users-service]=
+t=042s 04:52:29 http=503 ready[pharmago-users-service]=
+t=043s 04:52:31 http=503 ready[pharmago-users-service]=false false 
+t=045s 04:52:32 http=503 ready[pharmago-users-service]=false false 
+t=046s 04:52:34 http=503 ready[pharmago-users-service]=false false 
+t=048s 04:52:35 http=503 ready[pharmago-users-service]=false false 
+t=049s 04:52:36 http=503 ready[pharmago-users-service]=false false 
+t=051s 04:52:38 http=503 ready[pharmago-users-service]=false false 
+t=052s 04:52:40 http=200 ready[pharmago-users-service]=true true 
+t=054s 04:52:42 http=200 ready[pharmago-users-service]=true true 
+t=056s 04:52:43 http=200 ready[pharmago-users-service]=true true 
+t=057s 04:52:45 http=200 ready[pharmago-users-service]=true true 
+t=059s 04:52:46 http=200 ready[pharmago-users-service]=true true 
+t=060s 04:52:47 http=200 ready[pharmago-users-service]=true true 
+t=061s 04:52:49 http=200 ready[pharmago-users-service]=true true 
+t=063s 04:52:50 http=200 ready[pharmago-users-service]=true true 
+t=064s 04:52:51 http=200 ready[pharmago-users-service]=true true 
+t=065s 04:52:53 http=200 ready[pharmago-users-service]=true true 
+t=067s 04:52:54 http=200 ready[pharmago-users-service]=true true 
+t=068s 04:52:55 http=200 ready[pharmago-users-service]=true true 
+t=070s 04:52:57 http=200 ready[pharmago-users-service]=true true 
+t=071s 04:52:58 http=200 ready[pharmago-users-service]=true true 
+t=072s 04:53:00 http=200 ready[pharmago-users-service]=true true 
+t=074s 04:53:01 http=200 ready[pharmago-users-service]=true true 
+t=075s 04:53:02 http=200 ready[pharmago-users-service]=true true 
+t=076s 04:53:04 http=200 ready[pharmago-users-service]=true true 
+t=078s 04:53:05 http=200 ready[pharmago-users-service]=true true 
+t=079s 04:53:06 http=200 ready[pharmago-users-service]=true true 
+t=080s 04:53:08 http=200 ready[pharmago-users-service]=true true 
+
+Resumen por fase (antes / durante / después del script):
+  antes 200: 7
+  despues 200: 18
+  durante 000: 1
+  durante 200: 8
+  durante 502: 6
+  durante 503: 9
+  durante 504: 1
+Primer error a los 7 s de empezar el script; último error en t=51s (el script terminó en t=56s).
+
+$ kubectl logs -l app=pharmago-api-gateway --since=2m | grep "circuit_breaker cluster=users"
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=closed

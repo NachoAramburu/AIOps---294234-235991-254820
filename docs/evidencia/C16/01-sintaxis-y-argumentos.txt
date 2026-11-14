@@ -1,0 +1,12 @@
+bash -n lib.sh -> exit=0
+bash -n cpu-spike.sh -> exit=0
+bash -n ram-spike.sh -> exit=0
+bash -n volume-spike.sh -> exit=0
+bash -n load-requests.sh -> exit=0
+
+Validación de argumentos:
+$ ./cpu-spike.sh -> exit=1 | Uso: ./cpu-spike.sh <deployment> <segundos> [hilos=4]
+$ ./cpu-spike.sh pharmago-api-gateway abc -> exit=1 | Error: segundos tiene que ser un entero positivo (recibido: 'abc')
+$ ./ram-spike.sh pharmago-noexiste 10 5 -> exit=1 | Error: no existe el Deployment pharmago-noexiste en el namespace pharmago
+$ ./volume-spike.sh pharmago-users-service 0 5 -> exit=1 | Error: MB tiene que ser un entero positivo (recibido: '0')
+$ ./load-requests.sh 10 -> exit=1 | Uso: ./load-requests.sh <cantidad> <concurrencia> [url=http://127.0.0.1/api/login]

@@ -1,0 +1,17 @@
+Pod que elige el script: pharmago-users-service-569c47c8f5-jx4ds
+ANTES:
+/tmp/chaos_fill no existe
+du /tmp (MB): 1	/tmp
+DURANTE (t=18 s):
+-rw-r--r-- 1 root root 209715200 Nov 14 04:23 /tmp/chaos_fill
+du /tmp (MB): 201	/tmp
+DESPUÉS:
+/tmp/chaos_fill no existe
+du /tmp (MB): 1	/tmp
+
+$ ./volume-spike.sh pharmago-users-service 200 30
+[inicio] 2026-11-14T04:23:32Z
+Storage: pharmago-users-service-569c47c8f5-jx4ds escribe 200 MB en /tmp/chaos_fill y los mantiene 30 s
+-rw-r--r-- 1 root root 209715200 Nov 14 04:23 /tmp/chaos_fill
+Archivo /tmp/chaos_fill borrado en pharmago-users-service-569c47c8f5-jx4ds.
+[fin] 2026-11-14T04:24:04Z

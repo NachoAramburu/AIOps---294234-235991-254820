@@ -1,0 +1,74 @@
+$ ./network-chaos.sh pharmago-users-service 45   (a los 10 s del loop)
+[inicio] 2026-11-14T04:46:15Z
+Red: se corta todo el tráfico de app=pharmago-users-service durante 45 s
+networkpolicy.networking.k8s.io/chaos-deny-pharmago-users-service created
+NetworkPolicy chaos-deny-pharmago-users-service borrada.
+NetworkPolicies de caos que quedan: 0
+[fin] 2026-11-14T04:47:02Z
+exit=0 | el script corrió de t=10s a t=58s
+
+--- Loop: 1 GET/s a http://127.0.0.1/api/roles (código HTTP) y Ready de los pods de pharmago-users-service
+t=  0s 04:46:05 http=200 ready[pharmago-users-service]=true true 
+t=  2s 04:46:06 http=200 ready[pharmago-users-service]=true true 
+t=  4s 04:46:08 http=200 ready[pharmago-users-service]=true true 
+t=  5s 04:46:09 http=200 ready[pharmago-users-service]=true true 
+t=  6s 04:46:11 http=200 ready[pharmago-users-service]=true true 
+t=  8s 04:46:12 http=200 ready[pharmago-users-service]=true true 
+t=  9s 04:46:13 http=200 ready[pharmago-users-service]=true true 
+t= 10s 04:46:15 http=200 ready[pharmago-users-service]=true true 
+t= 12s 04:46:16 http=200 ready[pharmago-users-service]=true true 
+t= 13s 04:46:17 http=200 ready[pharmago-users-service]=true true 
+t= 14s 04:46:19 http=200 ready[pharmago-users-service]=true true 
+t= 16s 04:46:25 http=000 ready[pharmago-users-service]=true true 
+t= 22s 04:46:31 http=000 ready[pharmago-users-service]=true true 
+t= 28s 04:46:35 http=504 ready[pharmago-users-service]=true true 
+t= 32s 04:46:41 http=000 ready[pharmago-users-service]=true true 
+t= 38s 04:46:48 http=000 ready[pharmago-users-service]=true true 
+t= 45s 04:46:54 http=000 ready[pharmago-users-service]=true true 
+t= 51s 04:47:00 http=000 ready[pharmago-users-service]=true true 
+t= 57s 04:47:02 http=200 ready[pharmago-users-service]=true true 
+t= 59s 04:47:04 http=504 ready[pharmago-users-service]=true true 
+t= 61s 04:47:05 http=200 ready[pharmago-users-service]=true true 
+t= 62s 04:47:07 http=200 ready[pharmago-users-service]=true true 
+t= 64s 04:47:08 http=200 ready[pharmago-users-service]=true true 
+t= 65s 04:47:09 http=200 ready[pharmago-users-service]=true true 
+t= 66s 04:47:11 http=200 ready[pharmago-users-service]=true true 
+t= 68s 04:47:12 http=200 ready[pharmago-users-service]=true true 
+t= 69s 04:47:13 http=200 ready[pharmago-users-service]=true true 
+t= 70s 04:47:15 http=200 ready[pharmago-users-service]=true true 
+t= 72s 04:47:16 http=200 ready[pharmago-users-service]=true true 
+t= 73s 04:47:17 http=200 ready[pharmago-users-service]=true true 
+t= 74s 04:47:19 http=200 ready[pharmago-users-service]=true true 
+t= 76s 04:47:20 http=200 ready[pharmago-users-service]=true true 
+t= 77s 04:47:21 http=200 ready[pharmago-users-service]=true true 
+t= 78s 04:47:23 http=200 ready[pharmago-users-service]=true true 
+t= 80s 04:47:24 http=200 ready[pharmago-users-service]=true true 
+t= 81s 04:47:25 http=200 ready[pharmago-users-service]=true true 
+t= 82s 04:47:27 http=200 ready[pharmago-users-service]=true true 
+t= 84s 04:47:28 http=200 ready[pharmago-users-service]=true true 
+t= 85s 04:47:29 http=200 ready[pharmago-users-service]=true true 
+t= 86s 04:47:31 http=200 ready[pharmago-users-service]=true true 
+t= 88s 04:47:32 http=200 ready[pharmago-users-service]=true true 
+t= 89s 04:47:33 http=200 ready[pharmago-users-service]=true true 
+t= 91s 04:47:35 http=200 ready[pharmago-users-service]=true true 
+t= 92s 04:47:36 http=200 ready[pharmago-users-service]=true true 
+t= 93s 04:47:38 http=200 ready[pharmago-users-service]=true true 
+t= 95s 04:47:39 http=200 ready[pharmago-users-service]=true true 
+t= 96s 04:47:40 http=200 ready[pharmago-users-service]=true true 
+t= 97s 04:47:42 http=200 ready[pharmago-users-service]=true true 
+
+Resumen por fase (antes / durante / después del script):
+  antes : 48
+
+$ kubectl get networkpolicy -n pharmago
+No resources found in pharmago namespace.
+
+Resumen por fase, recalculado (el resumen automático de arriba falló por el formato del tiempo):
+  antes 200: 7
+  despues 200: 28
+  despues 504: 1
+  durante 000: 6
+  durante 200: 5
+  durante 504: 1
+Primer error en t=16s: la NetworkPolicy se aplicó en t≈12 s, así que se notó en ~4 s. Al borrarla (t=57 s) vuelve el 200; queda un 504 suelto en t=59 s y después todo 200.
+Lectura: 000 = curl cortó a los 5 s esperando (el gateway reintenta GET: hasta 3 intentos de 3 s, 9,5 s en total) y 504 = timeout del gateway. El circuit breaker no llegó a abrir porque a 1 request por segundo, con esperas de 5 a 10 s, nunca se juntan las 8 requests en 10 s que necesita (D13). Los pods de users siguieron Ready: Calico permite el tráfico desde el propio nodo (probes del kubelet) y la readiness consulta la BD por una conexión ya abierta del pool, que Calico deja seguir (conexiones establecidas). kubectl get netpol vacío al final.

@@ -1,0 +1,12 @@
+Pod elegido por ram-spike.sh: el primero Ready de pharmago-pharmacy-service (pharmago-pharmacy-service-7467475886-hx45v)
+Consulta Prometheus: container_memory_working_set_bytes{pod="pharmago-pharmacy-service-7467475886-hx45v",id=~"/kubepods/[^/]+/pod[^/]+"} (cAdvisor, nivel pod)
+ANTES   Prometheus: 68.3 MiB | cgroup memory.current: 68.9 MiB
+DURANTE (t=25 s) Prometheus: 219.1 MiB | cgroup memory.current: 220.1 MiB
+DESPUÉS (20 s tras terminar) Prometheus: 68.4 MiB | cgroup memory.current: 69.3 MiB
+
+$ ./ram-spike.sh pharmago-pharmacy-service 150 40
+[inicio] 2026-11-14T04:21:12Z
+Memoria: pharmago-pharmacy-service-7467475886-hx45v retiene 150 MB durante 40 s
+Reinicios de pharmago-pharmacy-service-7467475886-hx45v: 1 -> 1 (último motivo: Completed)
+[fin] 2026-11-14T04:22:04Z
+Nota: el 'último motivo: Completed' corresponde al reinicio previo del contenedor (al prender el cluster), no a este experimento: los reinicios no cambiaron (1 -> 1).
