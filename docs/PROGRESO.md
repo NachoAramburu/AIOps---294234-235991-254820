@@ -618,3 +618,71 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - Todavía no existe `chaos-engineering/EXPERIMENTOS.md`. El postmortem de ejemplo usa un experimento real ya medido: `disconnect.sh pharmago-db 45`, de `docs/evidencia/C17/03-disconnect-db.txt`. Las 64 requests entre 04:48:44 y 04:50:18 fallaron (6 × 500, 4 × 502, 54 × 503) y la recuperación fue automática, 8 s después de que la BD volvió a Ready. Las acciones del postmortem quedan asignadas a B6, B7 y B8.
   - El postmortem deja una lección operativa para la defensa: si se cae la BD, restaurarla y esperar unos 50 s, sin reiniciar los microservicios.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+
+## C13 — Alertas de Grafana como código — 2026-11-14 — Martin Roux (bloque B6)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 4 (Telemetría: al menos 5 alertas en Grafana)
+- **Commit:** `C13-C14: alertas de Grafana como código y logs JSON con trace_id en Kibana` (SHA en `git log --grep "^C13-C14:"`)
+- **Dónde se corrió:** PC de Martin, cluster de 5 nodos con B1 y B3 aplicados (imágenes `1c649b8-dirty`), `minikube tunnel` abierto. El trabajo se cortó a la mitad por un corte de luz y se retomó después; no se perdió nada.
+- **Archivos creados / modificados:** `k8s/configmaps/grafana-alerting.yaml` (nuevo, 10 reglas), `k8s/deployments/ops/grafana-deployment.yaml` (montaje en `/etc/grafana/provisioning/alerting/alerts.yaml`), `k8s/apply-k8s.sh`, `k8s/README-k8s.md`, `docs/alertas.md` (nuevo), `docs/DECISIONES.md` (D54).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: Grafana sin alertas provisionadas; datasource uid "prometheus"; nombres de métricas
+  de docs/evidencia/C12/nombres-metricas.txt; los uid pg-* que nombra docs/plan-incidentes.md (B4).
+
+  $ GET /api/v1/provisioning/alert-rules                      (01)
+    10 reglas, carpeta PharmaGo, grupo pharmago, provenance=file:
+    pg-5xx, pg-latency, pg-latency-anomaly, pg-429, pg-cpu, pg-memory, pg-storage, pg-restarts, pg-replicas, pg-breaker
+  $ cada expr contra GET /api/v1/query de Prometheus          (02)
+    las 10 con status=success (ninguna con error ni nombre inexistente); pg-latency-anomaly y pg-breaker vacías
+    (condición no cumplida); P95 del gateway 612 ms; 5xx 0; 429 0
+  $ GET /api/prometheus/grafana/api/v1/rules (sistema sano)   (03)  las 10 en Normal
+  $ ./load-requests.sh 300 20  (429 x280)                     (04)
+    pg-429: Pending a los 21 s, Firing a los 57 s (30 s de ventana)
+  $ bash verify/test-circuit-breaker.sh                       (05)
+    pg-breaker: Firing a los 32 s para cluster=users-cluster, mientras el gateway respondía 503 circuit_open
+  ```
+- **Criterio de "hecho" de §3 (ítem 4, alertas):** cumplido: 10 alertas de Grafana (la letra pide al menos 5) provisionadas como código, con query, umbral y ventana documentados en `docs/alertas.md`, y dos forzadas hasta Firing en el cluster.
+- **Decisiones tomadas:** D54 (piso de 50 ms en el k-sigma y filtro `job="PharmaGo.ApiGateway"`). Cada regla tiene `severity` alineada con el plan de incidentes y `runbook` con el playbook que nombra el plan.
+- **NO VERIFICADO / riesgos:**
+  - Captura de la pantalla de alertas: no se sacó (no hay forma de guardar la imagen desde la sesión de la IA). Queda para la revisión del integrante, que igual tiene que mirar Grafana, Alerting.
+  - Solo se forzaron `pg-429` y `pg-breaker`, como pide el plan. El resto se valida con los experimentos de B7.
+- **Hallazgos nuevos que cambian el plan:**
+  - Para forzar `pg-429` el plan proponía 120 requests en un minuto, pero el rate limit es por réplica del gateway (2 réplicas: 200 por minuto). Se usó una ráfaga a login (10 por minuto por réplica), con `load-requests.sh 300 20`.
+  - `pg-replicas` no dispara con `disconnect.sh`, porque ese script escala a 0 (las deseadas también bajan). Esa falla la cubren `pg-5xx` y `pg-breaker`. Está en `docs/alertas.md`, y B7 lo tiene que tener en cuenta en los playbooks.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B6)
+
+## C14 — Logs JSON con trace_id y consulta en Kibana — 2026-11-14 — Martin Roux (bloque B6)
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 4 (Telemetría: logs JSON consultables en Kibana)
+- **Commit:** `C13-C14: alertas de Grafana como código y logs JSON con trace_id en Kibana`
+- **Archivos creados / modificados:** `Backend/PharmaGo.ApiGateway/appsettings.json` (formatter JSON, igual que users), `Backend/Instrumentation/CustomMetrics.cs` (sin el `Console.WriteLine`), `Backend/Instrumentation/CorrelationIdMiddlewareExtensions.cs` (`trace_id` y `span_id` de `Activity.Current` en el scope de gateway y servicios), `Backend/PharmaGo.UsersService.Factory/ServiceFactory.cs` (el log de `MigrateDatabase` pasa de `Console.WriteLine` a `ILogger`), `Frontend/nginx.conf` (`log_format json_combined`), `k8s/setup-kibana.sh` (nuevo), `k8s/README-k8s.md`, `docs/logs.md` (nuevo).
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: gateway sin formatter JSON (users y pharmacy sí), Console.WriteLine en
+  CustomMetrics.LoginInvocations, scope sin trace_id, nginx con el formato por defecto.
+
+  $ dotnet build PharmaGo.sln -c Release                      (01)  0 errores
+  $ dotnet test ... --no-build                                 (01)  290/291 (falla Test_GetOneByExpression, como el baseline)
+  $ docker build de gateway, users, pharmacy y ui              (01)  las 4 OK
+  $ ./setup-kibana.sh  (dos veces)                             (02)  "Data view pharmago-logs-* creado." / "ya existe."
+  $ kubectl logs de cada pod, línea por línea con json.loads  (03)
+    gateway 298/298 JSON (291 con trace_id) x2 pods | users 5/5 x2 | pharmacy 8/8 y 5/5 |
+    ui 669/696 y 683/710: las 27 no-JSON son el arranque del contenedor nginx (docker-entrypoint y avisos de inicio)
+  $ _cat/indices/pharmago-logs-*  (2 lecturas)                 (04)  285248 -> 285583 documentos
+  $ kubectl logs fluent-bit (5 pods)                           (04)  0 mapper_parsing_exception; 0 [error] en los últimos 10 min
+  $ login -> trace de Jaeger -> búsqueda en Elasticsearch      (05)
+    traceID 73017f723564cc0f899fc13c59640619: 5 spans (gateway y users, 2 de SQL)
+    Scopes.trace_id en ES -> 3 documentos de 2 servicios: gateway "Proxying to .../api/login",
+    users "Login succeeded ... correlation_id=b0abffeb-...", gateway "Received HTTP/1.1 response 200."
+  ```
+- **Criterio de "hecho" de §3 (ítem 4, logs):** cumplido: logs JSON con `trace_id` y `span_id` en los 3 servicios .NET, la UI también en JSON, y los logs consultables en Kibana (data view creado por script). Se probó que se puede ir de una traza de Jaeger a sus logs.
+- **Decisiones tomadas:** ninguna nueva. El scope del gateway usa el mismo diccionario que el de los servicios (`correlation_id`, `trace_id`, `span_id`).
+- **NO VERIFICADO / riesgos:**
+  - Captura de Kibana con la búsqueda: no se sacó desde la sesión de la IA. Queda para la revisión del integrante (la consulta lista está en `docs/logs.md` y en la evidencia 05).
+  - Las 27 líneas de arranque del contenedor nginx siguen en texto: las escribe el entrypoint de la imagen antes de que nginx lea la configuración.
+- **Hallazgos nuevos que cambian el plan:**
+  - El `Console.WriteLine` de `MigrateDatabase` (agregado en C05) rompía el "todo JSON" de users. Se pasó a `ILogger`.
+  - Los logs de error de YARP tienen las claves `Message` y `message` en `State`. Son JSON válido (Python y Elasticsearch los aceptan), pero `ConvertFrom-Json` de PowerShell los rechaza. Para validar se usó Python.
+  - Después del corte de luz, Fluent Bit tuvo errores de conexión mientras Elasticsearch arrancaba; los reintentos (`Retry_Limit False`) evitaron perder datos.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B6)

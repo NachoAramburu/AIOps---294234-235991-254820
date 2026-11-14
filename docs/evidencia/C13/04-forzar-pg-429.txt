@@ -1,0 +1,26 @@
+Forzar pg-429 con: cd 'Implementacion K8S/Codigo/chaos-engineering' && ./load-requests.sh 300 20   (estado consultado por GET /api/prometheus/grafana/api/v1/rules cada 5 s)
+16:31:45 antes: regla=inactive instancias=Normal  valor=
+16:31:50 t=5s regla=inactive instancias=Normal  valor=
+16:31:55 t=10s regla=inactive instancias=Normal  valor=
+16:32:01 t=16s regla=inactive instancias=Normal  valor=
+16:32:06 t=21s regla=pending instancias=Pending  valor=1e+00
+16:32:11 t=26s regla=pending instancias=Pending  valor=1e+00
+16:32:16 t=31s regla=pending instancias=Pending  valor=1e+00
+16:32:21 t=36s regla=pending instancias=Pending  valor=1e+00
+16:32:26 t=41s regla=pending instancias=Pending  valor=1e+00
+16:32:32 t=47s regla=pending instancias=Pending  valor=1e+00
+16:32:37 t=52s regla=pending instancias=Pending  valor=1e+00
+16:32:42 t=57s regla=firing instancias=Alerting  valor=1e+00
+16:32:47 t=62s regla=firing instancias=Alerting  valor=1e+00
+16:32:52 t=67s regla=firing instancias=Alerting  valor=1e+00
+
+--- Salida del comando
+[inicio] 2026-11-14T19:31:46Z
+Requests: 300 a http://127.0.0.1/api/login con concurrencia 20
+Duración: 11 s
+Respuestas por código HTTP:
+  429 x280
+  404 x20
+[fin] 2026-11-14T19:31:58Z
+
+RESULTADO: pg-429 pasó a Firing a los 57 s de empezar.

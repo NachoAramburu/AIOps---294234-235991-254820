@@ -1,0 +1,15 @@
+$ dotnet build PharmaGo.sln -c Release
+638 Advertencia(s)
+0 Errores
+Tiempo transcurrido 00:00:19.45
+exit=0
+
+$ dotnet test PharnaGo.Test/PharmaGo.Test.csproj -c Release --no-build
+Con error Test_GetOneByExpression [72 ms]
+Con error! - Con error:     1, Superado:   290, Omitido:     0, Total:   291, Duración: 3 s - PharmaGo.Test.dll (net6.0)
+
+$ docker build de las 4 imágenes (con el cluster apagado; build-images.sh después solo las carga)
+pharmago-users-service:1c649b8-dirty exit=0 #23 10.60     0 Error(s)
+pharmago-pharmacy-service:1c649b8-dirty exit=0 #25 11.78     0 Error(s)
+pharmago-api-gateway:1c649b8-dirty exit=0 #16 7.491     0 Error(s)
+pharmago-ui:1c649b8-dirty exit=0 #12 49.81 1 rules skipped due to selector errors: | #12 49.81 2 rules skipped due to selector errors:

@@ -1,0 +1,80 @@
+=== Validación final (después de pasar el log de MigrateDatabase de Console.WriteLine a ILogger) ===
+Validación: kubectl logs de cada pod desde que arrancó; cada línea se parsea con json.loads de Python (parser estricto).
+
+pharmago-api-gateway-85f5bb859c-mv5r2         líneas= 298 JSON= 298 no-JSON=  0 con trace_id=291
+pharmago-api-gateway-85f5bb859c-pj2v2         líneas= 298 JSON= 298 no-JSON=  0 con trace_id=291
+pharmago-users-service-768bd87696-6p4m5       líneas=   5 JSON=   5 no-JSON=  0 con trace_id=0
+pharmago-users-service-768bd87696-jcgpq       líneas=   5 JSON=   5 no-JSON=  0 con trace_id=0
+pharmago-pharmacy-service-78b6c6865b-8vg69    líneas=   8 JSON=   8 no-JSON=  0 con trace_id=4
+pharmago-pharmacy-service-78b6c6865b-z5t77    líneas=   5 JSON=   5 no-JSON=  0 con trace_id=1
+pharmago-ui-864ccddfdd-4sczv                  líneas= 696 JSON= 669 no-JSON= 27 con trace_id=0
+    no-JSON: /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+    no-JSON: /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+    no-JSON: 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+    no-JSON: 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+    no-JSON: /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+    no-JSON: /docker-entrypoint.sh: Configuration complete; ready for start up
+    no-JSON: 2026/11/14 19:28:09 [notice] 1#1: using the "epoll" event method
+    no-JSON: 2026/11/14 19:28:09 [notice] 1#1: nginx/1.31.5
+    no-JSON: 2026/11/14 19:28:09 [notice] 1#1: built by gcc 15.2.0 (Alpine 15.2.0)
+pharmago-ui-864ccddfdd-qp9vk                  líneas= 710 JSON= 683 no-JSON= 27 con trace_id=0
+    no-JSON: /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+    no-JSON: /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+    no-JSON: 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+    no-JSON: 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+    no-JSON: /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+    no-JSON: /docker-entrypoint.sh: Configuration complete; ready for start up
+    no-JSON: 2026/11/14 19:27:56 [notice] 1#1: using the "epoll" event method
+    no-JSON: 2026/11/14 19:27:56 [notice] 1#1: nginx/1.31.5
+    no-JSON: 2026/11/14 19:27:56 [notice] 1#1: built by gcc 15.2.0 (Alpine 15.2.0)
+
+Ejemplo de línea JSON de users con el log de MigrateDatabase (antes era Console.WriteLine):
+{"Timestamp":"2026-11-14T19:40:04.425Z","EventId":0,"LogLevel":"Information","Category":"MigrateDatabase","Message":"Migraci\u00F3n aplicada (intento 1)","State":{"Message":"Migraci\u00F3n aplicada (intento 1)","Attempt":1,"{OriginalFormat}":"Migraci\u00F3n ap
+
+
+=== Primera validación (antes del arreglo; con ConvertFrom-Json de PowerShell) ===
+Las 2 líneas "no-JSON" del gateway eran JSON válido: PowerShell no acepta las claves Message y message juntas en State (logs de error de YARP de la prueba del breaker). La línea no-JSON de users era el Console.WriteLine de MigrateDatabase (C05), corregido.
+Tráfico previo: 45 s a 1 request/s por el Ingress (login con admin del seed, /api/drug, /api/roles y /).
+Validación: kubectl logs de cada pod desde que arrancó; cada línea se parsea con ConvertFrom-Json.
+
+pharmago-api-gateway-85f5bb859c-mv5r2         líneas= 280 JSON= 278 no-JSON=  2 con trace_id=271
+    no-JSON: {"Timestamp":"2026-11-14T19:33:18.977Z","EventId":48,"LogLevel":"Information","Category":"Yarp.ReverseProxy.Forwarder.HttpForwarder","Message":"Reques
+    no-JSON: {"Timestamp":"2026-11-14T19:33:20.082Z","EventId":48,"LogLevel":"Information","Category":"Yarp.ReverseProxy.Forwarder.HttpForwarder","Message":"Reques
+pharmago-api-gateway-85f5bb859c-pj2v2         líneas= 276 JSON= 274 no-JSON=  2 con trace_id=267
+    no-JSON: {"Timestamp":"2026-11-14T19:33:17.924Z","EventId":48,"LogLevel":"Information","Category":"Yarp.ReverseProxy.Forwarder.HttpForwarder","Message":"Reques
+    no-JSON: {"Timestamp":"2026-11-14T19:33:21.082Z","EventId":48,"LogLevel":"Information","Category":"Yarp.ReverseProxy.Forwarder.HttpForwarder","Message":"Reques
+pharmago-users-service-dc4c8cbdc-658tb        líneas=   8 JSON=   7 no-JSON=  1 con trace_id=3
+    no-JSON: MigrateDatabase: migración aplicada (intento 1).
+pharmago-users-service-dc4c8cbdc-wvhs7        líneas=   7 JSON=   6 no-JSON=  1 con trace_id=2
+    no-JSON: MigrateDatabase: migración aplicada (intento 1).
+pharmago-pharmacy-service-78b6c6865b-8vg69    líneas=   8 JSON=   8 no-JSON=  0 con trace_id=4
+pharmago-pharmacy-service-78b6c6865b-z5t77    líneas=   5 JSON=   5 no-JSON=  0 con trace_id=1
+pharmago-ui-864ccddfdd-4sczv                  líneas= 408 JSON= 381 no-JSON= 27 con trace_id=0
+    no-JSON: /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+    no-JSON: /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+    no-JSON: 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+    no-JSON: 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+    no-JSON: /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+pharmago-ui-864ccddfdd-qp9vk                  líneas= 420 JSON= 393 no-JSON= 27 con trace_id=0
+    no-JSON: /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+    no-JSON: /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+    no-JSON: 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+    no-JSON: 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+    no-JSON: /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+    no-JSON: /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+
+Ejemplo de línea JSON del gateway con scope (trace_id y span_id):
+  {"Timestamp":"2026-11-14T19:35:22.576Z","EventId":56,"LogLevel":"Information","Category":"Yarp.ReverseProxy.Forwarder.HttpForwarder","Message":"Received HTTP/1.1 response 200.","State":{"Message":"Received HTTP/1.1 response 200.","version":"1.1","statusCode":200,"{OriginalFormat}":"Received HTTP/{version} response {statusCode}."},"Scopes":[{"Message":"SpanId:fc5fb19e909f611f, TraceId:e28eaf42c76b81b20e269b02a493c812, ParentId:0000000000000000","SpanId":"fc5fb19e909f611f","TraceId":"e28eaf42c76b81b20e269b02a493c812","ParentId":"0000000000000000"},{"Message":"ConnectionId:0HNQ2GLM03SAR","ConnectionId":"0HNQ2GLM03SAR"},{"Message":"RequestPath:/api/roles RequestId:0HNQ2GLM03SAR:00000003","RequestId":"0HNQ2GLM03SAR:00000003","RequestPath":"/api/roles"},{"Message":"System.Collections.Generic.Dictionary\u00602[System.String,System.Object]","correlation_id":"b02a7fb3-dc4c-433a-8902-1d74f80ddd90","trace_id":"e28eaf42c76b81b20e269b02a493c812","span_id":"fc5fb19e909f611f"}]}
+Ejemplo de línea JSON de la UI (nginx):
+  {"time":"2026-11-14T19:35:26+00:00","remote_addr":"192.168.49.2","request":"GET / HTTP/1.1","status":200,"body_bytes_sent":8646,"request_time":0.000,"http_x_correlation_id":""}

@@ -1,0 +1,314 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerting
+  namespace: pharmago
+data:
+  alerts.yaml: |
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: pharmago
+        folder: PharmaGo
+        interval: 10s
+        rules:
+          - uid: pg-5xx
+            title: "pg-5xx: errores 5xx en el gateway"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: (sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway",status_code=~"5.."}[1m])) or vector(0)) / sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway"}[1m]))
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [0.05]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 30s
+            labels: {severity: sev2, signal: errores}
+            annotations:
+              summary: "Más del 5 % de las respuestas del gateway son 5xx (valor: {{ humanizePercentage $values.B.Value }})."
+              runbook: docs/playbooks/red.md
+          - uid: pg-latency
+            title: "pg-latency: P95 del gateway mayor a 1 s"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: histogram_quantile(0.95, sum by (le) (rate(pharmago_http_request_duration_milliseconds_bucket{job="PharmaGo.ApiGateway"}[1m])))
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [1000]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 1m
+            labels: {severity: sev2, signal: latencia}
+            annotations:
+              summary: "El P95 de latencia del gateway supera 1000 ms (valor: {{ printf \"%.0f\" $values.B.Value }} ms)."
+              runbook: docs/plan-incidentes.md
+          - uid: pg-latency-anomaly
+            title: "pg-latency-anomaly: latencia fuera de 3 desvíos (k-sigma)"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 2400, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: (abs((sum(rate(pharmago_http_request_duration_milliseconds_sum{job="PharmaGo.ApiGateway"}[1m])) / sum(rate(pharmago_http_request_duration_milliseconds_count{job="PharmaGo.ApiGateway"}[1m]))) - avg_over_time((sum(rate(pharmago_http_request_duration_milliseconds_sum{job="PharmaGo.ApiGateway"}[1m])) / sum(rate(pharmago_http_request_duration_milliseconds_count{job="PharmaGo.ApiGateway"}[1m])))[30m:30s])) > 50) / stddev_over_time((sum(rate(pharmago_http_request_duration_milliseconds_sum{job="PharmaGo.ApiGateway"}[1m])) / sum(rate(pharmago_http_request_duration_milliseconds_count{job="PharmaGo.ApiGateway"}[1m])))[30m:30s])
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [3]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 1m
+            labels: {severity: sev3, signal: latencia}
+            annotations:
+              summary: "La latencia media del gateway se alejó {{ printf \"%.1f\" $values.B.Value }} desvíos de su promedio de los últimos 30 min."
+              runbook: docs/plan-incidentes.md
+          - uid: pg-429
+            title: "pg-429: el rate limit está cortando requests"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: sum(rate(pharmago_http_requests_total{job="PharmaGo.ApiGateway",status_code="429"}[1m])) or vector(0)
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [1]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 30s
+            labels: {severity: sev3, signal: trafico}
+            annotations:
+              summary: "El gateway devuelve más de 1 respuesta 429 por segundo (valor: {{ printf \"%.1f\" $values.B.Value }}/s)."
+              runbook: docs/playbooks/requests.md
+          - uid: pg-cpu
+            title: "pg-cpu: CPU del pod sobre el 80 % de su límite"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: max by (k8s_pod_name) (k8s_pod_cpu_limit_utilization_ratio{k8s_namespace_name="pharmago"})
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [0.8]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 30s
+            labels: {severity: sev2, signal: saturacion}
+            annotations:
+              summary: "El pod {{ $labels.k8s_pod_name }} usa más del 80 % de su límite de CPU (valor: {{ humanizePercentage $values.B.Value }})."
+              runbook: docs/playbooks/cpu.md
+          - uid: pg-memory
+            title: "pg-memory: memoria del pod sobre el 85 % de su límite"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: max by (k8s_pod_name) (k8s_pod_memory_limit_utilization_ratio{k8s_namespace_name="pharmago"})
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [0.85]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 30s
+            labels: {severity: sev2, signal: saturacion}
+            annotations:
+              summary: "El pod {{ $labels.k8s_pod_name }} usa más del 85 % de su límite de memoria (valor: {{ humanizePercentage $values.B.Value }})."
+              runbook: docs/playbooks/memoria.md
+          - uid: pg-storage
+            title: "pg-storage: almacenamiento del pod sobre 300 MiB"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: max by (k8s_pod_name) (k8s_pod_filesystem_usage_bytes{k8s_namespace_name="pharmago"}) / 1048576
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [300]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 30s
+            labels: {severity: sev3, signal: saturacion}
+            annotations:
+              summary: "El pod {{ $labels.k8s_pod_name }} usa {{ printf \"%.0f\" $values.B.Value }} MiB de almacenamiento efímero (límite 512 MiB)."
+              runbook: docs/playbooks/storage.md
+          - uid: pg-restarts
+            title: "pg-restarts: un contenedor se reinició"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: sum by (k8s_pod_name, k8s_container_name) (increase(k8s_container_restarts{k8s_namespace_name="pharmago"}[2m]))
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [0]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 0s
+            labels: {severity: sev3, signal: errores}
+            annotations:
+              summary: "El contenedor {{ $labels.k8s_container_name }} del pod {{ $labels.k8s_pod_name }} se reinició en los últimos 2 min."
+              runbook: docs/playbooks/pod-caido.md
+          - uid: pg-replicas
+            title: "pg-replicas: réplicas disponibles menos que las deseadas"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: max by (k8s_deployment_name) (k8s_deployment_desired{k8s_namespace_name="pharmago"} - k8s_deployment_available{k8s_namespace_name="pharmago"})
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [0]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 30s
+            labels: {severity: sev2, signal: disponibilidad}
+            annotations:
+              summary: "Al Deployment {{ $labels.k8s_deployment_name }} le faltan {{ printf \"%.0f\" $values.B.Value }} réplica(s) disponibles."
+              runbook: docs/playbooks/pod-caido.md
+          - uid: pg-breaker
+            title: "pg-breaker: circuit breaker abierto en el gateway"
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange: {from: 600, to: 0}
+                datasourceUid: prometheus
+                model:
+                  refId: A
+                  instant: true
+                  range: false
+                  expr: max by (cluster) (pharmago_circuit_breaker_state == 1)
+              - refId: B
+                datasourceUid: __expr__
+                model: {refId: B, type: reduce, expression: A, reducer: last}
+              - refId: C
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: threshold
+                  expression: B
+                  conditions:
+                    - evaluator: {type: gt, params: [0]}
+            noDataState: OK
+            execErrState: Alerting
+            for: 0s
+            labels: {severity: sev1, signal: errores}
+            annotations:
+              summary: "El circuit breaker del gateway está abierto para {{ $labels.cluster }}: ese servicio está fallando y el gateway responde 503."
+              runbook: docs/playbooks/red.md

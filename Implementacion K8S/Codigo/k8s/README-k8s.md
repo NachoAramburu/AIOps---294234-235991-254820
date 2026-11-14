@@ -12,6 +12,7 @@ cd "Implementacion K8S/Codigo/k8s"
 ./build-images.sh    # construye las imágenes y las carga en todos los nodos
 ./apply-k8s.sh       # aplica namespace, secrets, configmaps, volúmenes y deployments
 ./seed-db.sh         # carga Backend/seed-data.sql (roles y usuarios de prueba)
+./setup-kibana.sh    # crea el data view pharmago-logs-* en Kibana (se puede correr varias veces)
 ```
 
 `seed-db.sh` es imprescindible: sin él no hay roles ni usuarios y no se puede iniciar sesión. Se puede correr más de una vez.
@@ -408,7 +409,8 @@ kubectl delete -f namespace.yaml
 
 ## Notas Importantes
 
-1. **Logs**: Fluent Bit (DaemonSet) recolecta los logs de los pods y los envía directamente a Elasticsearch con índice `pharmago-logs-*`. Kibana se usa para visualizarlos.
+1. **Logs**: los 4 microservicios escriben JSON a la consola (los 3 .NET con `trace_id` y `span_id` en `Scopes`, y nginx con `log_format json_combined`). Fluent Bit (DaemonSet) los recolecta y los envía a Elasticsearch, al índice `pharmago-logs-*`. Kibana los consulta con el data view que crea `./setup-kibana.sh`. Consultas listas en `docs/logs.md`.
+2. **Alertas**: las 10 reglas de Grafana se provisionan como código desde `configmaps/grafana-alerting.yaml` (carpeta "PharmaGo" en Grafana, Alerting). Detalle en `docs/alertas.md`.
 
 2. **PersistentVolumes**: Los PVs usan `hostPath` que es adecuado para desarrollo pero no para producción. En producción, usa storage classes apropiadas.
 

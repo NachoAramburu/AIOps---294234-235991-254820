@@ -1,0 +1,12 @@
+$ GET /api/v1/provisioning/alert-rules   (Grafana, port-forward 13000:3000)
+Reglas: 10
+pg-429               folder=ag4aoiddbhqm8a grupo=pharmago for=30s severity=sev3 provenance=file | pg-429: el rate limit está cortando requests
+pg-5xx               folder=ag4aoiddbhqm8a grupo=pharmago for=30s severity=sev2 provenance=file | pg-5xx: errores 5xx en el gateway
+pg-breaker           folder=ag4aoiddbhqm8a grupo=pharmago for=0s severity=sev1 provenance=file | pg-breaker: circuit breaker abierto en el gateway
+pg-cpu               folder=ag4aoiddbhqm8a grupo=pharmago for=30s severity=sev2 provenance=file | pg-cpu: CPU del pod sobre el 80 % de su límite
+pg-latency           folder=ag4aoiddbhqm8a grupo=pharmago for=1m severity=sev2 provenance=file | pg-latency: P95 del gateway mayor a 1 s
+pg-latency-anomaly   folder=ag4aoiddbhqm8a grupo=pharmago for=1m severity=sev3 provenance=file | pg-latency-anomaly: latencia fuera de 3 desvíos (k-sigma)
+pg-memory            folder=ag4aoiddbhqm8a grupo=pharmago for=30s severity=sev2 provenance=file | pg-memory: memoria del pod sobre el 85 % de su límite
+pg-replicas          folder=ag4aoiddbhqm8a grupo=pharmago for=30s severity=sev2 provenance=file | pg-replicas: réplicas disponibles menos que las deseadas
+pg-restarts          folder=ag4aoiddbhqm8a grupo=pharmago for=0s severity=sev3 provenance=file | pg-restarts: un contenedor se reinició
+pg-storage           folder=ag4aoiddbhqm8a grupo=pharmago for=30s severity=sev3 provenance=file | pg-storage: almacenamiento del pod sobre 300 MiB

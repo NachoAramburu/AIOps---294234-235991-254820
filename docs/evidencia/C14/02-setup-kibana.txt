@@ -1,0 +1,13 @@
+$ ./setup-kibana.sh   (primera vez)
+Esperando a Kibana...
+Data view pharmago-logs-* creado.
+"title":"pharmago-logs-*"
+Kibana: ./port-forward.sh y abrí http://127.0.0.1:5601 (Discover, data view "PharmaGo logs").
+exit=0
+
+$ ./setup-kibana.sh   (segunda vez: idempotente)
+Esperando a Kibana...
+El data view pharmago-logs-* ya existe.
+"title":"pharmago-logs-*"
+Kibana: ./port-forward.sh y abrí http://127.0.0.1:5601 (Discover, data view "PharmaGo logs").
+exit=0

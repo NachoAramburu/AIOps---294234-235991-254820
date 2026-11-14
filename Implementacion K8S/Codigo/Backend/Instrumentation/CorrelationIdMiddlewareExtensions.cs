@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,11 @@ public static class CorrelationIdMiddlewareExtensions
                 : header.Trim();
             context.Items[HttpContextItemKey] = correlationId;
             context.Response.Headers["X-Correlation-ID"] = correlationId;
-            await next();
+
+            var loggerFactory = context.RequestServices.GetRequiredService<ILoggerFactory>();
+            var log = loggerFactory.CreateLogger("Request");
+            using (log.BeginScope(BuildScope(correlationId)))
+                await next();
         });
     }
 
@@ -41,8 +46,20 @@ public static class CorrelationIdMiddlewareExtensions
 
             var loggerFactory = context.RequestServices.GetRequiredService<ILoggerFactory>();
             var log = loggerFactory.CreateLogger("Request");
-            using (log.BeginScope(new Dictionary<string, object> { ["correlation_id"] = correlationId }))
+            using (log.BeginScope(BuildScope(correlationId)))
                 await next();
         });
+    }
+
+    private static Dictionary<string, object> BuildScope(string correlationId)
+    {
+        var scope = new Dictionary<string, object> { ["correlation_id"] = correlationId };
+        var activity = Activity.Current;
+        if (activity != null)
+        {
+            scope["trace_id"] = activity.TraceId.ToString();
+            scope["span_id"] = activity.SpanId.ToString();
+        }
+        return scope;
     }
 }

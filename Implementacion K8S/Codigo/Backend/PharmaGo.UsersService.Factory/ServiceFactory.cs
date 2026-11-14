@@ -9,6 +9,7 @@ using PharmaGo.Domain.Entities;
 using PharmaGo.UsersService.IBusinessLogic;
 using PharmaGo.IDataAccess;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using InstrumentationInterface;
 using Instrumentation;
 
@@ -63,6 +64,7 @@ namespace PharmaGo.UsersService.Factory
         public static IHost MigrateDatabase(this IHost host)
         {
             const int maxAttempts = 30;
+            var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("MigrateDatabase");
             for (var attempt = 1; ; attempt++)
             {
                 try
@@ -72,13 +74,13 @@ namespace PharmaGo.UsersService.Factory
                         var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
                         dbContext.Database.Migrate();
                     }
-                    Console.WriteLine($"MigrateDatabase: migración aplicada (intento {attempt}).");
+                    logger.LogInformation("Migración aplicada (intento {Attempt})", attempt);
                     return host;
                 }
                 catch (Exception ex) when (attempt < maxAttempts)
                 {
                     var delay = TimeSpan.FromSeconds(Math.Min(attempt, 5));
-                    Console.WriteLine($"MigrateDatabase: intento {attempt}/{maxAttempts} falló ({ex.GetType().Name}: {ex.Message}). Reintentando en {delay.TotalSeconds} s.");
+                    logger.LogWarning("Intento {Attempt}/{MaxAttempts} de migración falló ({ErrorType}: {ErrorMessage}). Reintentando en {DelaySeconds} s", attempt, maxAttempts, ex.GetType().Name, ex.Message, delay.TotalSeconds);
                     Thread.Sleep(delay);
                 }
             }

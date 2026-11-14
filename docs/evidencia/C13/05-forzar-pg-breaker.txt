@@ -1,0 +1,52 @@
+Forzar pg-breaker con: cd 'Implementacion K8S/Codigo/k8s' && bash verify/test-circuit-breaker.sh   (estado consultado por GET /api/prometheus/grafana/api/v1/rules cada 5 s)
+16:33:09 antes: regla=inactive instancias=Normal (NoData)  valor=
+16:33:14 t=5s regla=inactive instancias=Normal (NoData)  valor=
+16:33:19 t=10s regla=inactive instancias=Normal (NoData)  valor=
+16:33:25 t=16s regla=inactive instancias=Normal (NoData)  valor=
+16:33:30 t=21s regla=inactive instancias=Normal (NoData)  valor=
+16:33:35 t=26s regla=inactive instancias=Normal (NoData)  valor=
+16:33:41 t=32s regla=firing instancias=Alerting,Normal (NoData) [users-cluster] valor=
+16:33:47 t=38s regla=firing instancias=Alerting [users-cluster] valor=1e+00
+16:33:52 t=43s regla=firing instancias=Alerting [users-cluster] valor=1e+00
+16:33:57 t=48s regla=firing instancias=Alerting [users-cluster] valor=1e+00
+
+--- Salida del comando
+19:33:10 Escalando pharmago-users-service a 0 (estaba en 2)
+19:33:17 GET http://127.0.0.1/api/roles, 2 por segundo durante 15 s:
+502 502 502 502 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 
+Restaurando pharmago-users-service a 2 réplicas...
+19:33:53 Esperando que http://127.0.0.1/api/roles vuelva a 200 (1 pedido por segundo, hasta 90 s):
+200 
+19:33:54 Volvió a 200 a los 1 s de restaurar.
+Logs del gateway (transiciones del breaker):
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=closed
+  circuit_breaker cluster=users-cluster state=closed
+OK: el circuito se abrió (503 circuit_open) y el servicio se recuperó solo.
+
+RESULTADO: pg-breaker pasó a Firing a los 32 s de empezar.

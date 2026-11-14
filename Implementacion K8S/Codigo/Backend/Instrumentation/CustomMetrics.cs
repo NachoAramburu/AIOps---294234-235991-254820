@@ -72,7 +72,6 @@ namespace Instrumentation
 
         public void LoginInvocations(long value = 1)
         {
-            Console.WriteLine("Logging invocation");
             _loginInvocationsCounter.Add(value);
         }
 

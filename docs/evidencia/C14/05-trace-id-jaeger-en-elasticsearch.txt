@@ -1,0 +1,14 @@
+1. POST http://127.0.0.1/api/login (admin del seed) -> HTTP 200 | X-Correlation-ID: b0abffeb-f5e6-49e4-9a47-c0d47f176727
+2. Jaeger GET /api/traces?service=PharmaGo.ApiGateway (último login): traceID=73017f723564cc0f899fc13c59640619 | 5 spans | servicios: PharmaGo.ApiGateway, PharmaGo.UsersService
+     [PharmaGo.ApiGateway] POST /api/login/{**catch-all}
+     [PharmaGo.ApiGateway] POST
+     [PharmaGo.UsersService] POST api/Login
+     [PharmaGo.UsersService] PharmaDb
+     [PharmaGo.UsersService] PharmaDb
+3. Elasticsearch POST pharmago-logs-*/_search {query: match Scopes.trace_id = 73017f723564cc0f899fc13c59640619} -> 3 documento(s)
+     11/14/2026 19:42:41 | pharmago-api-gateway | Information | Yarp.ReverseProxy.Forwarder.HttpForwarder | Proxying to http://pharmago-users-service/api/login HTTP/2 RequestVersionOrLower no-streaming
+     11/14/2026 19:42:42 | pharmago-users-service | Information | Instrumentation.StructuredLogger | Login succeeded pharma_biz=login_success EVTLGOK correlation_id=b0abffeb-f5e6-49e4-9a47-c0d47f176727
+     11/14/2026 19:42:42 | pharmago-api-gateway | Information | Yarp.ReverseProxy.Forwarder.HttpForwarder | Received HTTP/1.1 response 200.
+   Servicios distintos con ese trace_id: 2 (pharmago-api-gateway, pharmago-users-service)
+
+Consulta equivalente en Kibana (Discover, data view PharmaGo logs): Scopes.trace_id : "73017f723564cc0f899fc13c59640619"

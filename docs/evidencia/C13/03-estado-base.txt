@@ -1,0 +1,11 @@
+Estado de las 10 reglas con el sistema sano (antes de forzar alertas):
+pg-429               estado=inactive  Normal
+pg-5xx               estado=pending   Pending
+pg-breaker           estado=inactive  Normal (NoData)
+pg-cpu               estado=inactive  (todas las instancias Normal)
+pg-latency           estado=pending   Pending
+pg-latency-anomaly   estado=inactive  Normal (NoData)
+pg-memory            estado=inactive  (todas las instancias Normal)
+pg-replicas          estado=inactive  (todas las instancias Normal)
+pg-restarts          estado=inactive  (todas las instancias Normal)
+pg-storage           estado=inactive  (todas las instancias Normal)

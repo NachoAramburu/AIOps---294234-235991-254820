@@ -70,6 +70,7 @@ kubectl apply -f configmaps/otel-agent-config.yaml
 kubectl apply -f configmaps/grafana-provisioning.yaml
 kubectl apply -f configmaps/grafana-dashboards.yaml
 kubectl apply -f configmaps/grafana-dashboard-infra.yaml
+kubectl apply -f configmaps/grafana-alerting.yaml
 kubectl apply -f configmaps/fluent-bit-config.yaml
 
 echo ""

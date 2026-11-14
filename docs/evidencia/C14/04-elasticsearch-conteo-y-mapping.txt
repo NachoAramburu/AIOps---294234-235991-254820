@@ -1,0 +1,38 @@
+$ curl elasticsearch:9200/_cat/indices/pharmago-logs-*?h=index,docs.count   (dos lecturas con 30 s de tráfico entre medio)
+lectura 1 (16:41:24):
+index                    docs.count
+pharmago-logs-2026.11.10      30291
+pharmago-logs-2026.11.14     285248
+pharmago-logs-2026.11.11       5808
+pharmago-logs-2026.11.12      82818
+lectura 2 (16:42:03):
+index                    docs.count
+pharmago-logs-2026.11.10      30291
+pharmago-logs-2026.11.14     285583
+pharmago-logs-2026.11.11       5808
+pharmago-logs-2026.11.12      82818
+
+$ kubectl logs de los 5 pods de fluent-bit | grep -c -i "mapper_parsing_exception|error"
+  fluent-bit-fmk9m: mapper_parsing_exception=0 | líneas [error]/[warn]=328
+     [2026/11/14 19:24:50] [error] [/src/fluent-bit/plugins/in_tail/tail_fs_inotify.c:147 errno=2] No such file or directory
+     [2026/11/14 19:24:50] [error] [input:tail:tail.0] inode=2993341 cannot register file /var/lib/docker/containers/32accdd634325d606fdef7f0e16a69c16f3c8c38f8f82300e3de588fffd60b78/32accdd634325d606fdef7f
+  fluent-bit-kkgdg: mapper_parsing_exception=0 | líneas [error]/[warn]=443
+     [2026/11/14 19:24:50] [error] [net] TCP connection failed: elasticsearch:9200 (Connection refused)
+     [2026/11/14 19:24:51] [error] [net] TCP connection failed: elasticsearch:9200 (Connection refused)
+  fluent-bit-p8bqc: mapper_parsing_exception=0 | líneas [error]/[warn]=481
+     [2026/11/14 19:25:02] [error] [/src/fluent-bit/plugins/in_tail/tail_fs_inotify.c:147 errno=2] No such file or directory
+     [2026/11/14 19:25:02] [error] [input:tail:tail.0] inode=3344748 cannot register file /var/lib/docker/containers/606f29e8ad249339a7fc037ff9e38923cedcea1ed9a565602e064c3a1658099a/606f29e8ad249339a7fc037
+  fluent-bit-ptl5s: mapper_parsing_exception=0 | líneas [error]/[warn]=2759
+     [2026/11/14 19:22:09] [error] [net] TCP connection failed: elasticsearch:9200 (Connection refused)
+     [2026/11/14 19:22:10] [error] [net] TCP connection failed: elasticsearch:9200 (Connection refused)
+  fluent-bit-qszmk: mapper_parsing_exception=0 | líneas [error]/[warn]=377
+     [2026/11/14 19:25:20] [error] [net] TCP connection failed: elasticsearch:9200 (Connection refused)
+     [2026/11/14 19:25:21] [error] [net] TCP connection failed: elasticsearch:9200 (Connection refused)
+
+$ kubectl logs <fluent-bit> --since=10m | grep "[error]"   (después del arranque del cluster)
+  fluent-bit-fmk9m: [error] en los últimos 10 min = 0 | mapper_parsing_exception = 0
+  fluent-bit-kkgdg: [error] en los últimos 10 min = 0 | mapper_parsing_exception = 0
+  fluent-bit-p8bqc: [error] en los últimos 10 min = 0 | mapper_parsing_exception = 0
+  fluent-bit-ptl5s: [error] en los últimos 10 min = 0 | mapper_parsing_exception = 0
+  fluent-bit-qszmk: [error] en los últimos 10 min = 0 | mapper_parsing_exception = 0
+Lectura: los [error] de arriba son del arranque del cluster tras el corte de luz (Elasticsearch todavía no aceptaba conexiones: "Connection refused", y archivos de contenedores viejos que ya no existen). Fluent Bit reintenta (Retry_Limit False) y no perdió datos: el conteo del índice sigue creciendo.
