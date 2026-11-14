@@ -1,58 +1,53 @@
 #!/bin/bash
-# Script para construir y cargar imágenes Docker en Minikube (multi-nodo)
-# Funciona en Linux y Mac
-# Uso: ./build-images.sh
+# Construye las 4 imágenes propias y las carga en todos los nodos de Minikube.
+# Uso: ./build-images.sh [tag]
+#   Sin tag usa el SHA corto de git del commit actual (D21), con sufijo -dirty si hay cambios sin commitear.
+#   apply-k8s.sh y deploy.sh usan el mismo tag.
 
 set -e
 export MINIKUBE_IN_STYLE=false   # salida de minikube en texto plano, sin emojis
 
-echo "=== Construyendo y cargando imágenes Docker en Minikube ==="
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CODE_DIR="$(dirname "$SCRIPT_DIR")"
 
-# Verificar que docker está disponible
+image_tag() {
+    local sha
+    sha=$(git -C "$SCRIPT_DIR" rev-parse --short HEAD)
+    if git -C "$SCRIPT_DIR" diff --quiet HEAD --; then echo "$sha"; else echo "${sha}-dirty"; fi
+}
+TAG="${1:-$(image_tag)}"
+
+echo "=== Construyendo y cargando imágenes en Minikube (tag: ${TAG}) ==="
+
 if ! command -v docker &> /dev/null; then
     echo "Error: Docker no está instalado o no está en el PATH"
     exit 1
 fi
-
-# Verificar que minikube está corriendo
 if ! minikube status &> /dev/null; then
     echo "Error: Minikube no está corriendo. Ejecuta: ./cluster-up.sh"
     exit 1
 fi
 
-# Obtener el directorio base (donde está este script)
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-CODE_DIR="$(dirname "$SCRIPT_DIR")"
+build() {
+    local image="$1" dockerfile="$2" context="$3"
+    echo ""
+    echo "  - ${image}:${TAG}"
+    docker build -f "$dockerfile" -t "${image}:${TAG}" "$context"
+    minikube image load "${image}:${TAG}"
+}
 
-echo ""
-echo "Construyendo imágenes de backend..."
 cd "$CODE_DIR/Backend"
+build pharmago-users-service PharmaGo.UsersService/Dockerfile .
+build pharmago-pharmacy-service PharmaGo.PharmacyService/Dockerfile .
+build pharmago-api-gateway PharmaGo.ApiGateway/Dockerfile .
 
-echo "  - pharmago-users-service..."
-docker build -f PharmaGo.UsersService/Dockerfile -t pharmago-users-service:latest .
-minikube image load pharmago-users-service:latest
-
-echo "  - pharmago-pharmacy-service..."
-docker build -f PharmaGo.PharmacyService/Dockerfile -t pharmago-pharmacy-service:latest .
-minikube image load pharmago-pharmacy-service:latest
-
-echo "  - pharmago-api-gateway..."
-docker build -f PharmaGo.ApiGateway/Dockerfile -t pharmago-api-gateway:latest .
-minikube image load pharmago-api-gateway:latest
-
-echo ""
-echo "Construyendo imagen de frontend..."
 cd "$CODE_DIR/Frontend"
-
-echo "  - pharmago-ui..."
-docker build -f Dockerfile -t pharmago-ui:latest .
-minikube image load pharmago-ui:latest
+build pharmago-ui Dockerfile .
 
 echo ""
-echo "=== Imágenes construidas y cargadas exitosamente ==="
+echo "=== Imágenes construidas y cargadas ==="
+minikube image ls | grep "pharmago-.*:${TAG}$" || true
 echo ""
-echo "Verificando imágenes en Minikube..."
-minikube image ls | grep pharmago
+echo "Siguiente paso: ./apply-k8s.sh ${TAG}   (primera vez)   o   ./deploy.sh ${TAG}   (actualizar sin caídas)"
 
 cd "$SCRIPT_DIR"
-

@@ -5,6 +5,15 @@ metadata:
   namespace: pharmago
 spec:
   replicas: 2
+  # Despliegue seguro (C08, D20): el pod nuevo tiene que estar listo 5 s antes de apagar uno viejo,
+  # así la capacidad nunca baja durante un rollout.
+  revisionHistoryLimit: 5
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
     matchLabels:
       app: pharmago-pharmacy-service
@@ -31,10 +40,18 @@ spec:
               - key: app
                 operator: In
                 values: [pharmago-api-gateway, pharmago-users-service, pharmago-ui]
+      terminationGracePeriodSeconds: 30
       containers:
       - name: pharmago-pharmacy-service
-        image: pharmago-pharmacy-service:latest
+        # IMAGE_TAG lo reemplazan apply-k8s.sh y deploy.sh por el SHA corto de git (D21).
+        image: pharmago-pharmacy-service:IMAGE_TAG
         imagePullPolicy: Never
+        # preStop: espera 5 s antes de apagar, para que el pod salga del Service y del balanceo
+        # antes de dejar de atender. Así no se cortan requests en vuelo (C08).
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 5"]
         ports:
         - containerPort: 80
         env:
@@ -58,9 +75,11 @@ spec:
         # Recursos reducidos para nodos ~5GB (proyecto docente)
         resources:
           requests:
+            ephemeral-storage: "64Mi"
             memory: "128Mi"
             cpu: "100m"
           limits:
+            ephemeral-storage: "512Mi"
             memory: "384Mi"
             cpu: "500m"
         # Probes rápidas (D12): la readiness saca de servicio a un pod enfermo en ~4 s (2 x 2 s)

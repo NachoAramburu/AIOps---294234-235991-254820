@@ -1,0 +1,27 @@
+Verificación local de los scripts de C09 (esta PC no tiene cluster: la medición real queda pendiente).
+
+$ bash -n verify/test-rollout.sh verify/measure-mttr.sh
+  verify/test-rollout.sh: OK
+  verify/measure-mttr.sh: OK
+
+Validación de argumentos (con kubectl simulado, que responde contexto minikube):
+$ verify/test-rollout.sh
+  Uso: verify/test-rollout.sh <tag_v2> [url_base]
+  exit=1
+$ verify/measure-mttr.sh
+  Uso: verify/measure-mttr.sh <pharmago-api-gateway|pharmago-users-service|pharmago-pharmacy-service|pharmago-ui> [--crash] [url_base]
+  exit=1
+$ verify/measure-mttr.sh pharmago-db
+  Uso: verify/measure-mttr.sh <pharmago-api-gateway|pharmago-users-service|pharmago-pharmacy-service|pharmago-ui> [--crash] [url_base]
+  exit=1
+$ verify/measure-mttr.sh pharmago-ui --algo
+  Argumento desconocido: --algo
+  exit=1
+
+Sin la app accesible (no hay minikube tunnel en esta PC), los dos scripts se niegan a medir en vez de dar un resultado falso:
+$ verify/test-rollout.sh abc1234
+  Error: http://127.0.0.1/api/drug no responde 200 antes de empezar. ¿Está abierto minikube tunnel?
+  exit=1
+$ verify/measure-mttr.sh pharmago-users-service
+  Error: http://127.0.0.1/api/roles no responde 200 antes de empezar. ¿Está abierto minikube tunnel?
+  exit=1

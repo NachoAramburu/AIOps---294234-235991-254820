@@ -84,25 +84,32 @@ chmod +x build-images.sh
 
 #### Opción 2: Manual
 
-Desde el directorio `Implementacion K8S/Codigo`:
+Las imágenes propias se etiquetan con el SHA corto de git (D21), nunca con `latest`. Desde el directorio `Implementacion K8S/Codigo`:
 
 ```bash
-# Construir imágenes de backend
+TAG=$(git rev-parse --short HEAD)
 cd Backend
-docker build -f PharmaGo.UsersService/Dockerfile -t pharmago-users-service:latest .
-minikube image load pharmago-users-service:latest
-
-docker build -f PharmaGo.PharmacyService/Dockerfile -t pharmago-pharmacy-service:latest .
-minikube image load pharmago-pharmacy-service:latest
-
-docker build -f PharmaGo.ApiGateway/Dockerfile -t pharmago-api-gateway:latest .
-minikube image load pharmago-api-gateway:latest
-
-# Construir imagen de frontend
+docker build -f PharmaGo.UsersService/Dockerfile -t pharmago-users-service:$TAG .
+docker build -f PharmaGo.PharmacyService/Dockerfile -t pharmago-pharmacy-service:$TAG .
+docker build -f PharmaGo.ApiGateway/Dockerfile -t pharmago-api-gateway:$TAG .
 cd ../Frontend
-docker build -f Dockerfile -t pharmago-ui:latest .
-minikube image load pharmago-ui:latest
+docker build -f Dockerfile -t pharmago-ui:$TAG .
+for img in pharmago-users-service pharmago-pharmacy-service pharmago-api-gateway pharmago-ui; do minikube image load $img:$TAG; done
 ```
+
+`build-images.sh` hace lo mismo y agrega `-dirty` al tag si hay cambios sin commitear. `apply-k8s.sh` usa el mismo tag: los manifiestos tienen `IMAGE_TAG` y el script lo reemplaza al aplicar.
+
+### Actualizar una versión sin caídas y volver atrás
+
+```bash
+./build-images.sh            # construye y carga las imágenes con el tag del commit actual
+./deploy.sh <tag>            # RollingUpdate de users, pharmacy, gateway y ui, uno por uno
+./rollback.sh                # vuelve los 4 a la revisión anterior
+./rollback.sh pharmago-ui    # o solo uno
+kubectl rollout history deployment/pharmago-api-gateway -n pharmago
+```
+
+Si un rollout no termina en 180 s, `deploy.sh` hace rollback de ese Deployment y corta. La técnica y su justificación están en `docs/despliegue-seguro.md`.
 
 **Nota**: en un cluster multinodo, `minikube image load` carga las imágenes en todos los nodos.
 
@@ -458,6 +465,8 @@ k8s/
 │       └── kibana-service.yaml
 ├── build-images.sh
 ├── apply-k8s.sh
+├── deploy.sh
+├── rollback.sh
 ├── cleanup.sh
 └── README-k8s.md
 ```

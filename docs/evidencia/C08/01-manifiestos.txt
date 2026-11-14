@@ -1,0 +1,26 @@
+Validación de manifiestos de C08 (esta PC no tiene kubectl: se valida con PyYAML después de reemplazar IMAGE_TAG como hace apply-k8s.sh).
+
+$ bash -n build-images.sh apply-k8s.sh deploy.sh rollback.sh verify/test-circuit-breaker.sh
+  build-images.sh: OK
+  apply-k8s.sh: OK
+  deploy.sh: OK
+  rollback.sh: OK
+  verify/test-circuit-breaker.sh: OK
+
+$ grep -rn ':latest' k8s/
+  0 resultados
+
+$ tag que calculan build-images.sh y apply-k8s.sh en este momento (hay cambios sin commitear)
+  575991f-dirty
+
+$ sed s/IMAGE_TAG/abc1234/ en los 4 Deployments + PyYAML
+  pharmago-api-gateway: RollingUpdate maxUnavailable=0 maxSurge=1 minReadySeconds=5 revisionHistoryLimit=5 terminationGracePeriodSeconds=30
+      image=pharmago-api-gateway:abc1234 preStop=['/bin/sh', '-c', 'sleep 5'] ephemeral-storage requests=64Mi limits=512Mi
+  pharmago-users-service: RollingUpdate maxUnavailable=0 maxSurge=1 minReadySeconds=5 revisionHistoryLimit=5 terminationGracePeriodSeconds=30
+      image=pharmago-users-service:abc1234 preStop=['/bin/sh', '-c', 'sleep 5'] ephemeral-storage requests=64Mi limits=512Mi
+  pharmago-pharmacy-service: RollingUpdate maxUnavailable=0 maxSurge=1 minReadySeconds=5 revisionHistoryLimit=5 terminationGracePeriodSeconds=30
+      image=pharmago-pharmacy-service:abc1234 preStop=['/bin/sh', '-c', 'sleep 5'] ephemeral-storage requests=64Mi limits=512Mi
+  pharmago-ui: RollingUpdate maxUnavailable=0 maxSurge=1 minReadySeconds=5 revisionHistoryLimit=5 terminationGracePeriodSeconds=30
+      image=pharmago-ui:abc1234 preStop=['/bin/sh', '-c', 'sleep 5'] ephemeral-storage requests=64Mi limits=512Mi
+  prometheus: prom/prometheus:v2.53.4
+  otlp-collector: otel/opentelemetry-collector-contrib:0.111.0

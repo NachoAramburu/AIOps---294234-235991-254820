@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +23,11 @@ namespace InstrumentationInterface
 
             // Gauges
             void SetActiveUserCount(int count);
+
+            /// <summary>
+            /// Estado del circuit breaker de un cluster del gateway: 0 = closed, 1 = open, 2 = half-open
+            /// </summary>
+            void SetCircuitState(string cluster, int state);
 
             // Histograms / Timings
             void RequestDuration(double milliseconds);

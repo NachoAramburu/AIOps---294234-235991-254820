@@ -1,0 +1,17 @@
+NO VERIFICADO en la PC de Franco (sin Docker ni Minikube, 2026-11-13). Lo corre quien tenga el cluster, después de git pull --rebase.
+
+cd "Implementacion K8S/Codigo/k8s"
+./build-images.sh                              # tag = SHA corto del commit, por ejemplo 3f2a1bc
+./apply-k8s.sh                                 # aplica los Deployments con IMAGE_TAG reemplazado
+kubectl get deploy -n pharmago -o wide         # los 4 con la imagen :<sha> y 2/2
+grep -rn ":latest" .                           # sin resultados
+
+Segunda versión para probar el rollout y el rollback:
+./build-images.sh <sha>-v2
+./deploy.sh <sha>-v2
+kubectl rollout history deployment/pharmago-api-gateway -n pharmago     # muestra "deploy.sh <sha>-v2"
+./rollback.sh
+kubectl get deploy -n pharmago -o custom-columns=NOMBRE:.metadata.name,IMAGEN:.spec.template.spec.containers[0].image
+
+Esperado: deploy.sh termina con "Listo", rollback.sh deja los 4 en la imagen :<sha>.
+Guardar las salidas en docs/evidencia/C08/.

@@ -6,6 +6,8 @@ using PharmaGo.ApiGateway.Middleware;
 using Instrumentation;
 using InstrumentationInterface;
 using Yarp.ReverseProxy.Transforms;
+using Yarp.ReverseProxy.Forwarder;
+using PharmaGo.ApiGateway.Resilience;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -40,6 +42,9 @@ builder.Services.AddReverseProxy()
             return default;
         });
     });
+
+// Circuit breaker, reintentos con jitter y timeout por intento en gateway -> servicio (docs/resiliencia.md).
+builder.Services.AddSingleton<IForwarderHttpClientFactory, ResilientForwarderHttpClientFactory>();
 
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "live", "ready" });

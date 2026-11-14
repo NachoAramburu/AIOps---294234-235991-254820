@@ -312,3 +312,73 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - `GET /api/drug` va a pharmacy-service; para probar users hace falta otro endpoint. `GET /api/roles` responde 200 sin login y lo atiende users.
   - Algunos archivos de la copia local tenían CRLF de un checkout viejo con `core.autocrlf=true` (en el repo están en LF). `otel-collector-deployment.yaml` se normalizó a LF al editarlo.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
+
+## C07 — Circuit breaker, reintentos y timeout en el gateway — 2026-11-13 — francokbd (bloque B1)
+- **Estado:** 🟡 Parcial. Implementado y probado en local con el gateway real; la prueba en el cluster queda pendiente (esta PC no tiene Docker ni Minikube).
+- **Ítem de rúbrica:** 2 (Alta disponibilidad: patrón ante fallas reiteradas)
+- **Commit:** `C07-C09: resiliencia del gateway y despliegue seguro` (SHA en `git log --grep "^C07-C09:"`)
+- **Archivos creados / modificados:** `Backend/PharmaGo.ApiGateway/Resilience/ResilientForwarderHttpClientFactory.cs` (nuevo), `Backend/PharmaGo.ApiGateway/Program.cs`, `Backend/PharmaGo.ApiGateway/PharmaGo.ApiGateway.csproj` (Polly 7.2.4), `Backend/PharmaGo.ApiGateway/appsettings.json` (sección `Resilience`), `Backend/InstrumentationInterface/ICustomMetrics.cs`, `Backend/Instrumentation/CustomMetrics.cs`, `k8s/verify/test-circuit-breaker.sh` (nuevo), `docs/resiliencia.md` (nuevo)
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: PharmacyServiceClient y UsersServiceClient no se inyectan en ningún lado;
+  los clusters de YARP tienen HealthCheck.Active.Enabled=false.
+
+  $ dotnet build PharmaGo.sln -c Release           -> 0 Error(s)
+  $ dotnet test (PharmaGo.Test)                     -> 290 de 291, igual que el punto de partida
+  $ gateway real contra backend falso (01-gateway-local.txt)
+    GET con 500: 1 intento (no se reintenta)
+    12 GET con el backend fallando: 500 x7, después 503 con Retry-After: 5 y {"error":"circuit_open"}
+    POST con el circuito abierto: 503 sin llegar al backend
+    backend sano + 6 s: 200 x4; log: open for 5s -> half-open -> closed
+    backend lento (8 s): GET 504 en 9,5 s con 3 intentos; POST 504 en 3,1 s con 1 intento
+    pharmago_circuit_breaker_state{cluster="pharmacy-cluster"} 0 -> 1 -> 0
+    rate limit: 120 GET -> 100 con 200 y 20 con 429; 150 GET /health/live sin 429
+  ```
+- **Criterio de "hecho":** cumplido en código y probado en local. La prueba en el cluster (`test-circuit-breaker.sh`) está NO VERIFICADA.
+- **Decisiones tomadas:** D13 implementada con timeout de 3 s por intento. La métrica del breaker va sin unidad (ver hallazgos). Los health checks de YARP siguen apagados (D14).
+- **NO VERIFICADO / riesgos:** `test-circuit-breaker.sh` en el cluster. Comandos en `docs/evidencia/C07/cluster-pendiente.txt`.
+- **Hallazgos nuevos que cambian el plan:** con unidad `{state}` (lo que decía AGENTS.md §5), el exporter Prometheus de .NET publica `pharmago_circuit_breaker_state__state_`. Sin unidad sale `pharmago_circuit_breaker_state`, que es el nombre que usa la alerta del bloque B6. El gateway todavía expone `/metrics` directo; pasa a OTLP en C10.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B1)
+
+## C08 — Despliegue sin caídas y rollback — 2026-11-13 — francokbd (bloque B1)
+- **Estado:** 🟡 Parcial. Manifiestos y scripts hechos y verificados en local (YAML, sintaxis y lógica con kubectl simulado); el rollout real queda pendiente.
+- **Ítem de rúbrica:** 3 (Despliegues seguros)
+- **Commit:** `C07-C09: resiliencia del gateway y despliegue seguro`
+- **Archivos creados / modificados:** los Deployments de gateway, users, pharmacy y ui (RollingUpdate, `maxUnavailable: 0`, `maxSurge: 1`, `minReadySeconds: 5`, `revisionHistoryLimit: 5`, `terminationGracePeriodSeconds: 30`, `preStop sleep 5`, imagen `:IMAGE_TAG`, `ephemeral-storage` 64Mi y 512Mi), `prometheus-deployment.yaml` (`v2.53.4`), `otel-collector-deployment.yaml` (`0.111.0`), `k8s/build-images.sh`, `k8s/apply-k8s.sh`, `k8s/deploy.sh` (nuevo), `k8s/rollback.sh` (nuevo), `k8s/README-k8s.md`; eliminado `k8s/build-ui.sh`
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Confirmado antes de editar: los 4 Deployments sin strategy, con imágenes :latest e imagePullPolicy Never.
+
+  $ grep -rn ":latest" k8s/                          -> 0 resultados
+  $ bash -n (5 scripts)                              -> OK
+  $ IMAGE_TAG -> abc1234 + PyYAML (01-manifiestos.txt)
+    los 4: RollingUpdate maxUnavailable=0 maxSurge=1 minReadySeconds=5 preStop=sleep 5 ephemeral-storage 64Mi/512Mi
+  $ deploy.sh y rollback.sh con kubectl simulado (02-deploy-rollback-simulado.txt)
+    sin tag -> uso; imagen inexistente -> error; exitoso -> users, pharmacy, gateway, ui en orden;
+    rollout del gateway trabado -> rollout undo del gateway, exit 1, ui sin tocar;
+    rollback.sh: nombre inválido -> error; uno -> solo ese; sin argumento -> los 4
+  $ tag calculado con cambios sin commitear          -> 575991f-dirty
+  ```
+- **Criterio de "hecho":** cumplido en manifiestos y scripts. El rollout v1 → v2 → rollback en el cluster está NO VERIFICADO.
+- **Decisiones tomadas:** D20 y D21 aplicadas. El paso 6 de C16 (límites de `ephemeral-storage`) se hizo acá, por el plan del 13/11. `deploy.sh` anota `kubernetes.io/change-cause` antes de cada cambio, así `rollout history` muestra el tag. `apply-k8s.sh` corta con un mensaje claro si falta la imagen del tag, en vez de dejar pods en `ErrImageNeverPull`.
+- **NO VERIFICADO / riesgos:** todo lo de cluster. Comandos en `docs/evidencia/C08/cluster-pendiente.txt`.
+- **Hallazgos nuevos que cambian el plan:** ninguno.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B1)
+
+## C09 — Prueba de cero errores, medición de MTTR y documentación — 2026-11-13 — francokbd (bloque B1)
+- **Estado:** 🟡 Parcial. Scripts y documentación hechos; la medición en el cluster queda pendiente.
+- **Ítem de rúbrica:** 3 (Despliegues seguros) y la actividad "reducir el MTTR"
+- **Commit:** `C07-C09: resiliencia del gateway y despliegue seguro`
+- **Archivos creados / modificados:** `k8s/verify/test-rollout.sh` (nuevo), `k8s/verify/measure-mttr.sh` (nuevo, modos borrado y `--crash`), `docs/despliegue-seguro.md` (nuevo), `docs/mttr.md` (nuevo)
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ bash -n verify/test-rollout.sh verify/measure-mttr.sh   -> OK
+  $ validación de argumentos (01-scripts.txt)                -> uso o error claro en cada caso inválido
+  $ sin la app accesible                                     -> los dos scripts se niegan a medir (exit 1)
+  ```
+  Mediciones previas usadas en `docs/mttr.md`, todas de evidencia ya commiteada: C06 (borrado de pod, 5,7 a 9,0 s, 1 error en 5 pruebas) y C04-verificación (UI con 1 réplica, unos 14 s de corte).
+- **Criterio de "hecho":** no cumplido todavía: falta medir 0 no-2xx en el rollout y menos de 15 s al borrar un pod.
+- **Decisiones tomadas:** el loop de `test-rollout.sh` rota entre `/`, `/api/drug` y `/api/roles` a 1 request por segundo, para pasar tráfico por los 4 microservicios sin chocar con el rate limit; los 429 se informan aparte. `measure-mttr.sh` usa `/api/roles` para users, que responde sin login (hallazgo de C06).
+- **NO VERIFICADO / riesgos:** las mediciones. Comandos en `docs/evidencia/C09/cluster-pendiente.txt`; con esos números se completan las filas "Pendiente" de `docs/mttr.md`.
+- **Hallazgos nuevos que cambian el plan:** el error que vio C06 (502 en el segundo del borrado) es la carrera entre el apagado del pod y su salida del Service. Lo corrigen el `preStop` de C08 y el reintento de GET de C07; está explicado en `docs/mttr.md`.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B1)

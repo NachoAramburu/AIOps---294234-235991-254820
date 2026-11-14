@@ -1,0 +1,109 @@
+Prueba de la lógica de deploy.sh y rollback.sh con kubectl y minikube simulados (esta PC no tiene cluster).
+Los simuladores registran cada llamada; un rollout falla a propósito cuando FAIL_APP lo indica.
+
+--- deploy.sh sin tag
+$ bash deploy.sh
+  Uso: deploy.sh <tag>
+  exit=1
+  llamadas a kubectl:
+
+--- deploy.sh con un tag cuya imagen no está cargada
+$ bash deploy.sh zzz9999
+  Error: falta la imagen pharmago-users-service:zzz9999 en Minikube. Corré ./build-images.sh zzz9999
+  exit=1
+  llamadas a kubectl:
+
+--- deploy.sh exitoso
+$ bash deploy.sh abc1234
+  00:26:15 pharmago-users-service -> abc1234
+  deployment.apps/pharmago-users-service image updated
+  deployment "pharmago-users-service" successfully rolled out
+  00:26:15 pharmago-pharmacy-service -> abc1234
+  deployment.apps/pharmago-pharmacy-service image updated
+  deployment "pharmago-pharmacy-service" successfully rolled out
+  00:26:15 pharmago-api-gateway -> abc1234
+  deployment.apps/pharmago-api-gateway image updated
+  deployment "pharmago-api-gateway" successfully rolled out
+  00:26:15 pharmago-ui -> abc1234
+  deployment.apps/pharmago-ui image updated
+  deployment "pharmago-ui" successfully rolled out
+  00:26:15 Listo: los 4 microservicios corren abc1234.
+  (tabla de deployments)
+  exit=0
+  llamadas a kubectl:
+    kubectl set image deployment/pharmago-users-service pharmago-users-service=pharmago-users-service:abc1234
+    kubectl rollout status deployment/pharmago-users-service
+    kubectl set image deployment/pharmago-pharmacy-service pharmago-pharmacy-service=pharmago-pharmacy-service:abc1234
+    kubectl rollout status deployment/pharmago-pharmacy-service
+    kubectl set image deployment/pharmago-api-gateway pharmago-api-gateway=pharmago-api-gateway:abc1234
+    kubectl rollout status deployment/pharmago-api-gateway
+    kubectl set image deployment/pharmago-ui pharmago-ui=pharmago-ui:abc1234
+    kubectl rollout status deployment/pharmago-ui
+
+--- deploy.sh con el rollout del gateway trabado
+$ bash deploy.sh abc1234
+  00:26:15 pharmago-users-service -> abc1234
+  deployment.apps/pharmago-users-service image updated
+  deployment "pharmago-users-service" successfully rolled out
+  00:26:16 pharmago-pharmacy-service -> abc1234
+  deployment.apps/pharmago-pharmacy-service image updated
+  deployment "pharmago-pharmacy-service" successfully rolled out
+  00:26:16 pharmago-api-gateway -> abc1234
+  deployment.apps/pharmago-api-gateway image updated
+  error: timed out waiting for the condition
+  Error: el rollout de pharmago-api-gateway no terminó en 180 s. Volviendo a la revisión anterior...
+  deployment.apps/pharmago-api-gateway rolled back
+  deployment "pharmago-api-gateway" successfully rolled out
+  exit=1
+  llamadas a kubectl:
+    kubectl set image deployment/pharmago-users-service pharmago-users-service=pharmago-users-service:abc1234
+    kubectl rollout status deployment/pharmago-users-service
+    kubectl set image deployment/pharmago-pharmacy-service pharmago-pharmacy-service=pharmago-pharmacy-service:abc1234
+    kubectl rollout status deployment/pharmago-pharmacy-service
+    kubectl set image deployment/pharmago-api-gateway pharmago-api-gateway=pharmago-api-gateway:abc1234
+    kubectl rollout status deployment/pharmago-api-gateway
+    kubectl rollout undo deployment/pharmago-api-gateway
+    kubectl rollout status deployment/pharmago-api-gateway
+
+--- rollback.sh con un nombre inválido
+$ bash rollback.sh pharmago-db
+  Error: 'pharmago-db' no es uno de: pharmago-ui pharmago-api-gateway pharmago-pharmacy-service pharmago-users-service
+  exit=1
+  llamadas a kubectl:
+
+--- rollback.sh de un solo Deployment
+$ bash rollback.sh pharmago-ui
+  00:26:16 rollback de pharmago-ui
+  deployment.apps/pharmago-ui rolled back
+  deployment "pharmago-ui" successfully rolled out
+  (tabla de deployments)
+  exit=0
+  llamadas a kubectl:
+    kubectl rollout undo deployment/pharmago-ui
+    kubectl rollout status deployment/pharmago-ui
+
+--- rollback.sh de los cuatro
+$ bash rollback.sh
+  00:26:17 rollback de pharmago-ui
+  deployment.apps/pharmago-ui rolled back
+  deployment "pharmago-ui" successfully rolled out
+  00:26:17 rollback de pharmago-api-gateway
+  deployment.apps/pharmago-api-gateway rolled back
+  deployment "pharmago-api-gateway" successfully rolled out
+  00:26:17 rollback de pharmago-pharmacy-service
+  deployment.apps/pharmago-pharmacy-service rolled back
+  deployment "pharmago-pharmacy-service" successfully rolled out
+  00:26:17 rollback de pharmago-users-service
+  deployment.apps/pharmago-users-service rolled back
+  deployment "pharmago-users-service" successfully rolled out
+  (tabla de deployments)
+  exit=0
+  llamadas a kubectl:
+    kubectl rollout undo deployment/pharmago-ui
+    kubectl rollout status deployment/pharmago-ui
+    kubectl rollout undo deployment/pharmago-api-gateway
+    kubectl rollout status deployment/pharmago-api-gateway
+    kubectl rollout undo deployment/pharmago-pharmacy-service
+    kubectl rollout status deployment/pharmago-pharmacy-service
+    kubectl rollout undo deployment/pharmago-users-service
+    kubectl rollout status deployment/pharmago-users-service

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace Instrumentation
         private readonly Histogram<double> _requestDurationHistogram;
         private readonly Histogram<double> _endpointDurationHistogram;
         private int _activeUserCount;
+        private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int> _circuitStates = new();
 
         public CustomMetrics()
         {
@@ -52,6 +53,15 @@ namespace Instrumentation
                 description: "HTTP request duration in milliseconds by endpoint and method"
             );
 
+            // Sin unidad a proposito: con "1" Prometheus le agrega el sufijo _ratio, y con "{state}"
+            // el exporter Prometheus de .NET deforma el nombre a pharmago_circuit_breaker_state__state_.
+            _meter.CreateObservableGauge(
+                "pharmago_circuit_breaker_state",
+                () => _circuitStates.Select(kv => new Measurement<int>(kv.Value, new KeyValuePair<string, object?>("cluster", kv.Key))),
+                unit: null,
+                description: "Circuit breaker state per gateway cluster: 0=closed 1=open 2=half-open"
+            );
+
             _meter.CreateObservableGauge(
                 "active_user_count",
                 () => new Measurement<int>[] { new Measurement<int>(_activeUserCount) },
@@ -85,6 +95,11 @@ namespace Instrumentation
                 new("error_type", errorType)
             };
             _httpErrorsCounter.Add(1, tags);
+        }
+
+        public void SetCircuitState(string cluster, int state)
+        {
+            _circuitStates[cluster] = state;
         }
 
         public void SetActiveUserCount(int count)

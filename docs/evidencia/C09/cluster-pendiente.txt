@@ -1,0 +1,16 @@
+NO VERIFICADO en la PC de Franco (sin Docker ni Minikube, 2026-11-13). Lo corre quien tenga el cluster, después de git pull --rebase
+y después de los pasos de docs/evidencia/C08/cluster-pendiente.txt (tienen que existir las imágenes <sha> y <sha>-v2).
+En PowerShell como administrador, dejar abierto: minikube tunnel
+
+cd "Implementacion K8S/Codigo/k8s"
+bash verify/test-rollout.sh <sha>-v2
+  Esperado: "OK: 0 respuestas no-2xx durante v1 -> v2 -> rollback."
+  Si aparece 429, es el rate limit (no una caída): esperar una hora y repetir.
+
+for d in pharmago-api-gateway pharmago-users-service pharmago-pharmacy-service pharmago-ui; do bash verify/measure-mttr.sh $d; done
+for d in pharmago-api-gateway pharmago-users-service pharmago-pharmacy-service; do bash verify/measure-mttr.sh $d --crash; done
+bash verify/measure-mttr.sh pharmago-ui --crash     # si la imagen de nginx no permite "kill 1", anotarlo
+  Esperado en cada uno: "no-2xx: 0" y MTTR menor a 15 s.
+
+Con esos números, completar las filas "Pendiente" de docs/mttr.md y la sección "Resultado" de docs/despliegue-seguro.md.
+Guardar las salidas en docs/evidencia/C09/ y commitear junto con C07 y C08 como "B1-verificacion: evidencia de C07 a C09 en el cluster".

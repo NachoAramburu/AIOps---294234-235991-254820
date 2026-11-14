@@ -1,0 +1,11 @@
+Compilación y tests después de C07 (2026-11-13, .NET SDK 10.0.401).
+
+$ dotnet build PharmaGo.sln -c Release
+  22 Warning(s)
+  0 Error(s)
+
+$ dotnet test PharnaGo.Test/PharmaGo.Test.csproj -c Release --no-build
+  Failed Test_GetOneByExpression [24 ms]
+  Failed!  - Failed:     1, Passed:   290, Skipped:     0, Total:   291
+
+Igual que el punto de partida: el único test que falla es Test_GetOneByExpression, que se corrige en C21.

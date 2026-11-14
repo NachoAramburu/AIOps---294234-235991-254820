@@ -1,6 +1,7 @@
 #!/bin/bash
 # Script de despliegue para Kubernetes (Minikube)
-# Uso: ./apply-k8s.sh (se puede correr desde cualquier directorio)
+# Uso: ./apply-k8s.sh [tag] (se puede correr desde cualquier directorio)
+#   Sin tag usa el mismo que build-images.sh: el SHA corto de git, con -dirty si hay cambios sin commitear.
 # Requiere el cluster multinodo creado y etiquetado por cluster-up.sh.
 
 set -e
@@ -9,6 +10,15 @@ export MINIKUBE_IN_STYLE=false   # salida de minikube en texto plano, sin emojis
 # Trabajar siempre desde el directorio del script, para que las rutas relativas funcionen
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
+
+# Tag de las imágenes propias (D21). Los manifiestos de la app tienen IMAGE_TAG y apply_app lo reemplaza.
+image_tag() {
+    local sha
+    sha=$(git -C "$SCRIPT_DIR" rev-parse --short HEAD)
+    if git -C "$SCRIPT_DIR" diff --quiet HEAD --; then echo "$sha"; else echo "${sha}-dirty"; fi
+}
+TAG="${1:-$(image_tag)}"
+apply_app() { sed "s/IMAGE_TAG/${TAG}/g" "$1" | kubectl apply -f -; }
 
 echo "=== Desplegando PharmaGo en Kubernetes ==="
 
@@ -24,6 +34,15 @@ if ! minikube status &> /dev/null; then
     echo "Ejecuta: ./cluster-up.sh"
     exit 1
 fi
+
+echo "Tag de las imágenes propias: ${TAG}"
+IMAGES=$(minikube image ls 2>/dev/null)
+for img in pharmago-users-service pharmago-pharmacy-service pharmago-api-gateway pharmago-ui; do
+    if ! grep -q "/${img}:${TAG}$" <<< "$IMAGES"; then
+        echo "Error: falta la imagen ${img}:${TAG} en Minikube. Corré ./build-images.sh ${TAG}"
+        exit 1
+    fi
+done
 
 # Los nodos los etiqueta cluster-up.sh (node-type=frontend|gateway|users|pharmacy|ops).
 if ! kubectl get nodes -l node-type=ops -o name 2>/dev/null | grep -q .; then
@@ -146,18 +165,18 @@ kubectl apply -f deployments/ops/fluent-bit-daemonset.yaml
 echo ""
 echo "8. Desplegando servicios backend..."
 kubectl apply -f services/backend/users-service-service.yaml
-kubectl apply -f deployments/backend/users-service-deployment.yaml
+apply_app deployments/backend/users-service-deployment.yaml
 
 kubectl apply -f services/backend/pharmacy-service-service.yaml
-kubectl apply -f deployments/backend/pharmacy-service-deployment.yaml
+apply_app deployments/backend/pharmacy-service-deployment.yaml
 
 kubectl apply -f services/backend/api-gateway-service.yaml
-kubectl apply -f deployments/backend/api-gateway-deployment.yaml
+apply_app deployments/backend/api-gateway-deployment.yaml
 
 echo ""
 echo "9. Desplegando frontend..."
 kubectl apply -f services/frontend/ui-service.yaml
-kubectl apply -f deployments/frontend/ui-deployment.yaml
+apply_app deployments/frontend/ui-deployment.yaml
 
 echo ""
 echo "10. Creando PodDisruptionBudgets (al menos 1 réplica disponible por microservicio)..."

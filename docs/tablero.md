@@ -12,27 +12,29 @@
 
 ## Tarjetas para cargar en el tablero
 
-- C01 · Base de trabajo del equipo · A (Franco)
-- C02 · Cluster multinodo y prueba de memoria · B (Martin)
-- C03 · Separación de microservicios por nodo y diagrama · C (Nacho)
-- C04 · Acceso estable por Ingress y rutas del gateway · A (Franco)
-- C05 · Endpoints de salud y resiliencia de la base · B (Martin)
-- C06 · Réplicas, probes rápidas y secretos · C (Nacho)
-- C07 · Circuit breaker, reintentos y timeout en el gateway · A (Franco)
-- C08 · Despliegue sin caídas y rollback · B (Martin)
-- C09 · Prueba de cero errores, medición de MTTR y documentación · C (Nacho)
-- C10 · Métricas de aplicación solo por OTLP · A (Franco)
-- C11 · Trazas distribuidas con OTLP y Jaeger · B (Martin)
-- C12 · Métricas de pod, contenedor y nodo por OTLP · C (Nacho)
-- C13 · Alertas de Grafana como código · A (Franco)
-- C14 · Logs JSON con trace_id y consulta en Kibana · B (Martin)
-- C15 · Detección de anomalías · C (Nacho)
-- C16 · Scripts de caos 1/2: requests, CPU, memoria y storage · A (Franco)
-- C17 · Scripts de caos 2/2: red y desconexión · B (Martin)
-- C18 · Experimentos de caos con hipótesis y resultados · C (Nacho)
-- C19 · Plan de contención de incidentes · A (Franco)
-- C20 · Playbooks por tipo de fallo · B (Martin)
-- C21 · Pipeline CI/CD en GitHub Actions · C (Nacho)
-- C22 · Pruebas BDD con Cypress y Cucumber · A (Franco)
-- C23 · Runbook de defensa, diagrama final y ensayo · B (Martin)
-- C24 · Informe, matriz de cumplimiento y paquete de entrega · C (Nacho)
+El 13/11 los 17 commits que faltaban se agruparon en 9 bloques, 3 por integrante. Cada bloque es un commit; su mensaje empieza con las tareas que incluye (por ejemplo `C07-C09:`).
+
+**Hecho:**
+
+- C01 · Base de trabajo del equipo · Franco
+- C02 · Cluster multinodo y prueba de memoria · Martin
+- C15 · Detección de anomalías · Nacho
+- C04 · Acceso estable por Ingress y rutas del gateway · Franco
+- C04-verificación · Evidencia de C04 en el cluster · Martin
+- C05 · Endpoints de salud y resiliencia de la base · Martin
+- C03 · Separación de microservicios por nodo y diagrama · Nacho
+- C06 · Réplicas, probes rápidas y secretos · Nacho
+
+**Bloques:**
+
+| Bloque | Responsable | Tareas | Qué resuelve | Antes | Cuándo |
+|---|---|---|---|---|---|
+| B1 | Franco | C07, C08, C09 | Circuit breaker en el gateway, despliegue sin caídas y su prueba | Nada | vie 13/11 |
+| B2 | Martin | C16, C17 | Scripts de caos de los 6 tipos de falla | Nada | vie 13/11 |
+| B3 | Nacho | C10, C11, C12 | Métricas por OTLP, trazas con Jaeger y métricas de pod y nodo | B1 | sáb 14/11 |
+| B4 | Nacho | C19 | Plan de contención de incidentes | Nada | sáb 14/11 |
+| B5 | Franco | C21, C22 | Pipeline CI/CD y pruebas BDD | B3 | sáb 14 o dom 15/11 |
+| B6 | Martin | C13, C14 | Alertas de Grafana y logs JSON en Kibana | B1, B3 | sáb 14 o dom 15/11 |
+| B7 | Nacho | C18, C20 | Experimentos de caos y playbooks | B2, B6 | dom 15/11 |
+| B8 | Martin | C23 | Runbook de la defensa y ensayo con los 3 | B7 | dom 15 o lun 16/11 |
+| B9 | Franco | C24 | Informe, matriz de cumplimiento y zip | B5, B8 | lun 16/11 |

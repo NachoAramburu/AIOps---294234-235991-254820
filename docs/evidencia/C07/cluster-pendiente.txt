@@ -1,0 +1,14 @@
+NO VERIFICADO en la PC de Franco (sin Docker ni Minikube, 2026-11-13). Lo corre quien tenga el cluster, después de git pull --rebase.
+En PowerShell como administrador, dejar abierto: minikube tunnel
+
+cd "Implementacion K8S/Codigo/k8s"
+./build-images.sh
+./apply-k8s.sh
+bash verify/test-circuit-breaker.sh        # escala users a 0, pide /api/roles a 2 por segundo y restaura
+Esperado: aparece "503" con circuit_open, los logs del gateway muestran "state=open", y al final "OK".
+
+kubectl port-forward svc/pharmago-api-gateway 5000:80 -n pharmago   (en otra terminal)
+curl -s http://127.0.0.1:5000/metrics | grep pharmago_circuit_breaker_state
+Esperado: una serie por cluster (users-cluster y pharmacy-cluster), con valor 0 en estado normal.
+
+Guardar las salidas en docs/evidencia/C07/ y commitear como "B1-verificacion: evidencia de C07 a C09 en el cluster".
