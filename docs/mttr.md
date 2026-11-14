@@ -14,11 +14,16 @@ La primera actividad de la letra es "reducir el MTTR de un conjunto de fallos en
 | Borrado del pod de la UI con **1** réplica | unos 14 s | 14 de 40 | Sin otra réplica, el usuario espera a que arranque el pod nuevo. Es la línea de base | C04-verificación, `docs/evidencia/C04/11` |
 | Base de datos inaccesible | `/health/ready` responde 503 en unos 3,9 s | Sí, mientras dure la caída | La readiness saca de servicio a los pods que no llegan a la base; el breaker del gateway corta las requests al instante | C05 (local) |
 | Servicio caído detrás del gateway | No reemplaza al servicio: el circuito abre cuando fallan al menos la mitad de 8 o más requests en 10 s, y prueba de nuevo cada 5 s | 503 inmediato con `Retry-After`, en vez de esperas largas | Circuit breaker de C07 | C07, `docs/evidencia/C07/01` (local) |
-| Borrado de un pod **con** `preStop` y reintento de GET | Pendiente | Pendiente; se espera 0 | `preStop` de C08 y reintento de C07 | C09, `docs/evidencia/C09/cluster-pendiente.txt` |
-| Proceso que muere dentro del contenedor (`--crash`) | Pendiente | Pendiente | La liveness y el kubelet lo reinician; la otra réplica atiende | C09, ídem |
-| Borrado de un pod de la UI con 2 réplicas | Pendiente | Pendiente; se espera 0 | 2 réplicas de C06 | C09, ídem |
+| Borrado de un pod del gateway, **con** `preStop` y reintento de GET | 4,1 s | 0 de 40 | `preStop` de C08 y reintento de C07; la otra réplica atiende | B1-verificación, `docs/evidencia/C09/03-cluster-mttr.txt` |
+| Borrado de un pod de users, ídem | 5,4 s | 0 de 40 | Ídem | ídem |
+| Borrado de un pod de pharmacy, ídem | 6,7 s | 0 de 40 | Ídem. El 502 de C06 no se repitió | ídem |
+| Borrado de un pod de la UI con 2 réplicas | 5,4 s | 0 de 40 | 2 réplicas de C06 y `preStop` de C08 (contra 14 s y 14 errores con 1 réplica) | ídem |
+| Proceso que muere en el gateway (`--crash`, `kill 1`) | 4,4 s | 0 de 40 | El kubelet reinicia el contenedor; la otra réplica atiende | ídem |
+| Proceso que muere en users (`--crash`) | 8,8 s | 0 de 40 | Ídem | ídem |
+| Proceso que muere en pharmacy (`--crash`) | 7,4 s | 0 de 40 | Ídem | ídem |
+| Proceso que muere en la UI (`--crash`) | 3,0 s | 0 de 40 | Ídem (nginx arranca en menos de 1 s) | ídem |
 
-Las filas pendientes se completan cuando se corran los comandos de `docs/evidencia/C09/cluster-pendiente.txt`. En la PC donde se hizo C09 no hay Docker ni Minikube.
+Medido el 2026-11-14 en el cluster de 5 nodos de la PC de Martin (imágenes `be11702`), con `minikube tunnel`. En los 8 casos: 0 respuestas no-2xx y MTTR menor a 15 s. La resolución es de 1 s.
 
 ## El error de C06, explicado
 

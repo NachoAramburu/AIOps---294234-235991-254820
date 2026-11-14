@@ -1,0 +1,27 @@
+$ bash verify/test-circuit-breaker.sh   (minikube tunnel abierto)
+03:04:56 Escalando pharmago-users-service a 0 (estaba en 2)
+03:05:04 GET http://127.0.0.1/api/roles, 2 por segundo durante 15 s:
+502 502 502 503 502 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 
+Restaurando pharmago-users-service a 2 réplicas...
+03:05:41 Esperando que http://127.0.0.1/api/roles vuelva a 200 (1 pedido por segundo, hasta 90 s):
+200 
+03:05:42 Volvió a 200 a los 1 s de restaurar.
+Logs del gateway (transiciones del breaker):
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=open for 5s
+  circuit_breaker cluster=users-cluster state=half-open
+  circuit_breaker cluster=users-cluster state=closed
+OK: el circuito se abrió (503 circuit_open) y el servicio se recuperó solo.
+exit=0

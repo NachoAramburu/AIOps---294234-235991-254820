@@ -52,5 +52,8 @@ RollingUpdate cumple el "100 % de disponibilidad" con lo que ya trae Kubernetes,
 ## Resultado
 
 - **Verificado en local** (`docs/evidencia/C08/`): los cuatro Deployments tienen la estrategia, el `preStop`, `minReadySeconds`, el tag reemplazado y el límite de almacenamiento efímero. No queda ninguna imagen `:latest`. La lógica de `deploy.sh` y `rollback.sh` respeta el orden, vuelve atrás si un rollout se traba y valida los argumentos.
-- **Pendiente en el cluster** (`docs/evidencia/C09/cluster-pendiente.txt`): correr `test-rollout.sh` y `measure-mttr.sh` con el cluster levantado. El criterio es 0 respuestas no-2xx en v1 → v2 → rollback, y menos de 15 s para volver a Ready al borrar un pod.
+- **Verificado en el cluster** (2026-11-14, `docs/evidencia/C08/` y `C09/`, imágenes `be11702` y `be11702-v2`):
+  - `test-rollout.sh be11702-v2`: **145 requests durante v1 → v2 → rollback, 145 con 2xx, 0 no-2xx, 0 429.** `deploy.sh` y `rollback.sh` terminaron con 0.
+  - `deploy.sh` y `rollback.sh` por separado: los 4 Deployments pasan a `:be11702-v2` y vuelven a `:be11702`.
+  - `measure-mttr.sh`: 0 errores y vuelta a 2/2 Ready en 3,0 a 8,8 s, en borrado de pod y en crash, en los 4 microservicios (`docs/mttr.md`).
 - **Medición previa, sin `preStop` (C06):** en 5 borrados de pod hubo 1 error (un 502 en el segundo del borrado) y la vuelta a Ready tardó entre 5,7 y 9,0 s.

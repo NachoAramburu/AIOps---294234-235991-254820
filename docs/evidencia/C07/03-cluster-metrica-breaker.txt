@@ -1,0 +1,6 @@
+$ kubectl port-forward svc/pharmago-api-gateway 15000:80 -n pharmago   (el 5000 está reservado por Windows en esta PC)
+$ curl -s http://127.0.0.1:15000/metrics | grep pharmago_circuit_breaker_state
+# TYPE pharmago_circuit_breaker_state gauge
+# HELP pharmago_circuit_breaker_state Circuit breaker state per gateway cluster: 0=closed 1=open 2=half-open
+pharmago_circuit_breaker_state{cluster="pharmacy-cluster"} 0 1794625557345
+pharmago_circuit_breaker_state{cluster="users-cluster"} 0 1794625557345

@@ -382,3 +382,51 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
 - **NO VERIFICADO / riesgos:** las mediciones. Comandos en `docs/evidencia/C09/cluster-pendiente.txt`; con esos números se completan las filas "Pendiente" de `docs/mttr.md`.
 - **Hallazgos nuevos que cambian el plan:** el error que vio C06 (502 en el segundo del borrado) es la carrera entre el apagado del pod y su salida del Service. Lo corrigen el `preStop` de C08 y el reintento de GET de C07; está explicado en `docs/mttr.md`.
 - **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B1)
+
+## B1-verificacion — Evidencia de C07 a C09 en el cluster — 2026-11-14 — Martin Roux
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 2 (Alta disponibilidad: circuit breaker y MTTR) y 3 (Despliegues seguros)
+- **Commit:** `B1-verificacion: evidencia de C07 a C09 en el cluster` (SHA en `git log --grep "^B1-verificacion:"`)
+- **Dónde se corrió:** PC de Martin, cluster de 5 nodos de C02, `minikube tunnel` abierto en PowerShell como administrador. No se tocó código: se verificó el bloque B1 tal cual quedó en `be11702`, con los comandos de `docs/evidencia/C07/`, `C08/` y `C09/cluster-pendiente.txt`.
+- **Archivos creados / modificados:** `docs/evidencia/C07/02-cluster-circuit-breaker.txt`, `03-cluster-metrica-breaker.txt`; `docs/evidencia/C08/03-cluster-build.txt`, `04-cluster-apply.txt`, `05-cluster-deploy-rollback.txt`; `docs/evidencia/C09/02-cluster-test-rollout.txt`, `03-cluster-mttr.txt`; filas "Pendiente" de `docs/mttr.md` y sección "Resultado" de `docs/despliegue-seguro.md`; `docs/PROGRESO.md`, `docs/USO_IA.md`.
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ ./build-images.sh  /  ./build-images.sh be11702-v2   (C08/03)  tags be11702 y be11702-v2 cargados
+  $ ./apply-k8s.sh                                       (C08/04)  los 4 Deployments 2/2 con :be11702; grep ":latest" sin resultados
+
+  C07
+  $ bash verify/test-circuit-breaker.sh                  (C07/02)
+  users a 0 réplicas: 502 502 502 503 502 503 503 ... (desde la 4.ª request, 503 circuit_open)
+  logs del gateway: users-cluster state=open for 5s -> half-open -> open ... -> closed
+  al restaurar: 200 a 1 s; "OK: el circuito se abrió (503 circuit_open) y el servicio se recuperó solo."
+  $ curl /metrics | grep pharmago_circuit_breaker_state  (C07/03, port-forward 15000:80)
+  {cluster="pharmacy-cluster"} 0 | {cluster="users-cluster"} 0
+
+  C08
+  $ ./deploy.sh be11702-v2   -> "Listo: los 4 microservicios corren be11702-v2", exit=0   (C08/05)
+  $ kubectl rollout history deployment/pharmago-api-gateway   -> revisión con CHANGE-CAUSE "deploy.sh be11702-v2"
+  $ ./rollback.sh            -> los 4 de vuelta en :be11702, exit=0
+
+  C09
+  $ bash verify/test-rollout.sh be11702-v2               (C09/02)
+  Resultado: 145 requests | 2xx: 145 | 429: 0 | otras no-2xx: 0
+  OK: 0 respuestas no-2xx durante v1 -> v2 -> rollback.
+  $ bash verify/measure-mttr.sh <deployment> [--crash]   (C09/03)
+                     borrado de pod      crash (kill 1)
+  api-gateway        4,1 s  0/40 err     4,4 s  0/40 err
+  users-service      5,4 s  0/40 err     8,8 s  0/40 err
+  pharmacy-service   6,7 s  0/40 err     7,4 s  0/40 err
+  ui                 5,4 s  0/40 err     3,0 s  0/40 err
+  ```
+- **Criterio de "hecho" de §3:** cumplido para B1.
+  - Ítem 2: el circuit breaker pasa por Closed, Open, Half-Open y Closed en el cluster, con la métrica publicada. `kubectl delete pod` no produce errores y el pod vuelve a Ready en menos de 15 s (4,1 a 6,7 s), y lo mismo ante un crash (3,0 a 8,8 s).
+  - Ítem 3: rollout v1 → v2 → rollback con 0 respuestas no-2xx.
+  - El 502 de C06 no se repitió en ninguna de las 9 pruebas.
+- **Decisiones tomadas:** ninguna nueva. Para no saturar la memoria de esta PC, las imágenes se compilaron con el cluster apagado (`docker build` con el mismo tag) y después `build-images.sh` solo las cargó desde el caché.
+- **NO VERIFICADO / riesgos:**
+  - La resolución de las mediciones es de 1 s, la del loop: un corte menor a 1 s entre dos requests no se vería.
+  - La v2 es el mismo código con otro tag: prueba el mecanismo, no un cambio funcional.
+- **Hallazgos nuevos que cambian el plan:**
+  - **`rollout history` etiqueta mal la revisión.** Después del rollback, la revisión que corre la v1 (`be11702`) muestra CHANGE-CAUSE "deploy.sh be11702-v2". `deploy.sh` anota `kubernetes.io/change-cause` en el Deployment antes del `set image` (la anotación también queda en la revisión vigente) y `rollback.sh` no la actualiza, así que la anotación vieja pasa a la revisión nueva. Las imágenes y el rollback son correctos; solo la etiqueta confunde. Arreglo sugerido: anotar después del `set image` y anotar "rollback.sh" en `rollback.sh`. No se tocó en esta verificación.
+  - En esta PC el puerto 5000 está reservado por Windows, así que el port-forward de la métrica se hizo por el 15000.
+- **Uso de IA registrado en docs/USO_IA.md:** sí

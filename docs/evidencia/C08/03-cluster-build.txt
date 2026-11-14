@@ -1,0 +1,42 @@
+$ ./build-images.sh          (tag por defecto, árbol limpio)
+=== Construyendo y cargando imágenes en Minikube (tag: be11702) ===
+  - pharmago-users-service:be11702
+#27 naming to docker.io/library/pharmago-users-service:be11702 done
+#27 unpacking to docker.io/library/pharmago-users-service:be11702 0.0s done
+  - pharmago-pharmacy-service:be11702
+#29 naming to docker.io/library/pharmago-pharmacy-service:be11702
+#29 naming to docker.io/library/pharmago-pharmacy-service:be11702 done
+#29 unpacking to docker.io/library/pharmago-pharmacy-service:be11702 0.0s done
+  - pharmago-api-gateway:be11702
+#20 naming to docker.io/library/pharmago-api-gateway:be11702
+#20 naming to docker.io/library/pharmago-api-gateway:be11702 done
+#20 unpacking to docker.io/library/pharmago-api-gateway:be11702 0.0s done
+  - pharmago-ui:be11702
+#15 naming to docker.io/library/pharmago-ui:be11702 done
+#15 unpacking to docker.io/library/pharmago-ui:be11702 0.0s done
+=== Imágenes construidas y cargadas ===
+docker.io/library/pharmago-users-service:be11702
+docker.io/library/pharmago-ui:be11702
+docker.io/library/pharmago-pharmacy-service:be11702
+docker.io/library/pharmago-api-gateway:be11702
+
+$ ./build-images.sh be11702-v2
+=== Construyendo y cargando imágenes en Minikube (tag: be11702-v2) ===
+  - pharmago-users-service:be11702-v2
+#27 naming to docker.io/library/pharmago-users-service:be11702-v2 done
+#27 unpacking to docker.io/library/pharmago-users-service:be11702-v2 0.0s done
+  - pharmago-pharmacy-service:be11702-v2
+#29 naming to docker.io/library/pharmago-pharmacy-service:be11702-v2 done
+#29 unpacking to docker.io/library/pharmago-pharmacy-service:be11702-v2 0.0s done
+  - pharmago-api-gateway:be11702-v2
+#20 naming to docker.io/library/pharmago-api-gateway:be11702-v2 done
+#20 unpacking to docker.io/library/pharmago-api-gateway:be11702-v2 0.0s done
+  - pharmago-ui:be11702-v2
+#15 naming to docker.io/library/pharmago-ui:be11702-v2
+#15 naming to docker.io/library/pharmago-ui:be11702-v2 done
+#15 unpacking to docker.io/library/pharmago-ui:be11702-v2 0.0s done
+=== Imágenes construidas y cargadas ===
+docker.io/library/pharmago-users-service:be11702-v2
+docker.io/library/pharmago-ui:be11702-v2
+docker.io/library/pharmago-pharmacy-service:be11702-v2
+docker.io/library/pharmago-api-gateway:be11702-v2

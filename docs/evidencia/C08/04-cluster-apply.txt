@@ -1,0 +1,141 @@
+=== Desplegando PharmaGo en Kubernetes ===
+Tag de las imágenes propias: be11702
+
+1. Nodos y etiquetas:
+NAME           STATUS   ROLES           AGE     VERSION    NODE-TYPE
+minikube       Ready    control-plane   3d23h   v1.33.13   frontend
+minikube-m02   Ready    <none>          3d23h   v1.33.13   gateway
+minikube-m03   Ready    <none>          3d23h   v1.33.13   users
+minikube-m04   Ready    <none>          3d23h   v1.33.13   pharmacy
+minikube-m05   Ready    <none>          3d23h   v1.33.13   ops
+
+2. Creando namespace...
+namespace/pharmago unchanged
+
+3. Creando secrets...
+secret/db-secret configured
+
+4. Creando configmaps...
+configmap/prometheus-config unchanged
+configmap/otel-collector-config unchanged
+configmap/grafana-provisioning unchanged
+configmap/grafana-dashboards unchanged
+configmap/grafana-dashboard-infra unchanged
+configmap/fluent-bit-config unchanged
+
+5. Creando StorageClass y PersistentVolumes...
+storageclass.storage.k8s.io/local-storage unchanged
+   Limpiando PVs huérfanos (Released)...
+persistentvolume/sql-pv unchanged
+persistentvolumeclaim/sql-pvc unchanged
+persistentvolume/elasticsearch-pv unchanged
+persistentvolumeclaim/elasticsearch-pvc unchanged
+persistentvolume/prometheus-pv unchanged
+persistentvolumeclaim/prometheus-pvc unchanged
+persistentvolume/grafana-pv unchanged
+persistentvolumeclaim/grafana-pvc unchanged
+
+6. Desplegando base de datos...
+service/pharmago-db unchanged
+deployment.apps/pharmago-db configured
+
+   Esperando a que la base de datos esté lista...
+   Base de datos lista!
+
+7. Desplegando servicios de observabilidad...
+service/elasticsearch unchanged
+deployment.apps/elasticsearch configured
+   Esperando a que Elasticsearch esté listo...
+   Esperando... (5/300 segundos)
+   Esperando... (10/300 segundos)
+   Esperando... (15/300 segundos)
+   Elasticsearch listo!
+service/otlp-collector unchanged
+deployment.apps/otlp-collector unchanged
+serviceaccount/prometheus unchanged
+clusterrole.rbac.authorization.k8s.io/prometheus-cadvisor unchanged
+clusterrolebinding.rbac.authorization.k8s.io/prometheus-cadvisor unchanged
+service/prometheus unchanged
+deployment.apps/prometheus unchanged
+service/node-exporter unchanged
+daemonset.apps/node-exporter unchanged
+service/grafana unchanged
+deployment.apps/grafana configured
+service/kibana unchanged
+deployment.apps/kibana unchanged
+serviceaccount/fluent-bit unchanged
+clusterrole.rbac.authorization.k8s.io/fluent-bit-read unchanged
+clusterrolebinding.rbac.authorization.k8s.io/fluent-bit-read unchanged
+daemonset.apps/fluent-bit unchanged
+
+8. Desplegando servicios backend...
+service/pharmago-users-service unchanged
+deployment.apps/pharmago-users-service configured
+service/pharmago-pharmacy-service unchanged
+deployment.apps/pharmago-pharmacy-service configured
+service/pharmago-api-gateway unchanged
+deployment.apps/pharmago-api-gateway configured
+
+9. Desplegando frontend...
+service/pharmago-ui unchanged
+deployment.apps/pharmago-ui configured
+
+10. Creando PodDisruptionBudgets (al menos 1 réplica disponible por microservicio)...
+poddisruptionbudget.policy/pharmago-api-gateway configured
+poddisruptionbudget.policy/pharmago-pharmacy-service configured
+poddisruptionbudget.policy/pharmago-ui configured
+poddisruptionbudget.policy/pharmago-users-service configured
+
+11. Configurando Ingress (acceso a la app sin port-forward)...
+   Esperando al controlador de ingress-nginx (su webhook tiene que estar listo)...
+pod/ingress-nginx-controller-5dd7bb8666-kw5rw condition met
+ingress.networking.k8s.io/pharmago-ingress unchanged
+
+=== Despliegue completado ===
+
+Verificando estado de los pods...
+NAME                                         READY   STATUS              RESTARTS        AGE     IP               NODE           NOMINATED NODE   READINESS GATES
+elasticsearch-757964844b-vhxwm               1/1     Running             6 (5m7s ago)    3d22h   10.244.149.51    minikube-m05   <none>           <none>
+fluent-bit-fmk9m                             1/1     Running             6 (7m4s ago)    3d22h   10.244.205.221   minikube-m02   <none>           <none>
+fluent-bit-kkgdg                             1/1     Running             6 (6m26s ago)   3d22h   10.244.151.25    minikube-m03   <none>           <none>
+fluent-bit-p8bqc                             1/1     Running             6 (5m7s ago)    3d22h   10.244.149.48    minikube-m05   <none>           <none>
+fluent-bit-ptl5s                             1/1     Running             6 (7m56s ago)   3d22h   10.244.120.105   minikube       <none>           <none>
+fluent-bit-qszmk                             1/1     Running             6 (5m46s ago)   3d22h   10.244.59.151    minikube-m04   <none>           <none>
+grafana-854bbd78d7-vqphv                     1/1     Running             5 (5m7s ago)    3d22h   10.244.149.50    minikube-m05   <none>           <none>
+kibana-7d8cfc6546-fqkvr                      0/1     Running             6 (5m7s ago)    3d22h   10.244.149.46    minikube-m05   <none>           <none>
+node-exporter-ndr5m                          1/1     Running             6 (7m56s ago)   3d22h   192.168.49.2     minikube       <none>           <none>
+node-exporter-sl2rr                          1/1     Running             6 (6m26s ago)   3d22h   192.168.49.4     minikube-m03   <none>           <none>
+node-exporter-tk9zw                          1/1     Running             6 (5m46s ago)   3d22h   192.168.49.5     minikube-m04   <none>           <none>
+node-exporter-vv67n                          1/1     Running             6 (7m4s ago)    3d22h   192.168.49.3     minikube-m02   <none>           <none>
+node-exporter-zpj2x                          1/1     Running             6 (5m7s ago)    3d22h   192.168.49.6     minikube-m05   <none>           <none>
+otlp-collector-5985bb799-zrsk4               1/1     Running             1 (5m7s ago)    30h     10.244.149.47    minikube-m05   <none>           <none>
+pharmago-api-gateway-5dc5d85d5c-725lz        1/1     Running             1 (7m4s ago)    30h     10.244.205.220   minikube-m02   <none>           <none>
+pharmago-api-gateway-5dc5d85d5c-jh2jd        1/1     Running             1 (7m4s ago)    30h     10.244.205.223   minikube-m02   <none>           <none>
+pharmago-api-gateway-6d6656b845-52hk7        0/1     ContainerCreating   0               2s      <none>           minikube-m02   <none>           <none>
+pharmago-db-79bd8977ff-7hbxd                 1/1     Running             8 (5m7s ago)    3d23h   10.244.149.49    minikube-m05   <none>           <none>
+pharmago-pharmacy-service-5b57c6bdc4-5gzwz   1/1     Running             1 (5m46s ago)   30h     10.244.59.153    minikube-m04   <none>           <none>
+pharmago-pharmacy-service-5b57c6bdc4-fckjb   1/1     Running             1 (5m46s ago)   30h     10.244.59.152    minikube-m04   <none>           <none>
+pharmago-pharmacy-service-7467475886-ng62q   0/1     ContainerCreating   0               2s      <none>           minikube-m04   <none>           <none>
+pharmago-ui-54b8d6d894-8tzl9                 1/1     Running             1 (7m56s ago)   30h     10.244.120.108   minikube       <none>           <none>
+pharmago-ui-54b8d6d894-jv8b8                 1/1     Running             1 (7m57s ago)   30h     10.244.120.109   minikube       <none>           <none>
+pharmago-ui-7976789c56-zzgqw                 0/1     ContainerCreating   0               1s      <none>           minikube       <none>           <none>
+pharmago-users-service-569c47c8f5-2pp2v      0/1     Running             0               3s      10.244.151.26    minikube-m03   <none>           <none>
+pharmago-users-service-d5cb76b9c-92mcz       1/1     Running             2 (3m27s ago)   30h     10.244.151.24    minikube-m03   <none>           <none>
+pharmago-users-service-d5cb76b9c-qmk54       1/1     Running             2 (3m27s ago)   30h     10.244.151.23    minikube-m03   <none>           <none>
+prometheus-59449b774b-l4q2j                  1/1     Running             1 (5m7s ago)    30h     10.244.149.45    minikube-m05   <none>           <none>
+
+Para entrar a la app (sin port-forward):
+  1. En PowerShell como administrador: minikube tunnel   (dejalo abierto)
+  2. Abrí http://127.0.0.1/   (la API queda en http://127.0.0.1/api/...)
+
+Herramientas de operación (Prometheus, Grafana, Kibana, Elasticsearch):
+  ./port-forward.sh
+$ kubectl get deploy -n pharmago -o wide (app)
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS                  IMAGES                                                  SELECTOR
+pharmago-api-gateway        2/2     2            2           3d22h   pharmago-api-gateway        pharmago-api-gateway:be11702                            app=pharmago-api-gateway
+pharmago-pharmacy-service   2/2     2            2           3d22h   pharmago-pharmacy-service   pharmago-pharmacy-service:be11702                       app=pharmago-pharmacy-service
+pharmago-ui                 2/2     2            2           3d22h   pharmago-ui                 pharmago-ui:be11702                                     app=pharmago-ui
+pharmago-users-service      2/2     2            2           3d22h   pharmago-users-service      pharmago-users-service:be11702                          app=pharmago-users-service
+
+$ grep -rn ":latest" "Implementacion K8S/Codigo/k8s"
+(sin resultados)

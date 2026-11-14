@@ -1,0 +1,73 @@
+$ bash verify/measure-mttr.sh pharmago-api-gateway
+Deployment: pharmago-api-gateway | modo: delete | pod: pharmago-api-gateway-6d6656b845-86zml | réplicas: 2 | URL: http://127.0.0.1/api/drug | 40 requests, 1 por segundo
+t=10s  kubectl delete pod pharmago-api-gateway-6d6656b845-86zml
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 4.1 s (resolución de 1 s, la del loop)
+OK
+exit=0
+
+$ bash verify/measure-mttr.sh pharmago-users-service
+Deployment: pharmago-users-service | modo: delete | pod: pharmago-users-service-569c47c8f5-f99n2 | réplicas: 2 | URL: http://127.0.0.1/api/roles | 40 requests, 1 por segundo
+t=10s  kubectl delete pod pharmago-users-service-569c47c8f5-f99n2
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 5.4 s (resolución de 1 s, la del loop)
+OK
+exit=0
+
+$ bash verify/measure-mttr.sh pharmago-pharmacy-service
+Deployment: pharmago-pharmacy-service | modo: delete | pod: pharmago-pharmacy-service-7467475886-b7nt2 | réplicas: 2 | URL: http://127.0.0.1/api/drug | 40 requests, 1 por segundo
+t=10s  kubectl delete pod pharmago-pharmacy-service-7467475886-b7nt2
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 6.7 s (resolución de 1 s, la del loop)
+OK
+exit=0
+
+$ bash verify/measure-mttr.sh pharmago-ui
+Deployment: pharmago-ui | modo: delete | pod: pharmago-ui-7976789c56-l68r4 | réplicas: 2 | URL: http://127.0.0.1/ | 40 requests, 1 por segundo
+t=10s  kubectl delete pod pharmago-ui-7976789c56-l68r4
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 5.4 s (resolución de 1 s, la del loop)
+OK
+exit=0
+
+$ bash verify/measure-mttr.sh pharmago-api-gateway --crash
+Deployment: pharmago-api-gateway | modo: crash | pod: pharmago-api-gateway-6d6656b845-vp8fz | réplicas: 2 | URL: http://127.0.0.1/api/drug | 40 requests, 1 por segundo
+t=10s  kill 1 dentro de pharmago-api-gateway-6d6656b845-vp8fz
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 4.4 s (resolución de 1 s, la del loop)
+OK
+exit=0
+
+$ bash verify/measure-mttr.sh pharmago-users-service --crash
+Deployment: pharmago-users-service | modo: crash | pod: pharmago-users-service-569c47c8f5-jx4ds | réplicas: 2 | URL: http://127.0.0.1/api/roles | 40 requests, 1 por segundo
+t=10s  kill 1 dentro de pharmago-users-service-569c47c8f5-jx4ds
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 8.8 s (resolución de 1 s, la del loop)
+OK
+exit=0
+
+$ bash verify/measure-mttr.sh pharmago-pharmacy-service --crash
+Deployment: pharmago-pharmacy-service | modo: crash | pod: pharmago-pharmacy-service-7467475886-hx45v | réplicas: 2 | URL: http://127.0.0.1/api/drug | 40 requests, 1 por segundo
+t=10s  kill 1 dentro de pharmago-pharmacy-service-7467475886-hx45v
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 7.4 s (resolución de 1 s, la del loop)
+OK
+exit=0
+
+$ bash verify/measure-mttr.sh pharmago-ui --crash
+Deployment: pharmago-ui | modo: crash | pod: pharmago-ui-7976789c56-85d5v | réplicas: 2 | URL: http://127.0.0.1/ | 40 requests, 1 por segundo
+t=10s  kill 1 dentro de pharmago-ui-7976789c56-85d5v
+Respuestas: 40 | 2xx: 40 | no-2xx: 0
+MTTR (falla -> 2/2 Ready): 3.0 s (resolución de 1 s, la del loop)
+OK
+exit=0
+
+=== Resumen ===
+pharmago-api-gateway                 | Respuestas: 40 | 2xx: 40 | no-2xx: 0 | MTTR (falla -> 2/2 Ready): 4.1 s (resolución de 1 s, la del loop) | exit=0
+pharmago-users-service               | Respuestas: 40 | 2xx: 40 | no-2xx: 0 | MTTR (falla -> 2/2 Ready): 5.4 s (resolución de 1 s, la del loop) | exit=0
+pharmago-pharmacy-service            | Respuestas: 40 | 2xx: 40 | no-2xx: 0 | MTTR (falla -> 2/2 Ready): 6.7 s (resolución de 1 s, la del loop) | exit=0
+pharmago-ui                          | Respuestas: 40 | 2xx: 40 | no-2xx: 0 | MTTR (falla -> 2/2 Ready): 5.4 s (resolución de 1 s, la del loop) | exit=0
+pharmago-api-gateway --crash         | Respuestas: 40 | 2xx: 40 | no-2xx: 0 | MTTR (falla -> 2/2 Ready): 4.4 s (resolución de 1 s, la del loop) | exit=0
+pharmago-users-service --crash       | Respuestas: 40 | 2xx: 40 | no-2xx: 0 | MTTR (falla -> 2/2 Ready): 8.8 s (resolución de 1 s, la del loop) | exit=0
+pharmago-pharmacy-service --crash    | Respuestas: 40 | 2xx: 40 | no-2xx: 0 | MTTR (falla -> 2/2 Ready): 7.4 s (resolución de 1 s, la del loop) | exit=0
+pharmago-ui --crash                  | Respuestas: 40 | 2xx: 40 | no-2xx: 0 | MTTR (falla -> 2/2 Ready): 3.0 s (resolución de 1 s, la del loop) | exit=0
