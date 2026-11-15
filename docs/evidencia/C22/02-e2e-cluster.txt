@@ -1,0 +1,67 @@
+B5-verificacion: escenarios @e2e de C22 contra el cluster de Martin Roux, 2026-11-15T13:07:24Z
+Cluster levantado desde cero con full-up.sh (tag 94d8ad8), minikube tunnel abierto.
+La contraseña se pasó por CYPRESS_E2E_PASSWORD leída de Backend/seed-data.sql, sin imprimirla.
+
+$ CYPRESS_BASE_URL=http://127.0.0.1 CYPRESS_E2E_PASSWORD=<oculta> npm run test:e2e
+
+> test:e2e
+> cypress run --env tags=@e2e
+
+
+
+DevTools listening on ws://127.0.0.1:51088/devtools/browser/fbeffbf8-a2bb-4ae0-a58e-9661e8a87923
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v24.21.0 (C:\nvm4w\nodejs\node.exe)                                            │
+  │ Specs:          1 found (salud.feature)                                                        │
+  │ Searched:       D:/facultad/AIOps/cosas obl/OBLIGATORIO/AIOps/Implementacion K8S/Codigo/e2e/cy │
+  │                 press/e2e/salud.feature                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  salud.feature                                                                   (1 of 1)
+
+
+  La app desplegada responde
+    √ La API de medicamentos responde (143ms)
+    √ El administrador del seed inicia sesión de verdad (2359ms)
+
+
+  2 passing (3s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     2 seconds                                                                        │
+  │ Spec Ran:     salud.feature                                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  salud.feature                            00:02        2        2        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:02        2        2        -        -        -  
+
+exit 0

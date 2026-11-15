@@ -1,0 +1,62 @@
+B5-verificacion: C08-ajuste en el cluster de Martin Roux, 2026-11-14T22:45:46Z
+Commit del repo: 6158548. Imágenes: 6158548 (v1) y 6158548-v2 (mismo contenido, otro tag)
+
+$ kubectl rollout history deployment/pharmago-api-gateway -n pharmago   (antes)
+deployment.apps/pharmago-api-gateway 
+REVISION  CHANGE-CAUSE
+10        deploy.sh be11702-v2
+11        deploy.sh be11702-v2
+12        deploy.sh be11702-v2
+13        deploy.sh be11702-v2
+14        deploy.sh be11702-v2
+15        deploy.sh be11702-v2
+
+$ ./deploy.sh 6158548-v2
+22:45:49 pharmago-users-service -> 6158548-v2
+deployment.apps/pharmago-users-service image updated
+deployment "pharmago-users-service" successfully rolled out
+22:46:09 pharmago-pharmacy-service -> 6158548-v2
+deployment.apps/pharmago-pharmacy-service image updated
+deployment "pharmago-pharmacy-service" successfully rolled out
+22:46:31 pharmago-api-gateway -> 6158548-v2
+deployment.apps/pharmago-api-gateway image updated
+deployment "pharmago-api-gateway" successfully rolled out
+22:46:47 pharmago-ui -> 6158548-v2
+deployment.apps/pharmago-ui image updated
+deployment "pharmago-ui" successfully rolled out
+22:47:03 Listo: los 4 microservicios corren 6158548-v2.
+DEPLOYMENT                  LISTOS   IMAGEN
+pharmago-users-service      2        pharmago-users-service:6158548-v2
+pharmago-pharmacy-service   2        pharmago-pharmacy-service:6158548-v2
+pharmago-api-gateway        2        pharmago-api-gateway:6158548-v2
+pharmago-ui                 2        pharmago-ui:6158548-v2
+
+$ kubectl rollout history deployment/pharmago-api-gateway -n pharmago   (después de deploy)
+deployment.apps/pharmago-api-gateway 
+REVISION  CHANGE-CAUSE
+11        deploy.sh be11702-v2
+12        deploy.sh be11702-v2
+13        deploy.sh be11702-v2
+14        deploy.sh be11702-v2
+15        deploy.sh be11702-v2
+16        deploy.sh 6158548-v2
+
+$ ./rollback.sh pharmago-api-gateway
+22:47:04 rollback de pharmago-api-gateway
+deployment.apps/pharmago-api-gateway rolled back
+deployment "pharmago-api-gateway" successfully rolled out
+DEPLOYMENT             LISTOS   IMAGEN
+pharmago-api-gateway   2        pharmago-api-gateway:6158548
+
+$ kubectl rollout history deployment/pharmago-api-gateway -n pharmago   (después de rollback)
+deployment.apps/pharmago-api-gateway 
+REVISION  CHANGE-CAUSE
+11        deploy.sh be11702-v2
+12        deploy.sh be11702-v2
+13        deploy.sh be11702-v2
+14        deploy.sh be11702-v2
+16        deploy.sh 6158548-v2
+17        rollback.sh, vuelve a 6158548
+
+$ kubectl get deploy pharmago-api-gateway -n pharmago -o jsonpath={...image}
+pharmago-api-gateway:6158548

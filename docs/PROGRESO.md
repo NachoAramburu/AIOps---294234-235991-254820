@@ -813,3 +813,33 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - Seguir el playbook encontró un error real: `kubectl exec <pod> -- kill <pid>` no funciona en estas imágenes. Corregido en `memoria.md` y `cpu.md`.
   - El checker de C19 da los playbooks como pendientes por diseño: para B7 se usa `docs/evidencia/C20/check_plan_b7.py`, que exige que todo exista.
 - **Uso de IA registrado en docs/USO_IA.md:** sí (una fila para el bloque B7)
+
+## B5-verificacion — C08-ajuste y escenarios @e2e de C22 en el cluster — 2026-11-15 — Martin Roux
+- **Estado:** Hecho
+- **Ítem de rúbrica:** 3 (Despliegues seguros) y transversal (BDD: Cypress + Cucumber)
+- **Commit:** `B5-verificacion: C08-ajuste y escenarios @e2e de C22 en el cluster` (SHA en `git log --grep "^B5-verificacion:"`)
+- **Dónde se corrió:** PC de Martin, cluster de 5 nodos con `minikube tunnel` abierto. No se tocó código: se corrieron los comandos de `docs/evidencia/C08/04-ajuste-cluster-pendiente.txt` y `docs/evidencia/C22/cluster-pendiente.txt`. C08-ajuste se corrió sobre el cluster de C02 con las imágenes `6158548`; los `@e2e`, sobre el cluster levantado desde cero en C23 (`94d8ad8`, mismo código de la app).
+- **Archivos creados / modificados:** `docs/evidencia/C08/05-ajuste-cluster.txt`, `docs/evidencia/C22/02-e2e-cluster.txt`, `docs/PROGRESO.md`, `docs/USO_IA.md`.
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  C08-ajuste (C08/05)
+  $ ./deploy.sh 6158548-v2            -> "Listo: los 4 microservicios corren 6158548-v2"
+  $ kubectl rollout history deployment/pharmago-api-gateway
+    16        deploy.sh 6158548-v2
+  $ ./rollback.sh pharmago-api-gateway  -> pharmago-api-gateway:6158548, 2/2
+  $ kubectl rollout history deployment/pharmago-api-gateway
+    16        deploy.sh 6158548-v2
+    17        rollback.sh, vuelve a 6158548
+
+  C22 (C22/02)
+  $ CYPRESS_BASE_URL=http://127.0.0.1 CYPRESS_E2E_PASSWORD=<oculta> npm run test:e2e
+    √ La API de medicamentos responde (143ms)
+    √ El administrador del seed inicia sesión de verdad (2359ms)
+    Tests: 2  Passing: 2  Failing: 0   -> All specs passed!
+  ```
+- **Criterio de "hecho":** cumplido. La revisión nueva lleva el tag que corre y el rollback deja anotado a qué versión volvió. Los 2 escenarios `@e2e` pasan contra el Ingress real. La contraseña se pasó por variable de entorno leída del seed y no aparece en la evidencia (0 coincidencias).
+- **Decisiones tomadas:** ninguna.
+- **NO VERIFICADO / riesgos:** nada pendiente de estas dos tareas.
+- **Hallazgos nuevos que cambian el plan:** la revisión 15 del gateway, que creó `apply-k8s.sh`, mostraba `deploy.sh be11702-v2`: `apply-k8s.sh` no anota `change-cause` y la revisión hereda la anotación anterior. No afecta a `deploy.sh` ni a `rollback.sh`, que ahora anotan bien. Se puede corregir anotando `apply-k8s.sh <tag>` al aplicar; queda para quien toque ese script.
+- **Uso de IA registrado en docs/USO_IA.md:** sí
+
