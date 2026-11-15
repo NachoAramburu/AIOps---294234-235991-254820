@@ -66,3 +66,5 @@ anomaly-detection/.venv/
 **/cypress/screenshots/
 # Build del frontend que se copia para las pruebas BDD (C22)
 **/e2e/app/
+# Paquete de entrega para Gestión (C24, scripts/package-entrega.sh)
+obligatorio-aiops.zip

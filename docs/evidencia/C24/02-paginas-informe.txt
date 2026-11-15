@@ -1,0 +1,38 @@
+$ anomaly-detection/.venv/Scripts/python scripts/build-pdfs.py
+   8 págs    358 KB  docs/pdf/chaos-engineering-EXPERIMENTOS.pdf  <-  Implementacion K8S/Codigo/chaos-engineering/EXPERIMENTOS.md
+   2 págs     98 KB  docs/pdf/chaos-engineering-README.pdf  <-  Implementacion K8S/Codigo/chaos-engineering/README.md
+   8 págs    183 KB  docs/pdf/k8s-README-k8s.pdf  <-  Implementacion K8S/Codigo/k8s/README-k8s.md
+   3 págs    153 KB  docs/pdf/anomaly-detection-README.pdf  <-  anomaly-detection/README.md
+   6 págs    302 KB  docs/pdf/DECISIONES.pdf  <-  docs/DECISIONES.md
+   5 págs    220 KB  docs/pdf/MATRIZ_CUMPLIMIENTO.pdf  <-  docs/MATRIZ_CUMPLIMIENTO.md
+  27 págs    830 KB  docs/pdf/PROGRESO.pdf  <-  docs/PROGRESO.md
+   5 págs    160 KB  docs/pdf/USO_IA.pdf  <-  docs/USO_IA.md
+   7 págs    201 KB  docs/pdf/alertas.pdf  <-  docs/alertas.md
+   2 págs     90 KB  docs/pdf/bdd.pdf  <-  docs/bdd.md
+   1 págs     67 KB  docs/pdf/ci-cd.pdf  <-  docs/ci-cd.md
+   2 págs    110 KB  docs/pdf/despliegue-seguro.pdf  <-  docs/despliegue-seguro.md
+   3 págs    169 KB  docs/pdf/diagrama-despliegue.pdf  <-  docs/diagrama-despliegue.md
+   2 págs    123 KB  docs/pdf/incidentes-2026-11-14-memoria-ensayo.pdf  <-  docs/incidentes/2026-11-14-memoria-ensayo.md
+   3 págs    118 KB  docs/pdf/incidentes-ejemplo-postmortem.pdf  <-  docs/incidentes/ejemplo-postmortem.md
+   6 págs    265 KB  docs/pdf/informe.pdf  <-  docs/informe/informe.md
+   2 págs     99 KB  docs/pdf/logs.pdf  <-  docs/logs.md
+   2 págs    142 KB  docs/pdf/metricas.pdf  <-  docs/metricas.md
+   2 págs    103 KB  docs/pdf/mttr.pdf  <-  docs/mttr.md
+   6 págs    238 KB  docs/pdf/plan-incidentes.pdf  <-  docs/plan-incidentes.md
+   2 págs     80 KB  docs/pdf/plantillas-postmortem.pdf  <-  docs/plantillas/postmortem.md
+   1 págs     75 KB  docs/pdf/plantillas-registro-incidente.pdf  <-  docs/plantillas/registro-incidente.md
+   2 págs     92 KB  docs/pdf/playbooks-cpu.pdf  <-  docs/playbooks/cpu.md
+   2 págs     97 KB  docs/pdf/playbooks-desconexion.pdf  <-  docs/playbooks/desconexion.md
+   2 págs     95 KB  docs/pdf/playbooks-memoria.pdf  <-  docs/playbooks/memoria.md
+   2 págs     91 KB  docs/pdf/playbooks-pod-caido.pdf  <-  docs/playbooks/pod-caido.md
+   2 págs    101 KB  docs/pdf/playbooks-red.pdf  <-  docs/playbooks/red.md
+   2 págs     92 KB  docs/pdf/playbooks-requests.pdf  <-  docs/playbooks/requests.md
+   2 págs     98 KB  docs/pdf/playbooks-rollout-fallido.pdf  <-  docs/playbooks/rollout-fallido.md
+   2 págs     92 KB  docs/pdf/playbooks-storage.pdf  <-  docs/playbooks/storage.md
+   2 págs    118 KB  docs/pdf/resiliencia.pdf  <-  docs/resiliencia.md
+   7 págs    298 KB  docs/pdf/runbook-defensa.pdf  <-  docs/runbook-defensa.md
+   1 págs     73 KB  docs/pdf/tablero.pdf  <-  docs/tablero.md
+   2 págs    108 KB  docs/pdf/trazas.pdf  <-  docs/trazas.md
+
+Informe: 6 páginas (máximo 10): OK
+exit=0

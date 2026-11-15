@@ -1,0 +1,6 @@
+$ python docs/evidencia/C24/check_matriz.py
+Rutas comprobadas: 119. Faltan: 0
+Filas por estado: CUMPLE (defensa) 2, CUMPLE 47, PARCIAL 3, NO VERIFICADO 1
+Filas NO CUMPLE: ninguna
+Filas que no son CUMPLE: 5.2 CUMPLE (defensa); 9.4 CUMPLE (defensa); 11.2 PARCIAL; 13.3 PARCIAL; 14.2 PARCIAL; 14.3 NO VERIFICADO
+exit=0

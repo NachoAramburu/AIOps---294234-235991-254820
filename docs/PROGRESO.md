@@ -880,3 +880,32 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
   - El primer intento de `full-up.sh` falló porque exportaba `MSYS_NO_PATHCONV=1`, que rompe las rutas que bash le pasa a `git.exe`. Se quitó; los scripts que lo necesitan lo exportan por su cuenta.
 - **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B8)
 
+## C24 — Informe, matriz de cumplimiento y paquete de entrega — 2026-11-15 — Ignacio Aramburu (bloque B9)
+- **Estado:** ✅ Hecho. Quedan 3 filas PARCIAL en la matriz que dependen del equipo (tablero, firma de la fila "Plan" en USO_IA y subida a Gestión).
+- **Ítem de rúbrica:** transversal (informe, entrega y reflexión ágil)
+- **Commit:** `C24: informe final, matriz de cumplimiento y paquete de entrega` (SHA en `git log --grep "^C24:"`)
+- **Archivos creados / modificados:** `docs/MATRIZ_CUMPLIMIENTO.md`, `docs/informe/informe.md`, `docs/pdf/` (34 PDF), `scripts/build-pdfs.py`, `scripts/package-entrega.sh`, `.gitignore` (`obligatorio-aiops.zip`), `docs/DECISIONES.md` (D59, D60), `docs/evidencia/C24/`, `docs/PROGRESO.md`, `docs/USO_IA.md`
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  $ anomaly-detection/.venv/Scripts/python scripts/build-pdfs.py      (02)
+    34 PDF en docs/pdf/ en unos 30 s; diagramas Mermaid dibujados
+    Informe: 6 páginas (máximo 10): OK   (confirmado además abriendo el PDF)
+  $ git add ... && scripts/package-entrega.sh $(git write-tree)        (03)
+    Tamaño: 14,70 MB (máximo 40 MB) · 872 archivos, 45 PDF · INFORME.pdf en la raíz
+    Excluidos que se colaron (.bak, bin, obj, node_modules): 0 · OK
+  $ python docs/evidencia/C24/check_matriz.py                          (01)
+    todas las rutas de la matriz existen · NO CUMPLE: ninguna
+    PARCIAL: 11.2 tablero, 13.3 subida a Gestión, 14.2 fila "Plan" de USO_IA · NO VERIFICADO: 14.3 pautas de IA
+  $ git shortlog -sn ebae886^..HEAD                                     (04)
+    Martin Roux 9 · Ignacio Aramburu 6 · francokbd 6  (antes de este commit)
+  ```
+- **Criterio de "hecho":** cumplido. El informe tiene una sección por ítem de la rúbrica con desafíos y resultados medidos, más extensiones, reflexión ágil y uso de IA, en 6 páginas. El zip pesa menos de 40 MB e incluye los PDF. La matriz no tiene filas NO CUMPLE.
+- **Decisiones tomadas:** D59 (PDF con mistune y Chrome headless en lugar de `npx md-to-pdf` y `mmdc`) y D60 (PDF versionados y zip desde `git archive`).
+- **NO VERIFICADO / riesgos:**
+  - Si existe el Project de GitHub: en esta PC no hay `gh` y `docs/tablero.md` sigue con la URL `PENDIENTE`.
+  - El zip definitivo se arma desde `main` después del merge; el de esta evidencia salió del árbol stageado de C24.
+  - Los PDF necesitan internet al generarse, para bajar Mermaid desde jsDelivr. Sin conexión, los diagramas salen como texto.
+- **Hallazgos nuevos que cambian el plan:**
+  - `npx` quedó bloqueado por los permisos del agente en esta PC; se reemplazó por Chrome headless (D59).
+  - Hay 49 decisiones numeradas antes de C24, no 58: la numeración tiene saltos por sección. Con D59 y D60 son 51.
+- **Uso de IA registrado en docs/USO_IA.md:** sí

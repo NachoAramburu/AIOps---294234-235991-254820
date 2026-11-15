@@ -1,0 +1,1122 @@
+$ git add <archivos de C24> && scripts/package-entrega.sh $(git write-tree)   # árbol stageado de C24 = b4b485cb4c36016ae742ad3bf7b1710a7853f0bf
+Origen:    b4b485cb4c36016ae742ad3bf7b1710a7853f0bf (b4b485c)
+Zip:       C:/Users/nachi/OneDrive/Escritorio/Facultad/Octavo semestre/AI Ops/Obligatorio/AIOps/obligatorio-aiops.zip
+Tamaño:    15419294 bytes (14.70 MB, máximo 40 MB)
+Archivos:  872, de los cuales 45 son PDF
+Excluidos que se colaron (.bak, bin, obj, node_modules): 0
+PDF incluidos:
+  obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Descripcio╠ün del disen╠âo.pdf
+  obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Evidencia de la aplicacio╠ün de TDD y Clean Code.pdf
+  obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Evidencia de la ejecucio╠ün de las pruebas de la API con Postman.pdf
+  obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Evidencia del disen╠âo y especificacio╠ün de la API.pdf
+  obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/Anexo 1 - Evidencia del disen╠âo y especificacio╠ün de la API.docx.pdf
+  obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/Anexo 2 - Informe de Cobertura de las Pruebas .pdf
+  obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/Anexo 3 - Disen╠âo del Front-end.pdf
+  obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/Informe.docx.pdf
+  obligatorio-aiops/Implementacion K8S/Gestio╠ün Farmacias I.pdf
+  obligatorio-aiops/Implementacion K8S/Gestio╠ün Farmacias II.pdf
+  obligatorio-aiops/docs/pdf/DECISIONES.pdf
+  obligatorio-aiops/docs/pdf/MATRIZ_CUMPLIMIENTO.pdf
+  obligatorio-aiops/docs/pdf/PROGRESO.pdf
+  obligatorio-aiops/docs/pdf/USO_IA.pdf
+  obligatorio-aiops/docs/pdf/alertas.pdf
+  obligatorio-aiops/docs/pdf/anomaly-detection-README.pdf
+  obligatorio-aiops/docs/pdf/bdd.pdf
+  obligatorio-aiops/docs/pdf/chaos-engineering-EXPERIMENTOS.pdf
+  obligatorio-aiops/docs/pdf/chaos-engineering-README.pdf
+  obligatorio-aiops/docs/pdf/ci-cd.pdf
+  obligatorio-aiops/docs/pdf/despliegue-seguro.pdf
+  obligatorio-aiops/docs/pdf/diagrama-despliegue.pdf
+  obligatorio-aiops/docs/pdf/incidentes-2026-11-14-memoria-ensayo.pdf
+  obligatorio-aiops/docs/pdf/incidentes-ejemplo-postmortem.pdf
+  obligatorio-aiops/docs/pdf/informe.pdf
+  obligatorio-aiops/docs/pdf/k8s-README-k8s.pdf
+  obligatorio-aiops/docs/pdf/logs.pdf
+  obligatorio-aiops/docs/pdf/metricas.pdf
+  obligatorio-aiops/docs/pdf/mttr.pdf
+  obligatorio-aiops/docs/pdf/plan-incidentes.pdf
+  obligatorio-aiops/docs/pdf/plantillas-postmortem.pdf
+  obligatorio-aiops/docs/pdf/plantillas-registro-incidente.pdf
+  obligatorio-aiops/docs/pdf/playbooks-cpu.pdf
+  obligatorio-aiops/docs/pdf/playbooks-desconexion.pdf
+  obligatorio-aiops/docs/pdf/playbooks-memoria.pdf
+  obligatorio-aiops/docs/pdf/playbooks-pod-caido.pdf
+  obligatorio-aiops/docs/pdf/playbooks-red.pdf
+  obligatorio-aiops/docs/pdf/playbooks-requests.pdf
+  obligatorio-aiops/docs/pdf/playbooks-rollout-fallido.pdf
+  obligatorio-aiops/docs/pdf/playbooks-storage.pdf
+  obligatorio-aiops/docs/pdf/resiliencia.pdf
+  obligatorio-aiops/docs/pdf/runbook-defensa.pdf
+  obligatorio-aiops/docs/pdf/tablero.pdf
+  obligatorio-aiops/docs/pdf/trazas.pdf
+  obligatorio-aiops/INFORME.pdf
+OK: listo para subir a Gestión.
+exit=0
+
+$ unzip -l obligatorio-aiops.zip
+Archive:  obligatorio-aiops.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  2026-11-15 13:56   obligatorio-aiops/
+       73  2026-11-15 13:56   obligatorio-aiops/.gitattributes
+        0  2026-11-15 13:56   obligatorio-aiops/.github/
+        0  2026-11-15 13:56   obligatorio-aiops/.github/workflows/
+     4711  2026-11-15 13:56   obligatorio-aiops/.github/workflows/ci.yml
+      932  2026-11-15 13:56   obligatorio-aiops/.gitignore
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 1/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 1/Base con datos de prueba/
+    22362  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 1/Base con datos de prueba/baseConDatos.sql
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 1/Base vaci╠üa/
+    27210  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 1/Base vaci╠üa/baseVacia.sql
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 2/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 2/Base con datos de prueba/
+    92360  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 2/Base con datos de prueba/PharmaGoDb_SchemaAndData.sql
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 2/Base vaci╠üa/
+    22350  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Base de Datos/Entrega 2/Base vaci╠üa/PharmaGoDb_SchemaOnly.sql
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/
+     6034  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/.gitignore
+      660  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/Dockerfile
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/Exceptions/
+      321  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/Exceptions/InvalidParameterException.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/ExportDomain/
+      382  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/ExportDomain/DrugExportationModel.cs
+      296  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/ExportDomain/Parameter.cs
+      206  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/ExportationModel.csproj
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/Interfaces/
+      304  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/ExportationModel/Interfaces/IFormat.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/Instrumentation/
+     2564  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/Instrumentation/CorrelationIdMiddlewareExtensions.cs
+     4606  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/Instrumentation/CustomMetrics.cs
+      516  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/Instrumentation/Instrumentation.csproj
+     2920  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/Instrumentation/MetricsMiddleware.cs
+     5842  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/Instrumentation/StructuredLogger.cs
+      537  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/Instrumentation/SuppressEfConsoleLoggingExtensions.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/InstrumentationInterface/
+     1327  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/InstrumentationInterface/ICustomMetrics.cs
+      409  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/InstrumentationInterface/IStructuredLogger.cs
+      206  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/InstrumentationInterface/InstrumentationInterface.csproj
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/JSONExporter/
+      413  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/JSONExporter/JSONExporter.csproj
+     1236  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/JSONExporter/JSONFormat.cs
+     7597  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/MICROSERVICES_MIGRATION_SUMMARY.md
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/
+      988  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/Dockerfile
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/Middleware/
+     4849  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/Middleware/UserRateLimitMiddleware.cs
+      797  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/PharmaGo.ApiGateway.csproj
+     3412  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/Program.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/Resilience/
+     5802  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/Resilience/ResilientForwarderHttpClientFactory.cs
+      532  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/appsettings.Development.json
+     4287  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.ApiGateway/appsettings.json
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/
+     7546  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/DrugManager.cs
+     2705  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/ExportManager.cs
+     7546  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/InvitationManager.cs
+     2736  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/LoginManager.cs
+      657  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/PharmaGo.BusinessLogic.csproj
+     3181  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/PharmacyManager.cs
+      583  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/PresentationManager.cs
+    12479  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/PurchasesManager.cs
+      568  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/RoleManager.cs
+     6102  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/StockRequestMangaer.cs
+      574  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/UnitMeasureManager.cs
+     3125  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.BusinessLogic/UsersManager.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/
+    16286  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220910212258_InitialCreate.Designer.cs
+    15990  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220910212258_InitialCreate.cs
+    17418  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220917182456_AddSession.Designer.cs
+     2336  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220917182456_AddSession.cs
+    17677  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220917191530_ChangeSession.Designer.cs
+     2433  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220917191530_ChangeSession.cs
+    17743  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220917232725_CheckSession.Designer.cs
+     2310  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220917232725_CheckSession.cs
+    17626  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220918192623_RemoveUseCodeFromUserEntity.Designer.cs
+      705  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20220918192623_RemoveUseCodeFromUserEntity.cs
+    15792  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221001173323_UpdateUserAndInvitationEntity.Designer.cs
+    23286  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221001173323_UpdateUserAndInvitationEntity.cs
+    17641  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221001183953_UnitMeasurePresentationConversions.Designer.cs
+     2849  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221001183953_UnitMeasurePresentationConversions.cs
+    15854  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221002194836_nullablePharmacyOfDrug.Designer.cs
+     3043  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221002194836_nullablePharmacyOfDrug.cs
+    15938  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221010173819_PurchaseV2.Designer.cs
+     3029  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221010173819_PurchaseV2.cs
+    15864  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221013003816_RemoveEnums.Designer.cs
+     1612  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/20221013003816_RemoveEnums.cs
+    15801  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Migrations/PharmacyGoDbContextModelSnapshot.cs
+      886  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/PharmaGo - Backup.DataAccess.csproj
+      949  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/PharmaGo.DataAccess.csproj
+     1629  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/PharmacyGoDbContext.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/
+     1829  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/BaseRepository.cs
+     1137  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/DrugRepository.cs
+     1450  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/InvitationRepository.cs
+      620  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/PharmacyRepository.cs
+      357  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/PresentationRepository.cs
+      939  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/PurchasesDetailRepository.cs
+     1830  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/PurchasesRepository.cs
+      378  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/RoleRepository.cs
+      535  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/SessionRepository.cs
+     1218  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/StockRequestRepository.cs
+      470  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/UnitMeasureRepository.cs
+      874  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.DataAccess/Repositories/UsersRepository.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/
+      252  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/Authorization.cs
+     1072  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/Drug.cs
+      594  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/Invitation.cs
+      723  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/Pharmacy.cs
+      232  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/Presentation.cs
+      379  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/Purchase.cs
+      336  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/PurchaseDetail.cs
+      153  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/Role.cs
+      313  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/Session.cs
+      639  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/StockRequest.cs
+      206  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/StockRequestDetail.cs
+      232  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/UnitMeasure.cs
+      438  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Entities/User.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Enums/
+      267  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/Enums/StockRequestStatus.cs
+      529  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/PharmaGo.Domain.csproj
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/SearchCriterias/
+     1223  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/SearchCriterias/DrugSearchCriteria.cs
+      863  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/SearchCriterias/InvitationSearchCriteria.cs
+      963  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/SearchCriterias/PharmacySearchCriteria.cs
+     2791  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Domain/SearchCriterias/StockRequestSearchCriteria.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Exceptions/
+      311  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Exceptions/InvalidResourceException.cs
+      206  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Exceptions/PharmaGo.Exceptions.csproj
+      315  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Exceptions/ResourceNotFoundException.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Factory/
+     1511  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Factory/PharmaGo.Factory.csproj
+     3760  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Factory/ServiceFactory.cs
+     1233  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Factory/TelemetryExtensions.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/
+      542  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IDrugManager.cs
+      337  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IExportManager.cs
+      447  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IInvitationManager.cs
+      301  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/ILoginManager.cs
+      523  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IPharmacyManager.cs
+      172  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IPresentationManager.cs
+      639  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IPurchasesManager.cs
+      156  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IRoleManager.cs
+      509  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IStockRequestManager.cs
+      170  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IUnitMeasureManager.cs
+      261  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/IUsersManager.cs
+      395  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IBusinessLogic/PharmaGo.IBusinessLogic.csproj
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IDataAccess/
+      647  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IDataAccess/IRepository.cs
+      312  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.IDataAccess/PharmaGo.IDataAccess.csproj
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/
+     7576  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/DrugManager.cs
+     2736  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/ExportManager.cs
+      690  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/PharmaGo.PharmacyService.BusinessLogic.csproj
+     3095  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/PharmacyManager.cs
+      613  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/PresentationManager.cs
+    12509  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/PurchasesManager.cs
+     6131  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/StockRequestManager.cs
+      604  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.BusinessLogic/UnitMeasureManager.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.Factory/
+     1589  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.Factory/PharmaGo.PharmacyService.Factory.csproj
+     3465  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.Factory/ServiceFactory.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/
+      556  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/IDrugManager.cs
+      351  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/IExportManager.cs
+      421  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/IPharmacyManager.cs
+      186  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/IPresentationManager.cs
+      653  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/IPurchasesManager.cs
+      508  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/IStockRequestManager.cs
+      184  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/IUnitMeasureManager.cs
+      393  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService.IBusinessLogic/PharmaGo.PharmacyService.IBusinessLogic.csproj
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Controllers/
+     2722  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Controllers/DrugController.cs
+     1378  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Controllers/ExportController.cs
+     2454  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Controllers/PharmacyController.cs
+      875  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Controllers/PresentationsController.cs
+     4767  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Controllers/PurchasesController.cs
+     2856  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Controllers/StockRequestController.cs
+      840  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Controllers/UnitMeasuresController.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Converters/
+      978  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Converters/ConvertPurchaseModelRequestToPurchase.cs
+     1870  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Dockerfile
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Enums/
+      149  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Enums/RoleType.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Filters/
+     2795  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Filters/AuthorizationFilter.cs
+      990  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Filters/ExceptionFilter.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/HttpClients/
+     1406  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/HttpClients/UsersServiceClient.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/
+     1262  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/DrugModel.cs
+      145  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/DrugModelRequest.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/Exports/
+      256  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/Exports/DrugsExportationModel.cs
+      740  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/InvitationModelRequest.cs
+      548  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/InvitationSearchCriteriaModelRequest.cs
+      186  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/LoginModelRequest.cs
+      476  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/PharmacyModel.cs
+      195  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/PurchaseAuthorizationModel.cs
+      478  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/PurchaseModelRequest.cs
+      244  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/StockRequestDetailsModelRequest.cs
+      607  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/StockRequestModelRequest.cs
+      684  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/StockRequestSearchCriteriaModelRequest.cs
+      964  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/UpdateDrugModel.cs
+      405  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/In/UserModelRequest.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/
+      667  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/DrugBasicModel.cs
+     1139  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/DrugDetailModel.cs
+      417  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/DrugModelResponse.cs
+      666  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/InvitationDetailModelResponse.cs
+      365  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/InvitationModelResponse.cs
+      797  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/InvitationSearchCriteriaModelResponse.cs
+      252  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/InvitationUserCodeModelResponse.cs
+      224  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/LoginModelResponse.cs
+      346  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/PharmacyBasicModel.cs
+      915  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/PharmacyDetailModel.cs
+      371  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/PresentationBasicModel.cs
+      988  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/PurchaseDetailModelResponse.cs
+     1959  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/PurchaseModelResponse.cs
+      319  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/RoleBasicModel.cs
+      328  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/RoleModelResponse.cs
+      280  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/StockRequestModelResponse.cs
+      465  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/StockRequestSearchCriteriaDetailsModelResponse.cs
+      793  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/StockRequestSearchCriteriaModelResponse.cs
+      365  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/UnitMeasureBasicModel.cs
+      334  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/UserBasicModel.cs
+      562  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Models/Out/UserModelResponse.cs
+     1151  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/PharmaGo.PharmacyService.csproj
+     2031  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/Program.cs
+      277  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/appsettings.Development.json
+      662  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.PharmacyService/appsettings.json
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Telemetry/
+     1021  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Telemetry/PharmaGo.Telemetry.csproj
+     2748  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.Telemetry/TelemetryExtensions.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.BusinessLogic/
+     7569  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.BusinessLogic/InvitationManager.cs
+     2761  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.BusinessLogic/LoginManager.cs
+      605  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.BusinessLogic/PharmaGo.UsersService.BusinessLogic.csproj
+      592  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.BusinessLogic/RoleManager.cs
+     3149  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.BusinessLogic/UsersManager.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.Factory/
+     1574  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.Factory/PharmaGo.UsersService.Factory.csproj
+     4059  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.Factory/ServiceFactory.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.IBusinessLogic/
+      457  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.IBusinessLogic/IInvitationManager.cs
+      313  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.IBusinessLogic/ILoginManager.cs
+      167  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.IBusinessLogic/IRoleManager.cs
+      272  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.IBusinessLogic/IUsersManager.cs
+      314  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService.IBusinessLogic/PharmaGo.UsersService.IBusinessLogic.csproj
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Controllers/
+     2654  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Controllers/InvitationsController.cs
+     2401  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Controllers/LoginController.cs
+     1189  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Controllers/RolesController.cs
+     1008  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Controllers/UsersController.cs
+     1686  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Dockerfile
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Enums/
+      146  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Enums/RoleType.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Filters/
+     1351  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Filters/AuthorizationFilter.cs
+      987  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Filters/ExceptionFilter.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/HttpClients/
+     1444  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/HttpClients/PharmacyServiceClient.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/
+     1259  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/DrugModel.cs
+      142  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/DrugModelRequest.cs
+      737  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/InvitationModelRequest.cs
+      545  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/InvitationSearchCriteriaModelRequest.cs
+      183  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/LoginModelRequest.cs
+      473  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/PharmacyModel.cs
+      192  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/PurchaseAuthorizationModel.cs
+      475  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/PurchaseModelRequest.cs
+      241  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/StockRequestDetailsModelRequest.cs
+      604  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/StockRequestModelRequest.cs
+      681  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/StockRequestSearchCriteriaModelRequest.cs
+      961  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/UpdateDrugModel.cs
+      402  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/In/UserModelRequest.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/
+      664  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/DrugBasicModel.cs
+     1136  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/DrugDetailModel.cs
+      414  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/DrugModelResponse.cs
+      663  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/InvitationDetailModelResponse.cs
+      362  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/InvitationModelResponse.cs
+      794  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/InvitationSearchCriteriaModelResponse.cs
+      249  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/InvitationUserCodeModelResponse.cs
+      221  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/LoginModelResponse.cs
+      343  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/PharmacyBasicModel.cs
+      912  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/PharmacyDetailModel.cs
+      368  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/PresentationBasicModel.cs
+      985  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/PurchaseDetailModelResponse.cs
+     1953  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/PurchaseModelResponse.cs
+      316  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/RoleBasicModel.cs
+      325  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/RoleModelResponse.cs
+      277  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/StockRequestModelResponse.cs
+      462  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/StockRequestSearchCriteriaDetailsModelResponse.cs
+      790  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/StockRequestSearchCriteriaModelResponse.cs
+      362  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/UnitMeasureBasicModel.cs
+      331  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/UserBasicModel.cs
+      559  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Models/Out/UserModelResponse.cs
+     1073  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/PharmaGo.UsersService.csproj
+     2045  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/Program.cs
+      280  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/appsettings.Development.json
+      668  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.UsersService/appsettings.json
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/
+     1410  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/CodeCoverage.runsettings
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/
+     2664  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/DrugController.cs
+     1329  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/ExportController.cs
+     2670  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/InvitationsController.cs
+     1014  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/LoginController.cs
+     2396  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/PharmacyController.cs
+      844  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/PresentationsController.cs
+     3253  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/PurchasesController.cs
+      678  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/RolesController.cs
+     2798  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/StockRequestController.cs
+      668  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/TestMetricsService.cs
+      809  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/UnitMeasuresController.cs
+      979  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Controllers/UsersController.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Converters/
+      963  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Converters/ConvertPurchaseModelRequestToPurchase.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Enums/
+      143  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Enums/RoleType.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Filters/
+     1335  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Filters/AuthorizationFilter.cs
+      984  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Filters/ExceptionFilter.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/
+     1256  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/DrugModel.cs
+      139  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/DrugModelRequest.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/Exports/
+      250  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/Exports/DrugsExportationModel.cs
+      734  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/InvitationModelRequest.cs
+      542  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/InvitationSearchCriteriaModelRequest.cs
+      180  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/LoginModelRequest.cs
+      470  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/PharmacyModel.cs
+      189  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/PurchaseAuthorizationModel.cs
+      472  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/PurchaseModelRequest.cs
+      238  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/StockRequestDetailsModelRequest.cs
+      601  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/StockRequestModelRequest.cs
+      678  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/StockRequestSearchCriteriaModelRequest.cs
+      958  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/UpdateDrugModel.cs
+      399  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/In/UserModelRequest.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/
+      661  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/DrugBasicModel.cs
+     1133  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/DrugDetailModel.cs
+      411  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/DrugModelResponse.cs
+      660  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/InvitationDetailModelResponse.cs
+      359  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/InvitationModelResponse.cs
+      791  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/InvitationSearchCriteriaModelResponse.cs
+      246  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/InvitationUserCodeModelResponse.cs
+      218  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/LoginModelResponse.cs
+      340  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/PharmacyBasicModel.cs
+      909  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/PharmacyDetailModel.cs
+      365  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/PresentationBasicModel.cs
+      982  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/PurchaseDetailModelResponse.cs
+     1944  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/PurchaseModelResponse.cs
+      313  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/RoleBasicModel.cs
+      322  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/RoleModelResponse.cs
+      274  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/StockRequestModelResponse.cs
+      459  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/StockRequestSearchCriteriaDetailsModelResponse.cs
+      787  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/StockRequestSearchCriteriaModelResponse.cs
+      359  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/UnitMeasureBasicModel.cs
+      328  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/UserBasicModel.cs
+      556  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Models/Out/UserModelResponse.cs
+     1488  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/PharmaGo.WebApi.csproj
+     1429  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Program.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Properties/
+      776  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/Properties/launchSettings.json
+      208  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/appsettings.Development.json
+      353  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.WebApi/appsettings.json
+    13425  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharmaGo.sln
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/
+    16674  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/DrugManagerTests.cs
+    28252  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/InvitationManagerTest.cs
+     9024  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/LoginManagerTests.cs
+     8909  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/PharmacyManagerTests.cs
+     1627  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/PresentationManagerTest.cs
+    27631  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/PurchasesManagerTests.cs
+     1287  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/RoleManagerTest.cs
+    34151  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/StockManagerTest.cs
+     1562  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/UnitMeasureManagerTest.cs
+    12742  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/BusinessLogic.Test/UsersManagerTests.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/
+     6578  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/DrugRepositoryTests.cs
+     5256  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/InvitationRepositoryTest.cs
+     4889  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/PharmacyRepositoryTests.cs
+     4312  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/PurchasesDetailRepositoryTest.cs
+     8951  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/PurchasesRepositoryTests.cs
+     1951  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/SessionRepositoryTests.cs
+     5095  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/StockRequestRepositoryTest.cs
+     4155  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/DataAccess.Test/UsersRepositoryTests.cs
+      999  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/PharmaGo.Test.csproj
+       58  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/Usings.cs
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/
+    14570  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/DrugControllerTests.cs
+     4259  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/ExportControllerTests.cs
+    13781  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/InvitationControllerTest.cs
+     3043  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/LoginControllerTests.cs
+    11409  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/PharmacyControllerTests.cs
+     1991  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/PresentationsControllerTest.cs
+    14601  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/PurchasesControllerTests.cs
+     1661  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/RolesControllerTest.cs
+    14146  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/StockRequestControllerTest.cs
+     1950  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/UnitMeasureControllerTest.cs
+     4609  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/PharnaGo.Test/WebApi.Test/UsersControllerTests.cs
+     7730  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/RATE_LIMITING_GUIDE.md
+     9891  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/explicacion-volumenes.md
+      243  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/otel-collector-config.yaml
+      548  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/prometheus.yml
+     7065  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Backend/seed-data.sql
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/
+      600  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/.browserslistrc
+      274  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/.editorconfig
+      548  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/.gitignore
+      399  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/Dockerfile
+     1062  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/README.md
+     3426  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/angular.json
+     1426  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/karma.conf.js
+      520  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/nginx.conf
+   809625  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/package-lock.json
+     1289  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/package.json
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/
+     5132  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/app-routing.module.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/app.component.css
+       33  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/app.component.html
+      212  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/app.component.ts
+     5723  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/app.module.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-footer/
+       82  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-footer/custom-footer.component.css
+      289  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-footer/custom-footer.component.html
+      303  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-footer/custom-footer.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-header/
+      567  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-header/custom-header.component.css
+     1924  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-header/custom-header.component.html
+     1605  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-header/custom-header.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-toast/
+      250  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-toast/custom-toast.component.css
+      497  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-toast/custom-toast.component.html
+      887  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-toast/custom-toast.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-user-header/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-user-header/custom-user-header.component.css
+      847  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-user-header/custom-user-header.component.html
+      823  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/custom/custom-user-header/custom-user-header.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/guards/
+      986  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/guards/authentication.guard.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/
+      133  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/drug-exportation-model.ts
+     1050  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/drug.ts
+      636  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/invitation.ts
+      317  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/login.ts
+       74  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/parameter.ts
+      336  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/pharmacy.ts
+       72  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/presentation.ts
+     1339  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/purchase.ts
+       64  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/role.ts
+      861  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/stock-request.ts
+       71  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/unitmeasure.ts
+      687  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/interfaces/user.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/admin/
+       39  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/admin/admin.component.css
+     2176  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/admin/admin.component.html
+      638  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/admin/admin.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/create-invitation/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/create-invitation/create-invitation.component.css
+     2361  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/create-invitation/create-invitation.component.html
+     3194  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/create-invitation/create-invitation.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/create-pharmacy/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/create-pharmacy/create-pharmacy.component.css
+     1719  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/create-pharmacy/create-pharmacy.component.html
+     1693  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/create-pharmacy/create-pharmacy.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/list-invitation/
+       34  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/list-invitation/list-invitation.component.css
+     3481  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/list-invitation/list-invitation.component.html
+     2955  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/list-invitation/list-invitation.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/update-invitation/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/update-invitation/update-invitation.component.css
+     2954  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/update-invitation/update-invitation.component.html
+     4814  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/admin/update-invitation/update-invitation.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/create-drug/
+       39  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/create-drug/create-drug.component.css
+     4322  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/create-drug/create-drug.component.html
+     4482  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/create-drug/create-drug.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/create-request/
+       39  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/create-request/create-request.component.css
+     3388  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/create-request/create-request.component.html
+     2077  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/create-request/create-request.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/delete-drug/
+      126  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/delete-drug/delete-drug.component.css
+     1732  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/delete-drug/delete-drug.component.html
+     1745  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/delete-drug/delete-drug.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/employee/
+       39  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/employee/employee.component.css
+     5713  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/employee/employee.component.html
+      413  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/employee/employee.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/export-drugs/
+       64  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/export-drugs/export-drugs.component.css
+     1977  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/export-drugs/export-drugs.component.html
+     1747  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/export-drugs/export-drugs.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/purchase-status/
+      135  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/purchase-status/purchase-status.component.css
+     3212  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/purchase-status/purchase-status.component.html
+     3631  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/purchase-status/purchase-status.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/stock-request/
+      299  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/stock-request/stock-request.component.css
+     3838  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/stock-request/stock-request.component.html
+     2610  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/employee/stock-request/stock-request.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/cart/
+      244  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/cart/cart.component.css
+     2939  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/cart/cart.component.html
+     1854  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/cart/cart.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/cho/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/cho/cho.component.css
+     1578  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/cho/cho.component.html
+     2319  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/cho/cho.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/detail/
+       36  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/detail/detail.component.css
+     2171  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/detail/detail.component.html
+     2151  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/detail/detail.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/home/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/home/home.component.css
+     1328  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/home/home.component.html
+     1469  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/home/home.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/page401/
+      492  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/page401/page401.component.html
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/page401/page401.component.scss
+      228  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/page401/page401.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/page404/
+      482  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/page404/page404.component.html
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/page404/page404.component.scss
+      228  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/page404/page404.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/tracking/
+      200  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/tracking/tracking.component.css
+     4099  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/tracking/tracking.component.html
+     2038  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/home/tracking/tracking.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/login/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/login/login.component.css
+     1859  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/login/login.component.html
+     1702  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/login/login.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/invitation/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/invitation/invitation.component.css
+     1675  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/invitation/invitation.component.html
+     2990  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/invitation/invitation.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/owner/
+       39  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/owner/owner.component.css
+     2262  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/owner/owner.component.html
+      401  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/owner/owner.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/purchase-by-date/
+      196  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/purchase-by-date/purchase-by-date.component.css
+     3883  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/purchase-by-date/purchase-by-date.component.html
+     1942  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/purchase-by-date/purchase-by-date.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/stock-request-owner/
+       87  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/stock-request-owner/stock-request-owner.component.css
+     2186  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/stock-request-owner/stock-request-owner.component.html
+     2003  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/owner/stock-request-owner/stock-request-owner.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/register/
+       68  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/register/register.component.css
+     3618  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/register/register.component.html
+     2761  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/pages/register/register.component.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/
+      757  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/CommonService.ts
+     3794  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/drug.service.ts
+     2323  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/export.service.ts
+     3650  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/invitation.service.ts
+     1786  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/login.service.ts
+     2394  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/pharmacy.service.ts
+     2115  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/presentation.service.ts
+     4345  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/purchase.service.ts
+     1745  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/role.service.ts
+     3797  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/stock-request.service.ts
+     2108  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/unitmeasure.service.ts
+     1662  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/services/user.service.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/utils/
+      491  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/app/utils/storage-manager.ts
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/assets/
+   161270  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/assets/coreui.bundle.min.js
+   335088  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/assets/coreui.min.css
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/assets/img/
+    20301  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/assets/img/not_found.png
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/environments/
+       65  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/environments/environment.prod.ts
+       86  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/environments/environment.ts
+      948  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/favicon.ico
+      486  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/index.html
+      372  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/main.ts
+     2338  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/polyfills.ts
+      267  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/styles.css
+      749  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/test.ts
+      594  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/src/web.config
+      287  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/tsconfig.app.json
+      863  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/tsconfig.json
+      333  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/Frontend/tsconfig.spec.json
+     2173  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/QUICKSTART.md
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/
+    23786  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/EXPERIMENTOS.md
+     4992  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/README.md
+     1009  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/cpu-spike.sh
+     1436  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/disconnect.sh
+     1877  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/lib.sh
+     1214  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/load-requests.sh
+     1439  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/network-chaos.sh
+     3479  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/observar.sh
+     2097  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/ram-spike.sh
+     2127  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/run-all.sh
+     4359  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/steady-state.sh
+     2205  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/chaos-engineering/volume-spike.sh
+     5219  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/docker-compose.yml
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/
+      983  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/cypress.config.js
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/cypress/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/cypress/e2e/
+      908  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/cypress/e2e/login.feature
+      826  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/cypress/e2e/salud.feature
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/cypress/support/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/cypress/support/step_definitions/
+     2662  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/cypress/support/step_definitions/pasos.js
+   247610  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/package-lock.json
+      708  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/e2e/package.json
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/grafana/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/grafana/provisioning/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/grafana/provisioning/dashboards/
+      218  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/grafana/provisioning/dashboards/dashboards.yml
+    19087  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/grafana/provisioning/dashboards/pharmago-overview.json
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/grafana/provisioning/datasources/
+      244  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/grafana/provisioning/datasources/prometheus.yml
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/
+    16295  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/README-k8s.md
+     8650  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/apply-k8s.sh
+     1741  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/build-images.sh
+     2525  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/cleanup.sh
+     3111  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/cluster-up.sh
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/
+     2787  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/fluent-bit-config.yaml
+    13604  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/grafana-alerting.yaml
+    11288  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/grafana-dashboard-infra.yaml
+    10273  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/grafana-dashboards.yaml
+      664  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/grafana-provisioning.yaml
+     1675  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/otel-agent-config.yaml
+     1924  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/otel-collector-config.yaml
+      672  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/configmaps/prometheus-config.yaml
+     2065  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deploy.sh
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/backend/
+     3718  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/backend/api-gateway-deployment.yaml
+     4484  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/backend/pharmacy-service-deployment.yaml
+     4475  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/backend/users-service-deployment.yaml
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/frontend/
+     2867  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/frontend/ui-deployment.yaml
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/
+     2137  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/db-deployment.yaml
+     2684  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/elasticsearch-deployment.yaml
+      203  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/fluent-bit-clusterrole.yaml
+      271  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/fluent-bit-clusterrolebinding.yaml
+     1392  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/fluent-bit-daemonset.yaml
+       87  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/fluent-bit-serviceaccount.yaml
+     3463  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/grafana-deployment.yaml
+     1400  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/jaeger-deployment.yaml
+     1629  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/kibana-deployment.yaml
+     2004  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/otel-agent-daemonset.yaml
+      888  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/otel-agent-rbac.yaml
+     1600  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/otel-collector-deployment.yaml
+     1554  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/otel-collector-rbac.yaml
+     2841  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/prometheus-deployment.yaml
+       87  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/deployments/ops/prometheus-serviceaccount.yaml
+     2522  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/full-up.sh
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/ingress/
+      625  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/ingress/pharmago-ingress.yaml
+       88  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/namespace.yaml
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/pdb/
+      375  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/pdb/api-gateway-pdb.yaml
+      390  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/pdb/pharmacy-service-pdb.yaml
+      348  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/pdb/ui-pdb.yaml
+      381  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/pdb/users-service-pdb.yaml
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/persistent-volumes/
+      730  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/persistent-volumes/elasticsearch-pv.yaml
+      704  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/persistent-volumes/grafana-pv.yaml
+      718  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/persistent-volumes/prometheus-pv.yaml
+      690  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/persistent-volumes/sql-pv.yaml
+      192  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/persistent-volumes/storage-class.yaml
+     1969  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/port-forward.sh
+     1502  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/rollback.sh
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/secrets/
+      137  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/secrets/db-secret.yaml
+     3778  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/seed-db.sh
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/backend/
+      216  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/backend/api-gateway-service.yaml
+      226  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/backend/pharmacy-service-service.yaml
+      220  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/backend/users-service-service.yaml
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/frontend/
+      197  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/frontend/ui-service.yaml
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/ops/
+      202  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/ops/db-service.yaml
+      295  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/ops/elasticsearch-service.yaml
+      193  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/ops/grafana-service.yaml
+      379  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/ops/jaeger-service.yaml
+      191  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/ops/kibana-service.yaml
+      303  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/ops/otel-collector-service.yaml
+      199  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/services/ops/prometheus-service.yaml
+     1215  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/setup-kibana.sh
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/verify/
+     3776  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/verify/check-playbooks.sh
+     1929  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/verify/check-separacion.sh
+     4258  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/verify/measure-mttr.sh
+     2722  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/verify/test-circuit-breaker.sh
+     3062  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/k8s/verify/test-rollout.sh
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/
+     8455  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/como-agregar-metrica-nueva.md
+     8561  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/como-funciona-prometheus.md
+     7797  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/como-revisar-logs-kibana.md
+     9539  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/como-usar-grafana.md
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/logging/
+     4244  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/logging/como-agregar-log-estructurado.md
+      327  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/quickstart.md
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/rate-limit/
+      671  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/rate-limit/README.md
+     1142  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/rate-limit/como-tunear-rate-limit.md
+      863  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Codigo/tutoriales/rate-limit/test-rate-limit.sh
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/
+   792648  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Descripcio╠ün del disen╠âo.pdf
+   147818  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Evidencia de la aplicacio╠ün de TDD y Clean Code.pdf
+  1179869  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Evidencia de la ejecucio╠ün de las pruebas de la API con Postman.pdf
+   198177  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Evidencia del disen╠âo y especificacio╠ün de la API.pdf
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/collection/
+     9547  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/collection/DrugController.postman_collection.json
+     4431  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/collection/InvitationController.postman_collection.json
+     4898  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/collection/LoginController.postman_collection.json
+     8752  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/collection/PharmacyController.postman_collection.json
+     7975  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/collection/PurchasesController.postman_collection.json
+     7505  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/collection/StockRequestController.postman_collection.json
+     6514  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/collection/UsersController.postman_collection.json
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/enviroment/
+      216  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 1/Postman/enviroment/b3f44f5a-594f-4ab4-b36b-ab0a5cad7dc8.json
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/
+   206414  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/Anexo 1 - Evidencia del disen╠âo y especificacio╠ün de la API.docx.pdf
+   167191  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/Anexo 2 - Informe de Cobertura de las Pruebas .pdf
+   374318  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/Anexo 3 - Disen╠âo del Front-end.pdf
+  1551960  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Documentacio╠ün/Entrega 2/Informe.docx.pdf
+        0  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Exportations/
+      139  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Exportations/drugsExportation1.json
+      804  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Exportations/drugsExportation2.json
+      518  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Exportations/drugsExportation3.json
+   174865  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Gestio╠ün Farmacias I.pdf
+   335120  2026-11-15 13:56   obligatorio-aiops/Implementacion K8S/Gestio╠ün Farmacias II.pdf
+        0  2026-11-15 13:56   obligatorio-aiops/anomaly-detection/
+     7502  2026-11-15 13:56   obligatorio-aiops/anomaly-detection/README.md
+    12385  2026-11-15 13:56   obligatorio-aiops/anomaly-detection/deteccion_dataset_docentes.ipynb
+   733786  2026-11-15 13:56   obligatorio-aiops/anomaly-detection/laboratorio_comparacion_detectores.ipynb
+      114  2026-11-15 13:56   obligatorio-aiops/anomaly-detection/requirements.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/
+    26274  2026-11-15 13:56   obligatorio-aiops/docs/DECISIONES.md
+    12895  2026-11-15 13:56   obligatorio-aiops/docs/MATRIZ_CUMPLIMIENTO.md
+    93908  2026-11-15 13:56   obligatorio-aiops/docs/PROGRESO.md
+    10360  2026-11-15 13:56   obligatorio-aiops/docs/USO_IA.md
+    11040  2026-11-15 13:56   obligatorio-aiops/docs/alertas.md
+     3655  2026-11-15 13:56   obligatorio-aiops/docs/bdd.md
+     2771  2026-11-15 13:56   obligatorio-aiops/docs/ci-cd.md
+     5406  2026-11-15 13:56   obligatorio-aiops/docs/despliegue-seguro.md
+     6923  2026-11-15 13:56   obligatorio-aiops/docs/diagrama-despliegue.md
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/.gitkeep
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C01/
+      691  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C01/baseline.txt
+      934  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C01/letra-vs-docx.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/
+     3424  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/01-cluster-up.txt
+     1497  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/02-build-images.txt
+     8589  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/03-apply-k8s.txt
+     3118  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/04-seed-db.txt
+     1137  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/05-nodes.txt
+     5928  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/06-pods.txt
+      457  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/07-images-m03.txt
+     2933  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/08-memoria.txt
+     3647  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/09-fluent-bit.txt
+      448  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C02/10-login.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C03/
+     1959  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C03/01-cluster.txt
+     1174  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C03/02-antiafinidad-aplicada.txt
+     2946  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C03/03-pods.txt
+      884  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C03/04-check-separacion.txt
+     2165  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C03/05-prueba-negativa.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/
+      704  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/01-sintaxis.txt
+      802  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/02-gateway-rutas.txt
+     1039  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/03-frontend-build.txt
+     1743  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/04-cluster-pendiente.txt
+     4331  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/05-cluster-up.txt
+     1312  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/06-build-images.txt
+     6355  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/07-apply-k8s.txt
+     3332  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/08-rollout-ingress.txt
+      526  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/09-rutas-ingress.txt
+      373  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/10-login-ingress.txt
+     1333  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C04/11-delete-pod-ui.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C05/
+      409  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C05/01-build-test.txt
+      359  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C05/02-pharmacy-sin-bd.txt
+      273  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C05/03-gateway-rate-limit.txt
+     1342  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C05/04-build-images.txt
+     2011  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C05/05-cluster-health.txt
+      697  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C05/06-migrate-retry.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/
+     3049  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/01-deploy-pdb.txt
+     1256  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/02-check-separacion.txt
+     1006  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/03-secretos.txt
+     2202  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/04-probes-aplicadas.txt
+     1345  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/05-delete-pod-api-gateway.txt
+     1568  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/06-delete-pod-users-service.txt
+     1375  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/07-delete-pod-pharmacy-service.txt
+     1380  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/08-delete-pod-users-service-api-roles.txt
+     1812  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/09-delete-pod-pharmacy-integrante.txt
+     2562  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C06/loop-delete-pod.sh
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C07/
+      432  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C07/00-build-test.txt
+     2107  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C07/01-gateway-local.txt
+     1558  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C07/02-cluster-circuit-breaker.txt
+      499  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C07/03-cluster-metrica-breaker.txt
+      858  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C07/cluster-pendiente.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/
+     1705  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/01-manifiestos.txt
+     5115  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/02-deploy-rollback-simulado.txt
+     2050  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/03-ajuste-change-cause.txt
+     2291  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/03-cluster-build.txt
+      545  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/04-ajuste-cluster-pendiente.txt
+     9321  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/04-cluster-apply.txt
+     2591  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/05-ajuste-cluster.txt
+     9214  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/05-cluster-deploy-rollback.txt
+      981  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C08/cluster-pendiente.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C09/
+     1253  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C09/01-scripts.txt
+     8738  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C09/02-cluster-test-rollout.txt
+     4438  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C09/03-cluster-mttr.txt
+     1226  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C09/cluster-pendiente.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/
+      515  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/01-dotnet-build.txt
+      386  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/02-dotnet-test.txt
+      775  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/03-docker-build.txt
+      573  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/04-metrics-404.txt
+      114  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/05-prometheus-targets.txt
+     2483  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/06a-series-primer-minuto.txt
+     2340  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/06b-series-final.txt
+      661  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/07-grafana-overview.txt
+    25659  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C10/08-prometheus-count-by-job.png
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C11/
+      142  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C11/01-dotnet-build.txt
+      775  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C11/02-docker-build.txt
+     2458  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C11/03-traza-login-y-drug.txt
+     1455  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C11/04-sin-spans-health.txt
+    39340  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C11/05-jaeger-traza-login.png
+    91497  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C11/06-jaeger-busqueda.png
+    48112  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C11/07-jaeger-traza-login-integrante.png
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/
+     1012  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/01-daemonset.txt
+     4474  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/02-series-por-nodo.txt
+      203  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/03-prometheus-targets.txt
+     7170  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/04-queries-dashboard.txt
+     1355  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/05-kubelet-summary.txt
+     2417  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/06-recursos-otel-agent.txt
+     1427  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/07-grafana-api.txt
+    43289  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/08-grafana-infra-nodos.png
+     9234  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C12/nombres-metricas.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C13/
+     1542  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C13/01-reglas-provisionadas.txt
+     1771  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C13/02-queries-prometheus.txt
+      656  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C13/03-estado-base.txt
+     1274  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C13/04-forzar-pg-429.txt
+     3129  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C13/05-forzar-pg-breaker.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C14/
+      787  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C14/01-build-test.txt
+      460  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C14/02-setup-kibana.txt
+     8537  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C14/03-logs-json-por-servicio.txt
+     3116  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C14/04-elasticsearch-conteo-y-mapping.txt
+     1394  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C14/05-trace-id-jaeger-en-elasticsearch.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C15/
+      826  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C15/01-entorno.txt
+     7242  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C15/02-laboratorio.txt
+      700  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C15/03-docentes-sin-dataset.txt
+     9601  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C15/04-docentes-con-dataset-lab.txt
+     1445  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C15/05-reproducibilidad.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/
+      751  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/01-sintaxis-y-argumentos.txt
+     1539  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/02-cpu-spike.txt
+      950  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/03-ram-spike-150.txt
+     2083  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/04-ram-spike-500-oom.txt
+      628  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/05-volume-spike-200.txt
+     7337  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/06-volume-spike-600-desalojo.txt
+      318  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/07-load-requests.txt
+     2660  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C16/08-ctrl-c-trap.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C17/
+     1535  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C17/01-sintaxis-argumentos-calico.txt
+     4782  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C17/02-network-chaos-users.txt
+    13662  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C17/03-disconnect-db.txt
+     4614  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C17/04-disconnect-users.txt
+     1541  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C17/05-ctrl-c-trap.txt
+     4190  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C17/06-run-all.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/
+      805  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/00-ajuste-collector-antes.txt
+     1028  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/00-ajuste-collector-despues-y-sin-trafico.txt
+     2044  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/00-hipotesis-registradas.txt
+      956  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/00b-ajuste-nan-sin-trafico.txt
+     1202  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/00c-ajuste-nan-verificacion.txt
+    86720  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/01-requests-grafana-alertas.png
+   155184  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/01-requests-grafana-pharmago-overview.png
+     7400  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/01-requests.txt
+    87907  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/02-cpu-grafana-alertas.png
+   463024  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/02-cpu-grafana-pharmago-infra.png
+     9376  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/02-cpu.txt
+     1028  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/03-memoria-pods.txt
+    77424  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/03a-memoria-240-oom-grafana-alertas.png
+   511312  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/03a-memoria-240-oom-grafana-pharmago-infra.png
+     9162  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/03a-memoria-240-oom.txt
+    90488  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/03b-memoria-grafana-alertas.png
+   512431  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/03b-memoria-grafana-pharmago-infra.png
+     9983  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/03b-memoria.txt
+    77424  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/04-storage-grafana-alertas.png
+   508223  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/04-storage-grafana-pharmago-infra.png
+     3464  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/04-storage-pods.txt
+     9832  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/04-storage.txt
+     1003  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/04b-storage-kubelet-no-ve-rootfs.txt
+    90053  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/04c-storage-400-grafana-alertas.png
+   503054  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/04c-storage-400-grafana-pharmago-infra.png
+    10050  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/04c-storage-400.txt
+    89348  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/05a-red-cliente-3s-grafana-alertas.png
+   187933  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/05a-red-cliente-3s-grafana-pharmago-overview.png
+     7868  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/05a-red-cliente-3s.txt
+    99882  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/05b-red-grafana-alertas.png
+   188439  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/05b-red-grafana-pharmago-overview.png
+     9264  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/05b-red.txt
+    99290  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/06-desconexion-grafana-alertas.png
+   500772  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/06-desconexion-grafana-pharmago-infra.png
+    11038  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/06-desconexion.txt
+    77424  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/07-pod-borrado-grafana-alertas.png
+   492741  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/07-pod-borrado-grafana-pharmago-infra.png
+     5319  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/07-pod-borrado.txt
+    77424  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/08-rollout-fallido-grafana-alertas.png
+   493222  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/08-rollout-fallido-grafana-pharmago-infra.png
+     9768  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/08-rollout-fallido.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/scripts/
+     1284  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/scripts/con_trafico.sh
+      363  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/scripts/desc_con_ss.sh
+     1061  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/scripts/rollout_roto.sh
+     1429  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C18/scripts/run_exp.sh
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C19/
+     6208  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C19/01-chequeo-herramientas.txt
+     2676  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C19/02-comandos-cluster.txt
+     5623  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C19/check_c19.py
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/
+     6135  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/01-check-playbooks-y-alertas-cargadas.txt
+     5114  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/01a-check-playbooks-primera-corrida.txt
+    90511  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/02-ensayo-memoria-grafana-alertas.png
+     5381  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/02-ensayo-playbook-memoria.txt
+      486  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/02b-ensayo-accion-corregida.txt
+     5697  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/03-check-plan-incidentes.txt
+     4945  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/check_plan_b7.py
+     4094  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C20/ensayo_memoria.sh
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C21/
+      581  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C21/01-build-test.txt
+     1671  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C21/02-workflow.txt
+     4028  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C21/03-corrida-github.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C22/
+     4991  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C22/01-smoke-local.txt
+     5109  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C22/02-e2e-cluster.txt
+      767  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C22/cluster-pendiente.txt
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/
+    32671  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/01-desde-cero.txt
+     3571  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/02-pods-wide.txt
+      986  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/02b-pods-otros-namespaces.txt
+     9090  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/03-ensayo-cpu.txt
+    10014  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/03-ensayo-desconexion.txt
+     9305  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/03-ensayo-memoria.txt
+     9580  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/03-ensayo-red.txt
+     7152  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/03-ensayo-requests.txt
+    10228  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/03-ensayo-storage.txt
+     1846  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/04-ensayo-equipo.md
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/scripts/
+     2346  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C23/scripts/ensayo.sh
+        0  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C24/
+     2916  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C24/02-paginas-informe.txt
+      380  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C24/04-shortlog.txt
+     2215  2026-11-15 13:56   obligatorio-aiops/docs/evidencia/C24/check_matriz.py
+        0  2026-11-15 13:56   obligatorio-aiops/docs/incidentes/
+     4941  2026-11-15 13:56   obligatorio-aiops/docs/incidentes/2026-11-14-memoria-ensayo.md
+     6623  2026-11-15 13:56   obligatorio-aiops/docs/incidentes/ejemplo-postmortem.md
+        0  2026-11-15 13:56   obligatorio-aiops/docs/informe/
+    22513  2026-11-15 13:56   obligatorio-aiops/docs/informe/informe.md
+    10467  2026-11-15 13:56   obligatorio-aiops/docs/letra-obligatorio.md
+     3627  2026-11-15 13:56   obligatorio-aiops/docs/logs.md
+     6053  2026-11-15 13:56   obligatorio-aiops/docs/metricas.md
+     4517  2026-11-15 13:56   obligatorio-aiops/docs/mttr.md
+        0  2026-11-15 13:56   obligatorio-aiops/docs/pdf/
+   309883  2026-11-15 13:56   obligatorio-aiops/docs/pdf/DECISIONES.pdf
+   226268  2026-11-15 13:56   obligatorio-aiops/docs/pdf/MATRIZ_CUMPLIMIENTO.pdf
+   850908  2026-11-15 13:56   obligatorio-aiops/docs/pdf/PROGRESO.pdf
+   163857  2026-11-15 13:56   obligatorio-aiops/docs/pdf/USO_IA.pdf
+   206668  2026-11-15 13:56   obligatorio-aiops/docs/pdf/alertas.pdf
+   157408  2026-11-15 13:56   obligatorio-aiops/docs/pdf/anomaly-detection-README.pdf
+    92322  2026-11-15 13:56   obligatorio-aiops/docs/pdf/bdd.pdf
+   366991  2026-11-15 13:56   obligatorio-aiops/docs/pdf/chaos-engineering-EXPERIMENTOS.pdf
+   101037  2026-11-15 13:56   obligatorio-aiops/docs/pdf/chaos-engineering-README.pdf
+    69413  2026-11-15 13:56   obligatorio-aiops/docs/pdf/ci-cd.pdf
+   113274  2026-11-15 13:56   obligatorio-aiops/docs/pdf/despliegue-seguro.pdf
+   174022  2026-11-15 13:56   obligatorio-aiops/docs/pdf/diagrama-despliegue.pdf
+   126345  2026-11-15 13:56   obligatorio-aiops/docs/pdf/incidentes-2026-11-14-memoria-ensayo.pdf
+   121828  2026-11-15 13:56   obligatorio-aiops/docs/pdf/incidentes-ejemplo-postmortem.pdf
+   271499  2026-11-15 13:56   obligatorio-aiops/docs/pdf/informe.pdf
+   187887  2026-11-15 13:56   obligatorio-aiops/docs/pdf/k8s-README-k8s.pdf
+   102236  2026-11-15 13:56   obligatorio-aiops/docs/pdf/logs.pdf
+   146319  2026-11-15 13:56   obligatorio-aiops/docs/pdf/metricas.pdf
+   105766  2026-11-15 13:56   obligatorio-aiops/docs/pdf/mttr.pdf
+   244283  2026-11-15 13:56   obligatorio-aiops/docs/pdf/plan-incidentes.pdf
+    82576  2026-11-15 13:56   obligatorio-aiops/docs/pdf/plantillas-postmortem.pdf
+    77267  2026-11-15 13:56   obligatorio-aiops/docs/pdf/plantillas-registro-incidente.pdf
+    94975  2026-11-15 13:56   obligatorio-aiops/docs/pdf/playbooks-cpu.pdf
+   100169  2026-11-15 13:56   obligatorio-aiops/docs/pdf/playbooks-desconexion.pdf
+    97857  2026-11-15 13:56   obligatorio-aiops/docs/pdf/playbooks-memoria.pdf
+    93503  2026-11-15 13:56   obligatorio-aiops/docs/pdf/playbooks-pod-caido.pdf
+   103562  2026-11-15 13:56   obligatorio-aiops/docs/pdf/playbooks-red.pdf
+    94581  2026-11-15 13:56   obligatorio-aiops/docs/pdf/playbooks-requests.pdf
+   101059  2026-11-15 13:56   obligatorio-aiops/docs/pdf/playbooks-rollout-fallido.pdf
+    94681  2026-11-15 13:56   obligatorio-aiops/docs/pdf/playbooks-storage.pdf
+   121668  2026-11-15 13:56   obligatorio-aiops/docs/pdf/resiliencia.pdf
+   305317  2026-11-15 13:56   obligatorio-aiops/docs/pdf/runbook-defensa.pdf
+    75311  2026-11-15 13:56   obligatorio-aiops/docs/pdf/tablero.pdf
+   111347  2026-11-15 13:56   obligatorio-aiops/docs/pdf/trazas.pdf
+    17938  2026-11-15 13:56   obligatorio-aiops/docs/plan-incidentes.md
+        0  2026-11-15 13:56   obligatorio-aiops/docs/plantillas/
+     2285  2026-11-15 13:56   obligatorio-aiops/docs/plantillas/postmortem.md
+     1750  2026-11-15 13:56   obligatorio-aiops/docs/plantillas/registro-incidente.md
+        0  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/
+     4851  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/cpu.md
+     5153  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/desconexion.md
+     5147  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/memoria.md
+     4804  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/pod-caido.md
+     5906  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/red.md
+     4784  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/requests.md
+     5433  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/rollout-fallido.md
+     4871  2026-11-15 13:56   obligatorio-aiops/docs/playbooks/storage.md
+     5105  2026-11-15 13:56   obligatorio-aiops/docs/resiliencia.md
+    19091  2026-11-15 13:56   obligatorio-aiops/docs/runbook-defensa.md
+     1923  2026-11-15 13:56   obligatorio-aiops/docs/tablero.md
+     4208  2026-11-15 13:56   obligatorio-aiops/docs/trazas.md
+        0  2026-11-15 13:56   obligatorio-aiops/scripts/
+     6307  2026-11-15 13:56   obligatorio-aiops/scripts/build-pdfs.py
+     2459  2026-11-15 13:56   obligatorio-aiops/scripts/package-entrega.sh
+   271499  2026-11-15 13:56   obligatorio-aiops/INFORME.pdf
+---------                     -------
+ 21697317                     1061 files

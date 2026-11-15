@@ -1,0 +1,11 @@
+$ git shortlog -sn team/obligatorio   (historia completa, incluye los commits del repo de la cátedra)
+     9	Martin Roux
+     8	jirabedra
+     6	Ignacio Aramburu
+     6	francokbd
+     1	Juan Ignacio Irabedra
+
+$ git shortlog -sn ebae886^..team/obligatorio   (solo el trabajo del equipo, desde C01; antes del commit C24)
+     9	Martin Roux
+     6	Ignacio Aramburu
+     6	francokbd
