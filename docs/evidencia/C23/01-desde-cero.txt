@@ -1,0 +1,806 @@
+C23: arranque desde cero en la PC de Martin Roux
+Primer intento 12:49 UTC: Docker Desktop estaba cerrado y full-up.sh exportaba MSYS_NO_PATHCONV, que rompía git. Se corrigió el script y se repitió.
+Inicio 2026-11-15T12:50:14Z
+$ minikube delete
+! El perfil "minikube" no existe, intentando de todas formas.
+* Removed all traces of the "minikube" cluster.
+* Eliminando contenedor "minikube" ...
+minikube delete: 5 s
+
+$ ./full-up.sh
+
+=== 12:50:19 cluster-up.sh ===
+=== Cluster Minikube de PharmaGo (5 nodos) ===
+Verificando herramientas y Docker...
+Buscando si el cluster ya existe (puede tardar unos segundos)...
+Creando cluster: 5 nodos, 2 CPU y 4096 MB por nodo, Kubernetes v1.33.13...
+* minikube v1.39.0 en Microsoft Windows 11 Pro 25H2
+  - MINIKUBE_IN_STYLE=false
+* Using the docker driver based on user configuration
+* Using Docker Desktop driver with root privileges
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Configurando CNI Calico ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Complementos habilitados: storage-provisioner, default-storageclass
+
+* Starting "minikube-m02" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2
+  - NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2
+* Verifying Kubernetes components...
+
+* Starting "minikube-m03" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3
+  - NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+* Verifying Kubernetes components...
+
+* Starting "minikube-m04" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+* Verifying Kubernetes components...
+
+* Starting "minikube-m05" worker node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Se han encontrado las siguientes opciones de red:
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+  - NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+  - env NO_PROXY=192.168.49.2
+  - env NO_PROXY=192.168.49.2,192.168.49.3
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4
+  - env NO_PROXY=192.168.49.2,192.168.49.3,192.168.49.4,192.168.49.5
+* Verifying Kubernetes components...
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+Habilitando addon metrics-server...
+* metrics-server is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+  - Using image registry.k8s.io/metrics-server/metrics-server:v0.9.0
+* The 'metrics-server' addon is enabled
+
+Habilitando addon ingress (acceso a la app sin port-forward)...
+* ingress is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+* After the addon is enabled, please run "minikube tunnel" and your ingress resources would be available at "127.0.0.1"
+  - Using image registry.k8s.io/ingress-nginx/controller:v1.15.1
+  - Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.9
+  - Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.9
+* Verifying ingress addon...
+* The 'ingress' addon is enabled
+
+Etiquetando nodos (node-type)...
+node/minikube labeled
+node/minikube-m02 labeled
+node/minikube-m03 labeled
+node/minikube-m04 labeled
+node/minikube-m05 labeled
+
+Esperando a que todos los nodos estén Ready...
+node/minikube condition met
+node/minikube-m02 condition met
+node/minikube-m03 condition met
+node/minikube-m04 condition met
+node/minikube-m05 condition met
+
+NAME           STATUS   ROLES           AGE     VERSION    NODE-TYPE
+minikube       Ready    control-plane   5m42s   v1.33.13   frontend
+minikube-m02   Ready    <none>          3m50s   v1.33.13   gateway
+minikube-m03   Ready    <none>          2m45s   v1.33.13   users
+minikube-m04   Ready    <none>          100s    v1.33.13   pharmacy
+minikube-m05   Ready    <none>          37s     v1.33.13   ops
+
+Siguiente paso: ./build-images.sh, ./apply-k8s.sh y ./seed-db.sh
+Para entrar a la app: en PowerShell como administrador, minikube tunnel (dejalo abierto) y abrí http://127.0.0.1/
+
+=== 12:57:09 build-images.sh 94d8ad8 ===
+=== Construyendo y cargando imágenes en Minikube (tag: 94d8ad8) ===
+
+  - pharmago-users-service:94d8ad8
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.76kB 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:6.0
+#2 DONE 0.6s
+
+#3 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:6.0
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [base 1/2] FROM mcr.microsoft.com/dotnet/aspnet:6.0@sha256:e70c493f8af7f95bf459cb2b15c7e7a6173228929c2b7a9a6836b19377890e78
+#5 resolve mcr.microsoft.com/dotnet/aspnet:6.0@sha256:e70c493f8af7f95bf459cb2b15c7e7a6173228929c2b7a9a6836b19377890e78 0.0s done
+#5 DONE 0.0s
+
+#6 [build  1/17] FROM mcr.microsoft.com/dotnet/sdk:6.0@sha256:c8fdd06e430de9f4ddd066b475ea350d771f341b77dd5ff4c2fafa748e3f2ef2
+#6 resolve mcr.microsoft.com/dotnet/sdk:6.0@sha256:c8fdd06e430de9f4ddd066b475ea350d771f341b77dd5ff4c2fafa748e3f2ef2 0.0s done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 203.38kB 1.4s done
+#7 DONE 1.5s
+
+#8 [build  9/17] COPY [PharmaGo.DataAccess/PharmaGo.DataAccess.csproj, PharmaGo.DataAccess/]
+#8 CACHED
+
+#9 [base 2/2] WORKDIR /app
+#9 CACHED
+
+#10 [build 17/17] RUN dotnet build "PharmaGo.UsersService.csproj" -c Release -o /app/build
+#10 CACHED
+
+#11 [build  4/17] COPY [PharmaGo.UsersService.BusinessLogic/PharmaGo.UsersService.BusinessLogic.csproj, PharmaGo.UsersService.BusinessLogic/]
+#11 CACHED
+
+#12 [build  8/17] COPY [PharmaGo.Exceptions/PharmaGo.Exceptions.csproj, PharmaGo.Exceptions/]
+#12 CACHED
+
+#13 [build  3/17] COPY [PharmaGo.UsersService/PharmaGo.UsersService.csproj, PharmaGo.UsersService/]
+#13 CACHED
+
+#14 [build 11/17] COPY [Instrumentation/Instrumentation.csproj, Instrumentation/]
+#14 CACHED
+
+#15 [build 15/17] COPY . .
+#15 CACHED
+
+#16 [build  7/17] COPY [PharmaGo.Domain/PharmaGo.Domain.csproj, PharmaGo.Domain/]
+#16 CACHED
+
+#17 [build 12/17] COPY [InstrumentationInterface/InstrumentationInterface.csproj, InstrumentationInterface/]
+#17 CACHED
+
+#18 [build 16/17] WORKDIR /src/PharmaGo.UsersService
+#18 CACHED
+
+#19 [build 13/17] COPY [PharmaGo.Telemetry/PharmaGo.Telemetry.csproj, PharmaGo.Telemetry/]
+#19 CACHED
+
+#20 [build 14/17] RUN dotnet restore "PharmaGo.UsersService/PharmaGo.UsersService.csproj"
+#20 CACHED
+
+#21 [build  6/17] COPY [PharmaGo.UsersService.Factory/PharmaGo.UsersService.Factory.csproj, PharmaGo.UsersService.Factory/]
+#21 CACHED
+
+#22 [publish 1/1] RUN dotnet publish "PharmaGo.UsersService.csproj" -c Release -o /app/publish
+#22 CACHED
+
+#23 [build  5/17] COPY [PharmaGo.UsersService.IBusinessLogic/PharmaGo.UsersService.IBusinessLogic.csproj, PharmaGo.UsersService.IBusinessLogic/]
+#23 CACHED
+
+#24 [build 10/17] COPY [PharmaGo.IDataAccess/PharmaGo.IDataAccess.csproj, PharmaGo.IDataAccess/]
+#24 CACHED
+
+#25 [build  2/17] WORKDIR /src
+#25 CACHED
+
+#26 [final 1/2] WORKDIR /app
+#26 CACHED
+
+#27 [final 2/2] COPY --from=publish /app/publish .
+#27 CACHED
+
+#28 exporting to image
+#28 exporting layers 0.0s done
+#28 exporting manifest sha256:8ba27d08974b6d378f16d2d4a541e986208a8872080e36805338fd636795fd73 done
+#28 exporting config sha256:f6b5d6abf7f0ae47702ee49cc1006526c80e8935be724bc9de3a6bb64002f000 done
+#28 exporting attestation manifest sha256:3786de0a6fb31c11e120d1fd4dbaeb68c57e6242ac4ead653432750b886c9d5d
+#28 exporting attestation manifest sha256:3786de0a6fb31c11e120d1fd4dbaeb68c57e6242ac4ead653432750b886c9d5d 0.1s done
+#28 exporting manifest list sha256:a0f1b4f0f37d5231257d8ce554dfabeb900c035232c3c1dcdc94432fdccff0c1 0.0s done
+#28 naming to docker.io/library/pharmago-users-service:94d8ad8 0.0s done
+#28 unpacking to docker.io/library/pharmago-users-service:94d8ad8
+#28 unpacking to docker.io/library/pharmago-users-service:94d8ad8 0.0s done
+#28 DONE 0.2s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/404rbvlfymv7weibuqn2y6atv
+
+  - pharmago-pharmacy-service:94d8ad8
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.95kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:6.0
+#2 DONE 0.3s
+
+#3 [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:6.0
+#3 DONE 0.3s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [build  1/19] FROM mcr.microsoft.com/dotnet/sdk:6.0@sha256:c8fdd06e430de9f4ddd066b475ea350d771f341b77dd5ff4c2fafa748e3f2ef2
+#5 resolve mcr.microsoft.com/dotnet/sdk:6.0@sha256:c8fdd06e430de9f4ddd066b475ea350d771f341b77dd5ff4c2fafa748e3f2ef2 0.0s done
+#5 DONE 0.0s
+
+#6 [base 1/2] FROM mcr.microsoft.com/dotnet/aspnet:6.0@sha256:e70c493f8af7f95bf459cb2b15c7e7a6173228929c2b7a9a6836b19377890e78
+#6 resolve mcr.microsoft.com/dotnet/aspnet:6.0@sha256:e70c493f8af7f95bf459cb2b15c7e7a6173228929c2b7a9a6836b19377890e78 0.0s done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 203.38kB 0.1s done
+#7 DONE 0.1s
+
+#8 [build 14/19] COPY [ExportationModel/ExportationModel.csproj, ExportationModel/]
+#8 CACHED
+
+#9 [build  4/19] COPY [PharmaGo.PharmacyService.BusinessLogic/PharmaGo.PharmacyService.BusinessLogic.csproj, PharmaGo.PharmacyService.BusinessLogic/]
+#9 CACHED
+
+#10 [base 2/2] WORKDIR /app
+#10 CACHED
+
+#11 [build 18/19] WORKDIR /src/PharmaGo.PharmacyService
+#11 CACHED
+
+#12 [build  8/19] COPY [PharmaGo.Exceptions/PharmaGo.Exceptions.csproj, PharmaGo.Exceptions/]
+#12 CACHED
+
+#13 [build 19/19] RUN dotnet build "PharmaGo.PharmacyService.csproj" -c Release -o /app/build
+#13 CACHED
+
+#14 [publish 1/1] RUN dotnet publish "PharmaGo.PharmacyService.csproj" -c Release -o /app/publish
+#14 CACHED
+
+#15 [build 16/19] RUN dotnet restore "PharmaGo.PharmacyService/PharmaGo.PharmacyService.csproj"
+#15 CACHED
+
+#16 [build  3/19] COPY [PharmaGo.PharmacyService/PharmaGo.PharmacyService.csproj, PharmaGo.PharmacyService/]
+#16 CACHED
+
+#17 [build 17/19] COPY . .
+#17 CACHED
+
+#18 [build 13/19] COPY [PharmaGo.Telemetry/PharmaGo.Telemetry.csproj, PharmaGo.Telemetry/]
+#18 CACHED
+
+#19 [build 12/19] COPY [InstrumentationInterface/InstrumentationInterface.csproj, InstrumentationInterface/]
+#19 CACHED
+
+#20 [build  9/19] COPY [PharmaGo.DataAccess/PharmaGo.DataAccess.csproj, PharmaGo.DataAccess/]
+#20 CACHED
+
+#21 [final 1/2] WORKDIR /app
+#21 CACHED
+
+#22 [build  7/19] COPY [PharmaGo.Domain/PharmaGo.Domain.csproj, PharmaGo.Domain/]
+#22 CACHED
+
+#23 [build  5/19] COPY [PharmaGo.PharmacyService.IBusinessLogic/PharmaGo.PharmacyService.IBusinessLogic.csproj, PharmaGo.PharmacyService.IBusinessLogic/]
+#23 CACHED
+
+#24 [build 10/19] COPY [PharmaGo.IDataAccess/PharmaGo.IDataAccess.csproj, PharmaGo.IDataAccess/]
+#24 CACHED
+
+#25 [build  2/19] WORKDIR /src
+#25 CACHED
+
+#26 [build 15/19] COPY [JSONExporter/JSONExporter.csproj, JSONExporter/]
+#26 CACHED
+
+#27 [build 11/19] COPY [Instrumentation/Instrumentation.csproj, Instrumentation/]
+#27 CACHED
+
+#28 [build  6/19] COPY [PharmaGo.PharmacyService.Factory/PharmaGo.PharmacyService.Factory.csproj, PharmaGo.PharmacyService.Factory/]
+#28 CACHED
+
+#29 [final 2/2] COPY --from=publish /app/publish .
+#29 CACHED
+
+#30 exporting to image
+#30 exporting layers done
+#30 exporting manifest sha256:f956eeb471ad686dd89c8ed3888a80a1f04fd365dbae439f8c3167923838d000 done
+#30 exporting config sha256:780cad228f159d8b9ff18aacddb9f5d4d9cfd505316f18667294eb187db59687 done
+#30 exporting attestation manifest sha256:e2672e32e00e8c53b41047b078218c59ec5e69aaa93df66200a442fb902f8f0b 0.0s done
+#30 exporting manifest list sha256:927ce8490f99ff9f33ab077300c6283d62ae04425707d3cff900b177330aff5c
+#30 exporting manifest list sha256:927ce8490f99ff9f33ab077300c6283d62ae04425707d3cff900b177330aff5c 0.0s done
+#30 naming to docker.io/library/pharmago-pharmacy-service:94d8ad8 done
+#30 unpacking to docker.io/library/pharmago-pharmacy-service:94d8ad8 0.0s done
+#30 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/vn6buw444evdvss1unfx4oq5r
+
+  - pharmago-api-gateway:94d8ad8
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 DONE 0.0s
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.06kB 0.1s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:6.0
+#2 DONE 0.7s
+
+#3 [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:6.0
+#3 DONE 0.8s
+
+#4 [internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 2B 0.0s done
+#4 DONE 0.2s
+
+#5 [internal] load build context
+#5 DONE 0.0s
+
+#6 [build  1/10] FROM mcr.microsoft.com/dotnet/sdk:6.0@sha256:c8fdd06e430de9f4ddd066b475ea350d771f341b77dd5ff4c2fafa748e3f2ef2
+#6 resolve mcr.microsoft.com/dotnet/sdk:6.0@sha256:c8fdd06e430de9f4ddd066b475ea350d771f341b77dd5ff4c2fafa748e3f2ef2
+#6 resolve mcr.microsoft.com/dotnet/sdk:6.0@sha256:c8fdd06e430de9f4ddd066b475ea350d771f341b77dd5ff4c2fafa748e3f2ef2 0.4s done
+#6 DONE 0.4s
+
+#7 [base 1/2] FROM mcr.microsoft.com/dotnet/aspnet:6.0@sha256:e70c493f8af7f95bf459cb2b15c7e7a6173228929c2b7a9a6836b19377890e78
+#7 resolve mcr.microsoft.com/dotnet/aspnet:6.0@sha256:e70c493f8af7f95bf459cb2b15c7e7a6173228929c2b7a9a6836b19377890e78
+#7 resolve mcr.microsoft.com/dotnet/aspnet:6.0@sha256:e70c493f8af7f95bf459cb2b15c7e7a6173228929c2b7a9a6836b19377890e78 0.4s done
+#7 DONE 0.5s
+
+#5 [internal] load build context
+#5 transferring context: 203.38kB 0.2s done
+#5 DONE 0.3s
+
+#8 [build  8/10] COPY . .
+#8 CACHED
+
+#9 [base 2/2] WORKDIR /app
+#9 CACHED
+
+#10 [final 1/2] WORKDIR /app
+#10 CACHED
+
+#11 [build  5/10] COPY [InstrumentationInterface/InstrumentationInterface.csproj, InstrumentationInterface/]
+#11 CACHED
+
+#12 [build  7/10] RUN dotnet restore "PharmaGo.ApiGateway/PharmaGo.ApiGateway.csproj"
+#12 CACHED
+
+#13 [build 10/10] RUN dotnet build "PharmaGo.ApiGateway.csproj" -c Release -o /app/build
+#13 CACHED
+
+#14 [build  9/10] WORKDIR /src/PharmaGo.ApiGateway
+#14 CACHED
+
+#15 [publish 1/1] RUN dotnet publish "PharmaGo.ApiGateway.csproj" -c Release -o /app/publish
+#15 CACHED
+
+#16 [build  2/10] WORKDIR /src
+#16 CACHED
+
+#17 [build  4/10] COPY [Instrumentation/Instrumentation.csproj, Instrumentation/]
+#17 CACHED
+
+#18 [build  6/10] COPY [PharmaGo.Telemetry/PharmaGo.Telemetry.csproj, PharmaGo.Telemetry/]
+#18 CACHED
+
+#19 [build  3/10] COPY [PharmaGo.ApiGateway/PharmaGo.ApiGateway.csproj, PharmaGo.ApiGateway/]
+#19 CACHED
+
+#20 [final 2/2] COPY --from=publish /app/publish .
+#20 CACHED
+
+#21 exporting to image
+#21 exporting layers done
+#21 exporting manifest sha256:97df63158ae44ea7cf05bfe03f6c33981a4efd51541815d14fe21cbe02175e83 0.0s done
+#21 exporting config sha256:032114c087554c031a3f395d93a00d93747079ebebced074e430829496b237f2
+#21 exporting config sha256:032114c087554c031a3f395d93a00d93747079ebebced074e430829496b237f2 0.0s done
+#21 exporting attestation manifest sha256:a1dc7d0b3c18d4b2ffeea6249275b503f906a5a89bd72e70567f9b81895c205d
+#21 exporting attestation manifest sha256:a1dc7d0b3c18d4b2ffeea6249275b503f906a5a89bd72e70567f9b81895c205d 0.2s done
+#21 exporting manifest list sha256:a9a9c11a740ecb95ca51cb29a1ff22de221c46424fcf5280d4078e528196aaa9
+#21 exporting manifest list sha256:a9a9c11a740ecb95ca51cb29a1ff22de221c46424fcf5280d4078e528196aaa9 0.0s done
+#21 naming to docker.io/library/pharmago-api-gateway:94d8ad8 done
+#21 unpacking to docker.io/library/pharmago-api-gateway:94d8ad8 0.0s done
+#21 DONE 0.7s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/z0rurpd5yb22j3cfgw76arjsp
+
+  - pharmago-ui:94d8ad8
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 453B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/node:16
+#3 DONE 1.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [builder 1/6] FROM docker.io/library/node:16@sha256:f77a1aef2da8d83e45ec990f45df50f1a286c5fe8bbfb8c6e4246c6389705c0b
+#5 resolve docker.io/library/node:16@sha256:f77a1aef2da8d83e45ec990f45df50f1a286c5fe8bbfb8c6e4246c6389705c0b 0.0s done
+#5 DONE 0.1s
+
+#6 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3
+#6 resolve docker.io/library/nginx:alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3 0.1s done
+#6 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 11.05kB 0.1s done
+#7 DONE 0.1s
+
+#8 [builder 2/6] WORKDIR /app
+#8 CACHED
+
+#9 [builder 5/6] COPY . .
+#9 CACHED
+
+#10 [builder 6/6] RUN npm run build --prod
+#10 CACHED
+
+#11 [stage-1 2/3] COPY --from=builder /app/dist/pharma-go /usr/share/nginx/html
+#11 CACHED
+
+#12 [builder 3/6] COPY package*.json ./
+#12 CACHED
+
+#13 [builder 4/6] RUN npm install
+#13 CACHED
+
+#14 [stage-1 3/3] COPY nginx.conf /etc/nginx/conf.d/default.conf
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:d979b3a0e36919f6513220a4b1c4e11c622a91e83f6d67232fb745bd5eebec65 0.0s done
+#15 exporting config sha256:c513b0b758756e156950f0d2bdae92f464ec919e372536ead208042a8bde358d done
+#15 exporting attestation manifest sha256:35cc87f31226e6cf09ead693e8162c4d8d356e25ccf82c619b10610f8dc2a7d1
+#15 exporting attestation manifest sha256:35cc87f31226e6cf09ead693e8162c4d8d356e25ccf82c619b10610f8dc2a7d1 0.0s done
+#15 exporting manifest list sha256:2c22944ec2a4718e25fc2868ed38c2398e4bb638b654f5b87cc029c9f216ae13 0.0s done
+#15 naming to docker.io/library/pharmago-ui:94d8ad8 done
+#15 unpacking to docker.io/library/pharmago-ui:94d8ad8 0.0s done
+#15 DONE 0.2s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/p87wdpfuw984d5vpig7jdndyi
+
+=== Imágenes construidas y cargadas ===
+docker.io/library/pharmago-users-service:94d8ad8
+docker.io/library/pharmago-ui:94d8ad8
+docker.io/library/pharmago-pharmacy-service:94d8ad8
+docker.io/library/pharmago-api-gateway:94d8ad8
+
+Siguiente paso: ./apply-k8s.sh 94d8ad8   (primera vez)   o   ./deploy.sh 94d8ad8   (actualizar sin caídas)
+
+=== 12:59:15 apply-k8s.sh 94d8ad8 ===
+=== Desplegando PharmaGo en Kubernetes ===
+Tag de las imágenes propias: 94d8ad8
+
+1. Nodos y etiquetas:
+NAME           STATUS   ROLES           AGE     VERSION    NODE-TYPE
+minikube       Ready    control-plane   7m54s   v1.33.13   frontend
+minikube-m02   Ready    <none>          6m2s    v1.33.13   gateway
+minikube-m03   Ready    <none>          4m57s   v1.33.13   users
+minikube-m04   Ready    <none>          3m52s   v1.33.13   pharmacy
+minikube-m05   Ready    <none>          2m49s   v1.33.13   ops
+
+2. Creando namespace...
+namespace/pharmago created
+
+3. Creando secrets...
+secret/db-secret created
+
+4. Creando configmaps...
+configmap/prometheus-config created
+configmap/otel-collector-config created
+configmap/otel-agent-config created
+configmap/grafana-provisioning created
+configmap/grafana-dashboards created
+configmap/grafana-dashboard-infra created
+configmap/grafana-alerting created
+configmap/fluent-bit-config created
+
+5. Creando StorageClass y PersistentVolumes...
+storageclass.storage.k8s.io/local-storage created
+   Limpiando PVs huérfanos (Released)...
+persistentvolume/sql-pv created
+persistentvolumeclaim/sql-pvc created
+persistentvolume/elasticsearch-pv created
+persistentvolumeclaim/elasticsearch-pvc created
+persistentvolume/prometheus-pv created
+persistentvolumeclaim/prometheus-pvc created
+persistentvolume/grafana-pv created
+persistentvolumeclaim/grafana-pvc created
+
+6. Desplegando base de datos...
+service/pharmago-db created
+deployment.apps/pharmago-db created
+
+   Esperando a que la base de datos esté lista...
+   Esperando... (5/300 segundos)
+   Esperando... (10/300 segundos)
+   Esperando... (15/300 segundos)
+   Esperando... (20/300 segundos)
+   Esperando... (25/300 segundos)
+   Esperando... (30/300 segundos)
+   Esperando... (35/300 segundos)
+   Esperando... (40/300 segundos)
+   Base de datos lista!
+
+7. Desplegando servicios de observabilidad...
+service/elasticsearch created
+deployment.apps/elasticsearch created
+   Esperando a que Elasticsearch esté listo...
+   Esperando... (5/300 segundos)
+   Esperando... (10/300 segundos)
+   Esperando... (15/300 segundos)
+   Esperando... (20/300 segundos)
+   Esperando... (25/300 segundos)
+   Esperando... (30/300 segundos)
+   Esperando... (35/300 segundos)
+   Esperando... (40/300 segundos)
+   Esperando... (45/300 segundos)
+   Esperando... (50/300 segundos)
+   Esperando... (55/300 segundos)
+   Esperando... (60/300 segundos)
+   Esperando... (65/300 segundos)
+   Esperando... (70/300 segundos)
+   Esperando... (75/300 segundos)
+   Esperando... (80/300 segundos)
+   Esperando... (85/300 segundos)
+   Esperando... (90/300 segundos)
+   Esperando... (95/300 segundos)
+   Esperando... (100/300 segundos)
+   Esperando... (105/300 segundos)
+   Esperando... (110/300 segundos)
+   Esperando... (115/300 segundos)
+   Esperando... (120/300 segundos)
+   Esperando... (125/300 segundos)
+   Esperando... (130/300 segundos)
+   Esperando... (135/300 segundos)
+   Esperando... (140/300 segundos)
+   Esperando... (145/300 segundos)
+   Esperando... (150/300 segundos)
+   Esperando... (155/300 segundos)
+   Esperando... (160/300 segundos)
+   Esperando... (165/300 segundos)
+   Esperando... (170/300 segundos)
+   Esperando... (175/300 segundos)
+   Esperando... (180/300 segundos)
+   Esperando... (185/300 segundos)
+   Esperando... (190/300 segundos)
+   Esperando... (195/300 segundos)
+   Esperando... (200/300 segundos)
+   Elasticsearch listo!
+service/jaeger created
+deployment.apps/jaeger created
+serviceaccount/otel-collector created
+clusterrole.rbac.authorization.k8s.io/otel-collector-k8s-cluster created
+clusterrolebinding.rbac.authorization.k8s.io/otel-collector-k8s-cluster created
+service/otlp-collector created
+deployment.apps/otlp-collector created
+serviceaccount/otel-agent created
+clusterrole.rbac.authorization.k8s.io/otel-agent created
+clusterrolebinding.rbac.authorization.k8s.io/otel-agent created
+daemonset.apps/otel-agent created
+serviceaccount/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+service/grafana created
+deployment.apps/grafana created
+service/kibana created
+deployment.apps/kibana created
+serviceaccount/fluent-bit created
+clusterrole.rbac.authorization.k8s.io/fluent-bit-read created
+clusterrolebinding.rbac.authorization.k8s.io/fluent-bit-read created
+daemonset.apps/fluent-bit created
+
+8. Desplegando servicios backend...
+service/pharmago-users-service created
+deployment.apps/pharmago-users-service created
+service/pharmago-pharmacy-service created
+deployment.apps/pharmago-pharmacy-service created
+service/pharmago-api-gateway created
+deployment.apps/pharmago-api-gateway created
+
+9. Desplegando frontend...
+service/pharmago-ui created
+deployment.apps/pharmago-ui created
+
+10. Creando PodDisruptionBudgets (al menos 1 réplica disponible por microservicio)...
+poddisruptionbudget.policy/pharmago-api-gateway created
+poddisruptionbudget.policy/pharmago-pharmacy-service created
+poddisruptionbudget.policy/pharmago-ui created
+poddisruptionbudget.policy/pharmago-users-service created
+
+11. Configurando Ingress (acceso a la app sin port-forward)...
+   Esperando al controlador de ingress-nginx (su webhook tiene que estar listo)...
+pod/ingress-nginx-controller-5dd7bb8666-flrsm condition met
+ingress.networking.k8s.io/pharmago-ingress created
+
+=== Despliegue completado ===
+
+Verificando estado de los pods...
+NAME                                        READY   STATUS              RESTARTS   AGE     IP             NODE           NOMINATED NODE   READINESS GATES
+elasticsearch-757964844b-gghld              1/1     Running             0          3m42s   10.244.149.2   minikube-m05   <none>           <none>
+fluent-bit-cc5ws                            0/1     ContainerCreating   0          6s      <none>         minikube-m02   <none>           <none>
+fluent-bit-f6cvm                            0/1     ContainerCreating   0          6s      <none>         minikube-m05   <none>           <none>
+fluent-bit-qmtrc                            0/1     ContainerCreating   0          6s      <none>         minikube-m03   <none>           <none>
+fluent-bit-sz6xc                            0/1     ContainerCreating   0          6s      <none>         minikube       <none>           <none>
+fluent-bit-t62x9                            0/1     ContainerCreating   0          6s      <none>         minikube-m04   <none>           <none>
+grafana-74bd6f6d9d-7s6lp                    0/1     Init:0/2            0          8s      <none>         minikube-m05   <none>           <none>
+jaeger-64d5df5f6c-4c4bh                     1/1     Running             0          12s     10.244.149.3   minikube-m05   <none>           <none>
+kibana-7d8cfc6546-cwvst                     0/1     ContainerCreating   0          7s      <none>         minikube-m05   <none>           <none>
+otel-agent-599k6                            0/1     ContainerCreating   0          10s     <none>         minikube-m04   <none>           <none>
+otel-agent-ddh4c                            0/1     ContainerCreating   0          10s     <none>         minikube-m05   <none>           <none>
+otel-agent-dkldf                            0/1     ContainerCreating   0          10s     <none>         minikube-m03   <none>           <none>
+otel-agent-wwkhm                            0/1     ContainerCreating   0          10s     <none>         minikube-m02   <none>           <none>
+otel-agent-xgqr6                            0/1     ContainerCreating   0          10s     <none>         minikube       <none>           <none>
+otlp-collector-5df69c87d7-92jd4             1/1     Running             0          11s     10.244.149.4   minikube-m05   <none>           <none>
+pharmago-api-gateway-f78dd94bd-5n5fs        0/1     ContainerCreating   0          3s      <none>         minikube-m02   <none>           <none>
+pharmago-api-gateway-f78dd94bd-mkcnn        0/1     ContainerCreating   0          3s      <none>         minikube-m02   <none>           <none>
+pharmago-db-79bd8977ff-4m7hl                1/1     Running             0          4m25s   10.244.149.1   minikube-m05   <none>           <none>
+pharmago-pharmacy-service-b67798f4f-t7z5m   0/1     ContainerCreating   0          3s      <none>         minikube-m04   <none>           <none>
+pharmago-pharmacy-service-b67798f4f-xfn75   0/1     ContainerCreating   0          3s      <none>         minikube-m04   <none>           <none>
+pharmago-ui-5fb6749dff-2nnpk                0/1     ContainerCreating   0          2s      <none>         minikube       <none>           <none>
+pharmago-ui-5fb6749dff-f49tl                0/1     ContainerCreating   0          2s      <none>         minikube       <none>           <none>
+pharmago-users-service-5cffddfd68-8btxt     0/1     ContainerCreating   0          5s      <none>         minikube-m03   <none>           <none>
+pharmago-users-service-5cffddfd68-fvjgk     0/1     ContainerCreating   0          5s      <none>         minikube-m03   <none>           <none>
+prometheus-6c97686548-dkzjv                 0/1     Init:0/1            0          9s      <none>         minikube-m05   <none>           <none>
+
+Para entrar a la app (sin port-forward):
+  1. En PowerShell como administrador: minikube tunnel   (dejalo abierto)
+  2. Abrí http://127.0.0.1/   (la API queda en http://127.0.0.1/api/...)
+
+Herramientas de operación (Prometheus, Grafana, Kibana, Jaeger, Elasticsearch):
+  ./port-forward.sh
+
+=== 13:03:52 rollout de la app ===
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-users-service" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "pharmago-users-service" rollout to finish: 1 of 2 updated replicas are available...
+deployment "pharmago-users-service" successfully rolled out
+deployment "pharmago-pharmacy-service" successfully rolled out
+deployment "pharmago-api-gateway" successfully rolled out
+deployment "pharmago-ui" successfully rolled out
+deployment "pharmago-db" successfully rolled out
+
+=== 13:04:39 seed-db.sh ===
+=== Seed de datos de PharmaGo ===
+Esperando el pod de BD listo...
+pod/pharmago-db-79bd8977ff-4m7hl condition met
+Pod de BD: pharmago-db-79bd8977ff-4m7hl
+sqlcmd: /opt/mssql-tools18/bin/sqlcmd -C
+Esperando a que las migraciones creen las tablas (Roles, Users, Pharmacys, Drugs, Invitations)...
+Tablas listas.
+Copiando seed-data.sql al pod...
+Ejecutando seed-data.sql...
+Changed database context to 'PharmaDb'.
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+Datos iniciales insertados correctamente.
+Usuarios de prueba: admin, owner001, empleado01
+ 
+Roles: Administrator, Employee, Owner
+
+Verificación:
+Roles=3
+Users=3
+Drugs=4
+=== Seed completado ===
+
+=== 13:04:43 setup-kibana.sh ===
+Esperando a Kibana...
+Data view pharmago-logs-* creado.
+"title":"pharmago-logs-*"
+Kibana: ./port-forward.sh y abrí http://127.0.0.1:5601 (Discover, data view "PharmaGo logs").
+
+=== 13:06:04 minikube tunnel ===
+http://127.0.0.1 responde.
+
+=== 13:06:04 steady-state.sh ===
+[inicio] 2026-11-15T13:06:05Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 112, Pending: 1)
+
+[fin] 2026-11-15T13:06:31Z
+RESULTADO: steady state OK
+
+=== 13:06:31 check-separacion.sh ===
+=== Pods por microservicio y nodo ===
+MICROSERVICIO              NODO          POD                                        FASE
+pharmago-api-gateway       minikube-m02  pharmago-api-gateway-f78dd94bd-5n5fs       Running
+pharmago-api-gateway       minikube-m02  pharmago-api-gateway-f78dd94bd-mkcnn       Running
+pharmago-pharmacy-service  minikube-m04  pharmago-pharmacy-service-b67798f4f-t7z5m  Running
+pharmago-pharmacy-service  minikube-m04  pharmago-pharmacy-service-b67798f4f-xfn75  Running
+pharmago-ui                minikube      pharmago-ui-5fb6749dff-2nnpk               Running
+pharmago-ui                minikube      pharmago-ui-5fb6749dff-f49tl               Running
+pharmago-users-service     minikube-m03  pharmago-users-service-5cffddfd68-8btxt    Running
+pharmago-users-service     minikube-m03  pharmago-users-service-5cffddfd68-fvjgk    Running
+
+=== Microservicios por nodo ===
+NODO          MICROSERVICIOS             ESTADO
+minikube      pharmago-ui                ok
+minikube-m02  pharmago-api-gateway       ok
+minikube-m03  pharmago-users-service     ok
+minikube-m04  pharmago-pharmacy-service  ok
+
+OK: ningún nodo aloja dos microservicios distintos.
+
+=== Resumen (tag 94d8ad8) ===
+cluster-up.sh                 410 s
+build-images.sh 94d8ad8       126 s
+apply-k8s.sh 94d8ad8          277 s
+rollout de la app              46 s
+seed-db.sh                      4 s
+setup-kibana.sh                81 s
+minikube tunnel                 0 s
+steady-state.sh                27 s
+check-separacion.sh             1 s
+Total: 973 s
+
+App: http://127.0.0.1/   Herramientas: ./port-forward.sh
+exit 0
+Duración total de full-up.sh: 973 s
+Fin 2026-11-15T13:06:32Z

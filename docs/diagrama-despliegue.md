@@ -2,7 +2,7 @@
 
 Cumple el pedido de la letra: *"Cada microservicio debe ejecutar en un pod independiente. Los microservicios no pueden ejecutar en mismos nodos físicos. Se debe implementar un diagrama de despliegue."*
 
-Cluster Minikube de 5 nodos (decisión D01), namespace `pharmago`. El diagrama refleja el estado del repo al cerrar B3 (C10 a C12) y se completa en C23.
+Cluster Minikube de 5 nodos (decisión D01), namespace `pharmago`. El diagrama es el estado final, comparado en C23 contra `kubectl get pods -o wide` de un cluster levantado desde cero con `full-up.sh` (`docs/evidencia/C23/02-pods-wide.txt`).
 
 ```mermaid
 graph TB
@@ -29,7 +29,7 @@ graph TB
         db[("pharmago-db<br/>SQL Server 2019")]
         collector["otlp-collector<br/>OTLP :4317 · k8s_cluster · exporter prometheus :8889"]
         prometheus["Prometheus"]
-        grafana["Grafana"]
+        grafana["Grafana<br/>dashboards y 10 alertas provisionadas"]
         jaeger["Jaeger<br/>OTLP :4317 · UI :16686"]
         es[("Elasticsearch")]
         kibana["Kibana"]
@@ -84,8 +84,23 @@ Riesgo aceptado (D03): si se cae un nodo entero, se cae el microservicio que viv
 
 La comprobación automática es `Implementacion K8S/Codigo/k8s/verify/check-separacion.sh`. La evidencia está en `docs/evidencia/C03/`.
 
-## Flujo de telemetría (desde B3)
+## Flujo de telemetría
 
 - **Métricas:** las apps (cada 5 s) y los `otel-agent` de cada nodo (cada 10 s) mandan por OTLP al `otlp-collector`, que además lee la API de Kubernetes con `k8s_cluster`. Prometheus scrapea **solo** el exporter del Collector (`:8889`): no scrapea apps ni nodos (D30, D31, D32). Detalle en `docs/metricas.md`.
 - **Trazas:** apps por OTLP al Collector y de ahí a Jaeger. Detalle en `docs/trazas.md`.
-- **Logs:** consola JSON, Fluent Bit, Elasticsearch y Kibana. El `trace_id` en los logs llega en C14.
+- **Logs:** consola JSON con `trace_id` y `span_id` (C14), Fluent Bit, Elasticsearch y Kibana (`pharmago-logs-*`). Detalle en `docs/logs.md`.
+- **Alertas:** Grafana evalúa las 10 reglas `pg-*` sobre Prometheus cada 10 s (C13). Detalle en `docs/alertas.md`.
+
+## Comparación con el cluster (C23)
+
+Pods del namespace `pharmago` en un cluster recién levantado con `full-up.sh` (2026-11-15, tag `94d8ad8`):
+
+| Nodo | Pods de `pharmago` | Coincide con el diagrama |
+|---|---|---|
+| `minikube` | `pharmago-ui` ×2, `fluent-bit`, `otel-agent` (más `ingress-nginx-controller` en el namespace `ingress-nginx`) | Sí |
+| `minikube-m02` | `pharmago-api-gateway` ×2, `fluent-bit`, `otel-agent` | Sí |
+| `minikube-m03` | `pharmago-users-service` ×2, `fluent-bit`, `otel-agent` | Sí |
+| `minikube-m04` | `pharmago-pharmacy-service` ×2, `fluent-bit`, `otel-agent` | Sí |
+| `minikube-m05` | `pharmago-db`, `otlp-collector`, `prometheus`, `grafana`, `jaeger`, `elasticsearch`, `kibana`, `fluent-bit`, `otel-agent` | Sí |
+
+25 pods en total, todos 1/1 Running. `check-separacion.sh` dio OK. Salida completa en `docs/evidencia/C23/02-pods-wide.txt` y, para los otros namespaces (Calico, CoreDNS, ingress), en `02b-pods-otros-namespaces.txt`.

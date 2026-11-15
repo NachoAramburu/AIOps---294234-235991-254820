@@ -843,3 +843,40 @@ Cada commit agrega acá su sección. Las salidas completas van en `docs/evidenci
 - **Hallazgos nuevos que cambian el plan:** la revisión 15 del gateway, que creó `apply-k8s.sh`, mostraba `deploy.sh be11702-v2`: `apply-k8s.sh` no anota `change-cause` y la revisión hereda la anotación anterior. No afecta a `deploy.sh` ni a `rollback.sh`, que ahora anotan bien. Se puede corregir anotando `apply-k8s.sh <tag>` al aplicar; queda para quien toque ese script.
 - **Uso de IA registrado en docs/USO_IA.md:** sí
 
+## C23 — Runbook de defensa, diagrama final y ensayo cronometrado — 2026-11-15 — Martin Roux (bloque B8)
+- **Estado:** Parcial. Runbook, diagrama, `full-up.sh`, arranque desde cero y ensayo técnico de los 6 tipos hechos y medidos. Falta el ensayo con los 3 integrantes en sus roles y el fallo sorpresa.
+- **Ítem de rúbrica:** 8 (Defensa) y 1 (Plataforma: diagrama)
+- **Commit:** `C23: runbook de defensa, diagrama final y ensayo cronometrado` (SHA en `git log --grep "^C23:"`)
+- **Archivos creados / modificados:** `docs/runbook-defensa.md` (nuevo), `Implementacion K8S/Codigo/k8s/full-up.sh` (nuevo), `docs/diagrama-despliegue.md`, `docs/DECISIONES.md` (D58), `docs/evidencia/C23/` (`01-desde-cero.txt`, `02-pods-wide.txt`, `02b-pods-otros-namespaces.txt`, `03-ensayo-*.txt`, `04-ensayo-equipo.md`, `scripts/ensayo.sh`), `docs/PROGRESO.md`, `docs/USO_IA.md`
+- **Evidencia (comandos ejecutados y salida resumida):**
+  ```
+  Desde cero (01)
+  $ minikube delete                          2 s
+  $ ./full-up.sh                             exit 0, 16 min 13 s
+    cluster-up 410 s · build-images 126 s · apply-k8s 277 s · rollout 46 s · seed-db 4 s
+    setup-kibana 81 s · steady-state 27 s (OK al primer intento) · check-separacion 1 s (OK)
+
+  Diagrama contra el cluster (02)
+  $ kubectl get pods -n pharmago -o wide     25 pods 1/1 Running
+    minikube: ui x2 · m02: gateway x2 · m03: users x2 · m04: pharmacy x2
+    m05: db, collector, prometheus, grafana, jaeger, elasticsearch, kibana
+    fluent-bit y otel-agent en los 5 nodos; ingress-nginx-controller en minikube
+
+  Ensayo técnico de los 6 tipos (03, scripts/ensayo.sh)
+    falla        alerta en Firing (C18)                  no-2xx del usuario                    steady state OK
+    requests     pg-429 45 s (50)                         0/150                                 170 s después
+    cpu          pg-cpu 66 s (70)                         0/200                                 116 s
+    memoria      pg-memory 65 s (59)                      0/200                                 72 s
+    storage      pg-memory 68 s, pg-storage 100 s (76)    0/210                                 91 s
+    red          pg-breaker 39 s (33), pg-5xx 62 s (61)   20/85 en /api/roles, 0/85 /api/drug    139 s
+    desconexión  pg-breaker 28 s (33), pg-5xx 66 s (55)   30/85 en /api/drug, 0/85 /api/roles    124 s
+  ```
+- **Criterio de "hecho" de §3:** cumplido en lo que no depende del equipo: el runbook tiene arranque desde cero con tiempos medidos, checklist, qué abre cada rol, matriz fallo → mecanismo → alerta → panel → mitigación con valores medidos, protocolo para el script desconocido y fallas del entorno. La app se accede sin port-forward. No cumplido todavía: el ensayo con los 3 en sus roles (tiempo hasta identificar la causa) y el fallo sorpresa.
+- **Decisiones tomadas:** D58 (`full-up.sh` como arranque único, con reintentos del steady state).
+- **NO VERIFICADO / riesgos:** el ensayo con los 3 integrantes y el fallo sorpresa: se registran en `docs/evidencia/C23/04-ensayo-equipo.md` (plantilla lista). El arranque de 16 min supone las imágenes en la caché de Docker; en una PC sin caché, sumar la compilación.
+- **Hallazgos nuevos que cambian el plan:**
+  - Escribir en el disco del contenedor también dispara `pg-memory` (68 s), porque el page cache cuenta como memoria del pod. Si aparecen las dos juntas, la causa es storage. Quedó en la matriz y en la tabla de triage del runbook.
+  - `pg-storage` tardó 100 s (76 s en C18): depende de cuándo el kubelet recalcula el disco.
+  - El primer intento de `full-up.sh` falló porque exportaba `MSYS_NO_PATHCONV=1`, que rompe las rutas que bash le pasa a `git.exe`. Se quitó; los scripts que lo necesitan lo exportan por su cuenta.
+- **Uso de IA registrado en docs/USO_IA.md:** sí (fila del bloque B8)
+

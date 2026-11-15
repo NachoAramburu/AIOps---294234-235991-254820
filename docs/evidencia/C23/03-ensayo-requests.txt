@@ -1,0 +1,251 @@
+##### Ensayo requests 2026-11-15T13:08:16Z
+$ ./steady-state.sh   (antes)
+[inicio] 2026-11-15T13:08:16Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 111, Pending: 0)
+
+[fin] 2026-11-15T13:08:42Z
+RESULTADO: steady state OK
+exit=0
+
+$ ./observar.sh 150 /api/drug &
+$ ./load-requests.sh 300 20
+Inicio de la falla: 13:08:48
+[inicio] 2026-11-15T13:08:48Z
+Requests: 300 a http://127.0.0.1/api/login con concurrencia 20
+Duración: 13 s
+Respuestas por código HTTP:
+  429 x281
+  404 x19
+[fin] 2026-11-15T13:09:02Z
+exit=0
+Fin de la falla: 13:09:02 (14 s)
+--- observar.sh
+[inicio] 2026-11-15T13:08:43Z
+Observando 150 s: tráfico a 1 request/s por http://127.0.0.1 (/api/drug) y alertas de Grafana cada 5 s
+13:08:43 http /api/drug 200 13
+13:08:43 alertas 
+13:08:44 http /api/drug 200 9
+13:08:45 http /api/drug 200 22
+13:08:46 http /api/drug 200 25
+13:08:48 http /api/drug 200 8
+13:08:49 http /api/drug 200 12
+13:08:49 alertas 
+13:08:50 http /api/drug 200 54
+13:08:51 http /api/drug 200 63
+13:08:52 http /api/drug 200 52
+13:08:53 http /api/drug 200 35
+13:08:54 http /api/drug 200 83
+13:08:54 alertas 
+13:08:55 http /api/drug 200 60
+13:08:57 http /api/drug 200 75
+13:08:58 http /api/drug 200 94
+13:08:59 http /api/drug 200 41
+13:09:00 http /api/drug 200 60
+13:09:00 alertas 
+13:09:01 http /api/drug 200 28
+13:09:02 http /api/drug 200 6
+13:09:03 http /api/drug 200 8
+13:09:04 http /api/drug 200 8
+13:09:05 http /api/drug 200 11
+13:09:05 alertas 
+13:09:06 http /api/drug 200 9
+13:09:07 http /api/drug 200 7
+13:09:09 http /api/drug 200 7
+13:09:10 http /api/drug 200 6
+13:09:11 http /api/drug 200 17
+13:09:11 alertas pg-429=pending 
+13:09:12 http /api/drug 200 6
+13:09:13 http /api/drug 200 6
+13:09:14 http /api/drug 200 7
+13:09:15 http /api/drug 200 7
+13:09:16 http /api/drug 200 6
+13:09:16 alertas pg-429=pending 
+13:09:17 http /api/drug 200 8
+13:09:18 http /api/drug 200 7
+13:09:20 http /api/drug 200 7
+13:09:21 http /api/drug 200 10
+13:09:22 http /api/drug 200 7
+13:09:22 alertas pg-429=pending 
+13:09:23 http /api/drug 200 7
+13:09:24 http /api/drug 200 7
+13:09:25 http /api/drug 200 8
+13:09:26 http /api/drug 200 7
+13:09:27 http /api/drug 200 7
+13:09:28 alertas pg-429=pending 
+13:09:28 http /api/drug 200 7
+13:09:29 http /api/drug 200 8
+13:09:31 http /api/drug 200 7
+13:09:32 http /api/drug 200 8
+13:09:33 http /api/drug 200 9
+13:09:33 alertas pg-429=firing 
+13:09:34 http /api/drug 200 7
+13:09:35 http /api/drug 200 7
+13:09:36 http /api/drug 200 8
+13:09:37 http /api/drug 200 8
+13:09:38 http /api/drug 200 7
+13:09:38 alertas pg-429=firing 
+13:09:39 http /api/drug 200 7
+13:09:40 http /api/drug 200 7
+13:09:41 http /api/drug 200 7
+13:09:43 http /api/drug 200 6
+13:09:44 http /api/drug 200 24
+13:09:44 alertas pg-429=firing 
+13:09:45 http /api/drug 200 7
+13:09:46 http /api/drug 200 10
+13:09:47 http /api/drug 200 7
+13:09:48 http /api/drug 200 8
+13:09:49 http /api/drug 200 8
+13:09:49 alertas pg-429=firing 
+13:09:50 http /api/drug 200 8
+13:09:51 http /api/drug 200 25
+13:09:52 http /api/drug 200 10
+13:09:54 http /api/drug 200 36
+13:09:55 http /api/drug 200 7
+13:09:55 alertas pg-429=firing 
+13:09:56 http /api/drug 200 7
+13:09:57 http /api/drug 200 6
+13:09:58 http /api/drug 200 6
+13:09:59 http /api/drug 200 7
+13:10:00 http /api/drug 200 7
+13:10:00 alertas pg-429=firing 
+13:10:01 http /api/drug 200 6
+13:10:02 http /api/drug 200 6
+13:10:03 http /api/drug 200 6
+13:10:04 http /api/drug 200 6
+13:10:06 http /api/drug 200 8
+13:10:06 alertas pg-429=firing 
+13:10:07 http /api/drug 200 6
+13:10:08 http /api/drug 200 9
+13:10:09 http /api/drug 200 6
+13:10:10 http /api/drug 200 6
+13:10:11 http /api/drug 200 7
+13:10:11 alertas 
+13:10:12 http /api/drug 200 7
+13:10:13 http /api/drug 200 6
+13:10:14 http /api/drug 200 7
+13:10:15 http /api/drug 200 9
+13:10:16 http /api/drug 200 6
+13:10:17 alertas 
+13:10:17 http /api/drug 200 8
+13:10:19 http /api/drug 200 6
+13:10:20 http /api/drug 200 6
+13:10:21 http /api/drug 200 7
+13:10:22 http /api/drug 200 6
+13:10:22 alertas 
+13:10:23 http /api/drug 200 8
+13:10:24 http /api/drug 200 7
+13:10:25 http /api/drug 200 7
+13:10:26 http /api/drug 200 7
+13:10:27 http /api/drug 200 9
+13:10:27 alertas 
+13:10:28 http /api/drug 200 6
+13:10:29 http /api/drug 200 7
+13:10:31 http /api/drug 200 6
+13:10:32 http /api/drug 200 6
+13:10:33 http /api/drug 200 8
+13:10:33 alertas 
+13:10:34 http /api/drug 200 7
+13:10:35 http /api/drug 200 7
+13:10:36 http /api/drug 200 7
+13:10:37 http /api/drug 200 6
+13:10:38 http /api/drug 200 7
+13:10:38 alertas 
+13:10:39 http /api/drug 200 7
+13:10:40 http /api/drug 200 6
+13:10:42 http /api/drug 200 8
+13:10:43 http /api/drug 200 7
+13:10:44 http /api/drug 200 7
+13:10:44 alertas 
+13:10:45 http /api/drug 200 7
+13:10:46 http /api/drug 200 7
+13:10:47 http /api/drug 200 6
+13:10:48 http /api/drug 200 7
+13:10:49 http /api/drug 200 7
+13:10:49 alertas 
+13:10:50 http /api/drug 200 6
+13:10:51 http /api/drug 200 6
+13:10:52 http /api/drug 200 6
+13:10:54 http /api/drug 200 8
+13:10:55 http /api/drug 200 11
+13:10:56 http /api/drug 200 7
+13:10:55 alertas 
+13:10:57 http /api/drug 200 8
+13:10:58 http /api/drug 200 7
+13:10:59 http /api/drug 200 8
+13:11:00 http /api/drug 200 6
+13:11:01 http /api/drug 200 7
+13:11:02 http /api/drug 200 6
+13:11:01 alertas 
+13:11:03 http /api/drug 200 7
+13:11:05 http /api/drug 200 6
+13:11:06 http /api/drug 200 6
+13:11:07 http /api/drug 200 6
+13:11:08 http /api/drug 200 9
+13:11:07 alertas 
+13:11:09 http /api/drug 200 7
+13:11:10 http /api/drug 200 7
+13:11:11 http /api/drug 200 10
+13:11:12 http /api/drug 200 6
+13:11:13 http /api/drug 200 7
+13:11:14 http /api/drug 200 7
+13:11:15 http /api/drug 200 7
+13:11:17 http /api/drug 200 7
+13:11:18 http /api/drug 200 8
+13:11:19 http /api/drug 200 7
+13:11:20 http /api/drug 200 6
+13:11:21 http /api/drug 200 11
+13:11:22 http /api/drug 200 6
+13:11:23 http /api/drug 200 7
+13:11:24 http /api/drug 200 9
+13:11:25 http /api/drug 200 20
+13:11:26 http /api/drug 200 8
+
+Resumen (150 s):
+  Respuestas por código HTTP:
+    200 x150
+  no-2xx: 0
+  Alertas (primera vez en cada estado):
+    pg-429 pending       13:09:11
+    pg-429 firing        13:09:33
+[fin] 2026-11-15T13:11:28Z
+
+$ ./steady-state.sh   (intento 1, 146 s después del fin)
+[inicio] 2026-11-15T13:11:28Z
+Steady state de PharmaGo (namespace pharmago)
+
+1. Deployments
+  [OK]    pharmago-api-gateway 2/2
+  [OK]    pharmago-users-service 2/2
+  [OK]    pharmago-pharmacy-service 2/2
+  [OK]    pharmago-ui 2/2
+  [OK]    pharmago-db 1/1
+
+2. Nodos
+  [OK]    5/5 nodos Ready
+
+3. Tráfico: 20 s a 1 request/s por http://127.0.0.1 (/api/drug /api/roles /)
+  [OK]    0 no-2xx de 20 (200 x20  )
+
+4. Alertas de Grafana
+  [OK]    ninguna alerta en Firing (Normal: 111, Pending: 0)
+
+[fin] 2026-11-15T13:11:52Z
+RESULTADO: steady state OK
+exit=0
+Recuperación: steady state OK 170 s después del fin de la falla

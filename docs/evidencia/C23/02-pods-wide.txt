@@ -1,0 +1,26 @@
+NAME                                        READY   STATUS    RESTARTS   AGE     IP               NODE           NOMINATED NODE   READINESS GATES
+elasticsearch-757964844b-gghld              1/1     Running   0          6m36s   10.244.149.2     minikube-m05   <none>           <none>
+fluent-bit-cc5ws                            1/1     Running   0          3m      10.244.205.194   minikube-m02   <none>           <none>
+fluent-bit-f6cvm                            1/1     Running   0          3m      10.244.149.9     minikube-m05   <none>           <none>
+fluent-bit-qmtrc                            1/1     Running   0          3m      10.244.151.3     minikube-m03   <none>           <none>
+fluent-bit-sz6xc                            1/1     Running   0          3m      10.244.120.71    minikube       <none>           <none>
+fluent-bit-t62x9                            1/1     Running   0          3m      10.244.59.130    minikube-m04   <none>           <none>
+grafana-74bd6f6d9d-7s6lp                    1/1     Running   0          3m2s    10.244.149.8     minikube-m05   <none>           <none>
+jaeger-64d5df5f6c-4c4bh                     1/1     Running   0          3m6s    10.244.149.3     minikube-m05   <none>           <none>
+kibana-7d8cfc6546-cwvst                     1/1     Running   0          3m1s    10.244.149.7     minikube-m05   <none>           <none>
+otel-agent-599k6                            1/1     Running   0          3m4s    10.244.59.129    minikube-m04   <none>           <none>
+otel-agent-ddh4c                            1/1     Running   0          3m4s    10.244.149.5     minikube-m05   <none>           <none>
+otel-agent-dkldf                            1/1     Running   0          3m4s    10.244.151.2     minikube-m03   <none>           <none>
+otel-agent-wwkhm                            1/1     Running   0          3m4s    10.244.205.193   minikube-m02   <none>           <none>
+otel-agent-xgqr6                            1/1     Running   0          3m4s    10.244.120.70    minikube       <none>           <none>
+otlp-collector-5df69c87d7-92jd4             1/1     Running   0          3m5s    10.244.149.4     minikube-m05   <none>           <none>
+pharmago-api-gateway-f78dd94bd-5n5fs        1/1     Running   0          2m57s   10.244.205.195   minikube-m02   <none>           <none>
+pharmago-api-gateway-f78dd94bd-mkcnn        1/1     Running   0          2m57s   10.244.205.196   minikube-m02   <none>           <none>
+pharmago-db-79bd8977ff-4m7hl                1/1     Running   0          7m19s   10.244.149.1     minikube-m05   <none>           <none>
+pharmago-pharmacy-service-b67798f4f-t7z5m   1/1     Running   0          2m57s   10.244.59.132    minikube-m04   <none>           <none>
+pharmago-pharmacy-service-b67798f4f-xfn75   1/1     Running   0          2m57s   10.244.59.131    minikube-m04   <none>           <none>
+pharmago-ui-5fb6749dff-2nnpk                1/1     Running   0          2m56s   10.244.120.72    minikube       <none>           <none>
+pharmago-ui-5fb6749dff-f49tl                1/1     Running   0          2m56s   10.244.120.73    minikube       <none>           <none>
+pharmago-users-service-5cffddfd68-8btxt     1/1     Running   0          2m59s   10.244.151.4     minikube-m03   <none>           <none>
+pharmago-users-service-5cffddfd68-fvjgk     1/1     Running   0          2m59s   10.244.151.5     minikube-m03   <none>           <none>
+prometheus-6c97686548-dkzjv                 1/1     Running   0          3m3s    10.244.149.6     minikube-m05   <none>           <none>
